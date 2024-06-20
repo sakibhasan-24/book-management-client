@@ -1,9 +1,117 @@
 import React, { useRef, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import ModalImage from "react-modal-image";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import useUserLogin from "../../../hooks/useUserLogin";
+import Swal from "sweetalert2";
 export default function Login() {
-  const images = [
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const { loading, userLogin, error } = useUserLogin();
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  //login function
+  const [formData, setFormData] = useState({});
+  const handleSubmitFormData = async (e) => {
+    e.preventDefault();
+    console.table(error);
+    try {
+      const res = await userLogin(formData);
+      if (res.data.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Login Success",
+          text: "Welcome to your account",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        navigate(`${location.state?.from?.pathname || "/"}`);
+      }
+    } catch (e) {
+      if (error.success === false) {
+        Swal.fire({
+          icon: "error",
+          title: "Login Failed",
+          text: "Invalid Email or Password",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+      console.log("error");
+    }
+  };
+  return (
+    <div className="w-full sm:max-w-xl md:max-w-2xl  mx-auto ">
+      <h1 className="text-xl text-center font-semibold text-slate-500 mb-2">
+        Welcome Back
+      </h1>
+      <div className="w-full">
+        <form
+          className="flex items-center flex-col gap-4"
+          onSubmit={handleSubmitFormData}
+        >
+          <input
+            onChange={(e) =>
+              setFormData({ ...formData, userEmail: e.target.value })
+            }
+            type="email"
+            name="userEmail"
+            placeholder="User Email"
+            className="w-full mb-2 p-2 rounded-md border-none outline-none focus:outline-none"
+          />
+
+          <input
+            type={`${showPassword ? "text" : "password"}`}
+            name="password"
+            placeholder="****************"
+            className="w-full mb-2 p-2 rounded-md border-none outline-none focus:outline-none"
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
+          />
+          {showPassword ? (
+            <FaEye
+              onClick={handleShowPassword}
+              className="relative  -top-[52px] -right-32 sm:-right-56  text-xl text-slate-500 cursor-pointer hover:text-slate-800"
+            />
+          ) : (
+            <FaEyeSlash
+              onClick={handleShowPassword}
+              className="relative  -top-[52px] -right-32 sm:-right-56  text-xl text-slate-500 cursor-pointer hover:text-slate-800"
+            />
+          )}
+
+          <input
+            type="submit"
+            value={loading ? "Loading..." : "Login"}
+            disabled={loading}
+            className={`w-full font-bold p-2 rounded-md bg-slate-800 cursor-pointer hover:bg-slate-600 text-white ${
+              loading && "cursor-not-allowed"
+            }`}
+          />
+        </form>
+        <p className="text-center text-slate-500 mt-2">
+          Don't have an account?
+          <span className="text-slate-800 font-semibold">
+            <Link
+              to="/user-credentials/signup"
+              className="text-slate-800 font-semibold"
+            >
+              SignUp
+            </Link>
+          </span>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* 
+
+ const images = [
     {
       small:
         "https://st.depositphotos.com/2274151/4841/i/450/depositphotos_48410095-stock-photo-sample-blue-square-grungy-stamp.jpg",
@@ -43,63 +151,7 @@ export default function Login() {
   const showImage = (index) => {
     setCurrentIndex(index);
   };
-  const [showPassword, setShowPassword] = useState(false);
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  //login function
-  return (
-    <div className="w-full sm:max-w-xl md:max-w-2xl  mx-auto ">
-      <h1 className="text-xl text-center font-semibold text-slate-500 mb-2">
-        Welcome Back
-      </h1>
-      <div className="w-full">
-        <form className="flex items-center flex-col gap-4">
-          <input
-            type="email"
-            name="userEmail"
-            placeholder="User Email"
-            className="w-full mb-2 p-2 rounded-md border-none outline-none focus:outline-none"
-          />
-
-          <input
-            type={`${showPassword ? "text" : "password"}`}
-            name="userPassword"
-            placeholder="****************"
-            className="w-full mb-2 p-2 rounded-md border-none outline-none focus:outline-none"
-          />
-          {showPassword ? (
-            <FaEye
-              onClick={handleShowPassword}
-              className="relative  -top-[52px] -right-32 sm:-right-56  text-xl text-slate-500 cursor-pointer hover:text-slate-800"
-            />
-          ) : (
-            <FaEyeSlash
-              onClick={handleShowPassword}
-              className="relative  -top-[52px] -right-32 sm:-right-56  text-xl text-slate-500 cursor-pointer hover:text-slate-800"
-            />
-          )}
-
-          <input
-            type="submit"
-            value="Login"
-            className="w-full font-bold p-2 rounded-md bg-slate-800 cursor-pointer hover:bg-slate-600 text-white"
-          />
-        </form>
-        <p className="text-center text-slate-500 mt-2">
-          Don't have an account?
-          <span className="text-slate-800 font-semibold">
-            <Link
-              to="/user-credentials/signup"
-              className="text-slate-800 font-semibold"
-            >
-              SignUp
-            </Link>
-          </span>
-        </p>
-      </div>
-      <div className="hidden" ref={showImageRef}>
+ <div className="hidden" ref={showImageRef}>
         {images.map((image, index) => (
           <img
             ref={(el) => (imageRefs.current[index] = el)}
@@ -130,6 +182,4 @@ export default function Login() {
       >
         Show Demo
       </p>
-    </div>
-  );
-}
+*/

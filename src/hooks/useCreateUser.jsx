@@ -6,11 +6,11 @@ export default function useCreateUser() {
   const axiosPublic = useApiCall();
 
   const signUpUser = async (userInfo) => {
-    console.log(userInfo);
+    // console.log(userInfo);
     setLoading(true);
     try {
       const response = await axiosPublic.post("/api/user/signup", userInfo);
-      console.table(response);
+      //   console.table(response);
       return response.data;
     } catch (error) {
       console.log(error);
