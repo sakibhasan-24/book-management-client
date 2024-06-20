@@ -90,7 +90,7 @@ export default function Signup() {
   // submit form data to store in db
   const handleSubmitFormData = async (e) => {
     e.preventDefault();
-
+    console.log("s");
     try {
       const res = await signUpUser(formData);
       console.log("he", res);
@@ -108,6 +108,8 @@ export default function Signup() {
       console.log(error);
     }
   };
+  console.log(loading);
+  console.log(uploadProgress);
   return (
     <div className="w-full sm:max-w-xl md:max-w-2xl mx-auto ">
       <h1 className="text-xl text-center font-semibold text-slate-500 mb-2">
@@ -185,8 +187,14 @@ export default function Signup() {
           </div>
           <input
             type="submit"
-            value="Signup"
-            className="w-full font-bold p-2 rounded-md bg-slate-800 cursor-pointer hover:bg-slate-600 text-white"
+            value={loading ? "loading...." : "Sign Up"}
+            // disabled={(uploadProgress < 90 && uploadProgress > 10) || loading}
+            disabled={(uploadProgress > 10 && uploadProgress < 90) || loading}
+            className={`w-full font-bold p-2 rounded-md bg-slate-800 cursor-pointer hover:bg-slate-600 text-white ${
+              (uploadProgress > 10 && uploadProgress < 90) || loading
+                ? "cursor-not-allowed bg-slate-600"
+                : "cursor-pointer hover:bg-slate-600"
+            }`}
           />
         </form>
         <p className="text-center text-slate-500 mt-2">

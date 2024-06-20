@@ -47,6 +47,8 @@ export default function Login() {
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
+  //login function
   return (
     <div className="w-full sm:max-w-xl md:max-w-2xl  mx-auto ">
       <h1 className="text-xl text-center font-semibold text-slate-500 mb-2">
