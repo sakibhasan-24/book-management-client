@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import MobileNav from "./MobileNav";
+import { useSelector } from "react-redux";
 
 export default function Navbar() {
   const location = useLocation();
+  const { currentUser } = useSelector((state) => state.user);
+  console.log(currentUser);
   const handleRoute = (route) => {
     if (location.pathname === route) {
       return true;

@@ -4,7 +4,11 @@ import ModalImage from "react-modal-image";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useUserLogin from "../../../hooks/useUserLogin";
 import Swal from "sweetalert2";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../../redux/user/user";
 export default function Login() {
+  const dispatch = useDispatch();
+
   const location = useLocation();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -17,7 +21,7 @@ export default function Login() {
   const [formData, setFormData] = useState({});
   const handleSubmitFormData = async (e) => {
     e.preventDefault();
-    console.table(error);
+
     try {
       const res = await userLogin(formData);
       if (res.data.success) {
@@ -28,6 +32,7 @@ export default function Login() {
           showConfirmButton: false,
           timer: 1500,
         });
+        dispatch(loginSuccess(res.data));
         navigate(`${location.state?.from?.pathname || "/"}`);
       }
     } catch (e) {
