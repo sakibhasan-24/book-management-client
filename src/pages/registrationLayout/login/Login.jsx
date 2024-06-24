@@ -6,6 +6,7 @@ import useUserLogin from "../../../hooks/useUserLogin";
 import Swal from "sweetalert2";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../../redux/user/user";
+import GoogleSignup from "../../../componets/googleSignup/GoogleSignup";
 export default function Login() {
   const dispatch = useDispatch();
 
@@ -97,6 +98,7 @@ export default function Login() {
               loading && "cursor-not-allowed"
             }`}
           />
+          <GoogleSignup />
         </form>
         <p className="text-center text-slate-500 mt-2">
           Don't have an account?

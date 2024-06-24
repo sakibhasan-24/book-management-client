@@ -4,8 +4,9 @@ import { initializeApp } from "firebase/app";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
+
 const firebaseConfig = {
-  apiKey: import.meta.env.BOOK_APIKEY,
+  apiKey: import.meta.env.VITE_BOOK_APIKEY,
   authDomain: "book-management-57c93.firebaseapp.com",
   projectId: "book-management-57c93",
   storageBucket: "book-management-57c93.appspot.com",

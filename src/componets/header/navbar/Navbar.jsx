@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 export default function Navbar() {
   const location = useLocation();
   const { currentUser } = useSelector((state) => state.user);
-  console.log(currentUser);
+  // console.log(currentUser);
   const handleRoute = (route) => {
     if (location.pathname === route) {
       return true;

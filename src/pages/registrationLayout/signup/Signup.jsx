@@ -11,7 +11,11 @@ import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import app from "../../../firebase/firebase.config";
 import useCreateUser from "../../../hooks/useCreateUser";
+import GoogleSignup from "../../../componets/googleSignup/GoogleSignup";
+import { getAuth } from "firebase/auth";
 export default function Signup() {
+  const auth = getAuth(app);
+  console.log(app);
   const { loading, signUpUser } = useCreateUser();
   const [showPassword, setShowPassword] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -196,6 +200,7 @@ export default function Signup() {
                 : "cursor-pointer hover:bg-slate-600"
             }`}
           />
+          <GoogleSignup />
         </form>
         <p className="text-center text-slate-500 mt-2">
           Already have an account?
