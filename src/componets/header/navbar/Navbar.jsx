@@ -7,7 +7,8 @@ import { Avatar, Dropdown } from "flowbite-react";
 export default function Navbar() {
   const location = useLocation();
   const { currentUser } = useSelector((state) => state.user);
-  console.log(currentUser.user);
+  console.log(currentUser);
+
   const handleRoute = (route) => {
     if (location.pathname === route) {
       return true;
@@ -39,25 +40,21 @@ export default function Navbar() {
             Add Books
           </Link>
           {/* if user login then do here logout */}
-          {currentUser.user ? (
+          {currentUser?.user ? (
             <>
               <Dropdown
                 arrowIcon={false}
                 inline
                 label={
-                  <Avatar
-                    alt="img"
-                    img={currentUser.user.profileImage}
-                    rounded
-                  />
+                  <Avatar alt="img" img={currentUser?.user?.image} rounded />
                 }
               >
                 <Dropdown.Header>
                   <span className="block text-sm">
-                    {currentUser.user.userName}
+                    {currentUser?.user?.userName}
                   </span>
                   <span className="block truncate text-sm font-medium">
-                    {currentUser.user.userEmail}
+                    {currentUser?.user?.userEmail}
                   </span>
                 </Dropdown.Header>
                 <Link to="/dashboard/profile">

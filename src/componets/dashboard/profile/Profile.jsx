@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Alert, Button, Label, TextInput } from "flowbite-react";
 import { HiUser, HiMail, HiLockClosed } from "react-icons/hi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getDownloadURL,
   getStorage,
@@ -11,10 +11,19 @@ import {
 import app from "../../../firebase/firebase.config";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import useUpdateUserApi from "../../../hooks/user/useUpdateUserApi";
+import { updateSuccess } from "../../../redux/user/user";
+import Swal from "sweetalert2";
 
 export default function SignupForm() {
+  const { error, loading, updateUser } = useUpdateUserApi();
+  const dispatch = useDispatch();
+
   const { currentUser } = useSelector((state) => state.user);
   console.log(currentUser.user);
+  const [formData, setFormData] = useState({
+    userId: currentUser?.user._id,
+  });
 
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
@@ -71,18 +80,45 @@ export default function SignupForm() {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           console.log("File available at", downloadURL);
           setImageFileUrl(downloadURL);
+          setFormData({ ...formData, image: downloadURL });
         });
       }
     );
   };
-  console.log(imageUploadProgress);
-  console.log(imageUploadError);
+
+  const handleFormData = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+  //   console.log(imageUploadProgress);
+  //   console.log(imageUploadError);
+  console.log(formData);
+
+  const handleFormDataSubmit = async (e) => {
+    e.preventDefault();
+    if (Object.keys(formData).length === 0) return;
+
+    try {
+      const result = await updateUser(formData);
+      //   console.log(result);
+      dispatch(updateSuccess(result));
+      if (result.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Profile updated successfully",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="w-full max-w-md mx-auto mt-10 p-8 bg-white shadow-md rounded-lg">
       <h2 className="text-2xl font-semibold text-center text-gray-700 mb-6">
         Update Profile
       </h2>
-      <form className="flex flex-col gap-6">
+      <form className="flex flex-col gap-6" onSubmit={handleFormDataSubmit}>
         <div
           onClick={() => fileRef.current.click()}
           className="mt-6 w-1/3 mx-auto flex cursor-pointer justify-center relative "
@@ -138,8 +174,9 @@ export default function SignupForm() {
             id="userName"
             name="userName"
             placeholder="User Name"
-            required
             icon={HiUser}
+            onChange={handleFormData}
+            defaultValue={currentUser.user.userName}
             className="w-full px-4 py-2 rounded-md focus:outline-none"
           />
         </div>
@@ -147,17 +184,17 @@ export default function SignupForm() {
         <div className="w-full">
           <Label
             htmlFor="userEmail"
-            value="User Email"
+            defaultValue="User Email"
             className="mb-2 block"
           />
           <TextInput
             id="userEmail"
             name="userEmail"
             type="email"
-            placeholder="User Email"
-            required
+            defaultValue={currentUser.user.userEmail}
             icon={HiMail}
             className="w-full px-4 py-2 rounded-md focus:outline-none"
+            onChange={handleFormData}
           />
         </div>
 
@@ -168,7 +205,7 @@ export default function SignupForm() {
             name="password"
             type="password"
             placeholder="*************"
-            required
+            onChange={handleFormData}
             icon={HiLockClosed}
             className="w-full px-4 py-2 rounded-md focus:outline-none"
           />

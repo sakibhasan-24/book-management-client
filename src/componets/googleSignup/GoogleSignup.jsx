@@ -4,7 +4,7 @@ import React from "react";
 import app from "../../firebase/firebase.config";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../redux/user/user";
-import useGoogleSignIn from "../../hooks/useGoogleSignIn";
+import useGoogleSignIn from "../../hooks/user/useGoogleSignIn";
 import Swal from "sweetalert2";
 import { useLocation, useNavigate } from "react-router-dom";
 // import { GoogleAuthProvider } from "firebase/auth/web-extension";

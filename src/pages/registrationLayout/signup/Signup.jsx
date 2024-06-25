@@ -10,7 +10,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import app from "../../../firebase/firebase.config";
-import useCreateUser from "../../../hooks/useCreateUser";
+import useCreateUser from "../../../hooks/user/useCreateUser";
 import GoogleSignup from "../../../componets/googleSignup/GoogleSignup";
 import { getAuth } from "firebase/auth";
 export default function Signup() {

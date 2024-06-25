@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import useApiCall from "../apicall/publicApi/useApiCall";
+import useApiCall from "../../apicall/publicApi/useApiCall";
 
 export default function useGoogleSignIn() {
   const axiosPublic = useApiCall();
