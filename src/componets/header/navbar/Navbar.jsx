@@ -60,7 +60,7 @@ export default function Navbar() {
                     {currentUser.user.userEmail}
                   </span>
                 </Dropdown.Header>
-                <Link to="/dashboard">
+                <Link to="/dashboard/profile">
                   <Dropdown.Item>Dashboard</Dropdown.Item>
                 </Link>
 
