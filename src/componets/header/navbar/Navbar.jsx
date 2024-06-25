@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import MobileNav from "./MobileNav";
 import { useSelector } from "react-redux";
+import { Avatar, Dropdown } from "flowbite-react";
 
 export default function Navbar() {
   const location = useLocation();
   const { currentUser } = useSelector((state) => state.user);
-  // console.log(currentUser);
+  console.log(currentUser.user);
   const handleRoute = (route) => {
     if (location.pathname === route) {
       return true;
@@ -37,15 +38,54 @@ export default function Navbar() {
           >
             Add Books
           </Link>
+          {/* if user login then do here logout */}
+          {currentUser.user ? (
+            <>
+              <Dropdown
+                arrowIcon={false}
+                inline
+                label={
+                  <Avatar
+                    alt="img"
+                    img={currentUser.user.profileImage}
+                    rounded
+                  />
+                }
+              >
+                <Dropdown.Header>
+                  <span className="block text-sm">
+                    {currentUser.user.userName}
+                  </span>
+                  <span className="block truncate text-sm font-medium">
+                    {currentUser.user.userEmail}
+                  </span>
+                </Dropdown.Header>
+                <Link to="/dashboard">
+                  <Dropdown.Item>Dashboard</Dropdown.Item>
+                </Link>
 
-          <Link
-            to="/user-credentials/login"
-            className={`
+                <Dropdown.Divider />
+                <Dropdown.Item>Sign out</Dropdown.Item>
+              </Dropdown>
+              {/* <Link
+                to="/user-credentials/login"
+                className={`
+           ${handleRoute("/user-credentials/login") && "underline "}
+          `}
+              >
+                Logout
+              </Link> */}
+            </>
+          ) : (
+            <Link
+              to="/user-credentials/login"
+              className={`
              ${handleRoute("/user-credentials/login") && "underline "}
             `}
-          >
-            Login
-          </Link>
+            >
+              Login
+            </Link>
+          )}
         </div>
         {/* start of mobile view */}
         <div
