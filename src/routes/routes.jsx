@@ -7,6 +7,9 @@ import Login from "../pages/registrationLayout/login/Login";
 import ErrorPage from "../pages/errorpage/ErrorPage";
 import MainPanel from "../componets/dashboard/MainPanel";
 import Profile from "../componets/dashboard/profile/Profile";
+import PrivateRoutes from "./PrivateRoutes";
+
+import Users from "../componets/dashboard/users/Users";
 
 const router = createBrowserRouter([
   {
@@ -17,21 +20,32 @@ const router = createBrowserRouter([
       { path: "/", element: <Home /> },
       {
         path: "/dashboard",
-        element: <MainPanel />,
+        element: (
+          <PrivateRoutes>
+            <MainPanel />
+          </PrivateRoutes>
+        ),
         children: [
           {
             path: "/dashboard/profile",
-            element: <Profile />,
+            element: (
+              <PrivateRoutes>
+                <Profile />
+              </PrivateRoutes>
+            ),
           },
           {
-            path: "/dashboard/about",
-            element: <Home />,
+            path: "/dashboard/users",
+            element: (
+              <PrivateRoutes>
+                <Users />
+              </PrivateRoutes>
+            ),
           },
           {
             path: "/dashboard/contact",
             element: <Home />,
           },
-          {},
         ],
       },
       {

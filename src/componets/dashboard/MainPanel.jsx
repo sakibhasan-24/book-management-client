@@ -1,5 +1,5 @@
 import { Sidebar } from "flowbite-react";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   HiArrowSmRight,
   HiChartPie,
@@ -10,9 +10,19 @@ import {
   HiUserAdd,
   HiViewBoards,
 } from "react-icons/hi";
+import { useSelector } from "react-redux";
 import { Link, Outlet } from "react-router-dom";
+import useGetAllUsers from "../../hooks/user/useGetAllUsers";
 
 export default function MainPanel() {
+  const { users, getAllUsers } = useGetAllUsers();
+  console.log(users.length);
+  useEffect(() => {
+    getAllUsers();
+  }, [users?.length]);
+
+  const { currentUser } = useSelector((state) => state.user);
+  //   console.log(currentUser.user.isAdmin);
   return (
     <div className="w-full flex flex-col sm:flex-row bg-gray-100">
       <div className="w-full sm:w-[300px] md:w-[300px]">
@@ -24,16 +34,20 @@ export default function MainPanel() {
               </Sidebar.Item>
               <Link to="/dashboard/profile">
                 {" "}
-                <Sidebar.Item href="#" icon={HiUserAdd} as={"div"}>
+                <Sidebar.Item icon={HiUserAdd} as={"div"}>
                   profile
                 </Sidebar.Item>
               </Link>
               <Sidebar.Item href="#" icon={HiInbox} label="3">
                 Inbox
               </Sidebar.Item>
-              <Sidebar.Item href="#" icon={HiUser}>
-                Users
-              </Sidebar.Item>
+              {currentUser?.user?.isAdmin && (
+                <Link to="/dashboard/users">
+                  <Sidebar.Item icon={HiUser} as={"div"} label={users?.length}>
+                    Users
+                  </Sidebar.Item>
+                </Link>
+              )}
               <Sidebar.Item href="#" icon={HiShoppingBag}>
                 Products
               </Sidebar.Item>
