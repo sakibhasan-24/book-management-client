@@ -9,7 +9,18 @@ export default function User({ user, handleDeleteUser }) {
       <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
         {user.userName}
       </Table.Cell>
-      <Table.Cell>{user.isAdmin ? "Admin" : "User"}</Table.Cell>
+      <Table.Cell>
+        {/* {user.isAdmin ? "Admin" : "User"} */}
+        <p
+          className={`${
+            user.isAdmin
+              ? "text-slate-100 bg-green-800 text-center font-semibold   p-1 rounded-lg"
+              : ""
+          }`}
+        >
+          {user.isAdmin ? "Admin" : "User"}
+        </p>
+      </Table.Cell>
       <Table.Cell>6</Table.Cell>
       <Table.Cell>$2999</Table.Cell>
       <Table.Cell>

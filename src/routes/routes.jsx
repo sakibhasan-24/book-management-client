@@ -10,6 +10,7 @@ import Profile from "../componets/dashboard/profile/Profile";
 import PrivateRoutes from "./PrivateRoutes";
 
 import Users from "../componets/dashboard/users/Users";
+import Addbooks from "../componets/dashboard/addbooks/Addbooks";
 
 const router = createBrowserRouter([
   {
@@ -43,8 +44,8 @@ const router = createBrowserRouter([
             ),
           },
           {
-            path: "/dashboard/contact",
-            element: <Home />,
+            path: "/dashboard/add-books",
+            element: <Addbooks />,
           },
         ],
       },

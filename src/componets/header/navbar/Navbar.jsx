@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import MobileNav from "./MobileNav";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Avatar, Dropdown } from "flowbite-react";
+import { signOutSuccess } from "../../../redux/user/user";
+import useUserSignOut from "../../../hooks/user/useUserSignOut";
+import Swal from "sweetalert2";
 
 export default function Navbar() {
   const location = useLocation();
   const { currentUser } = useSelector((state) => state.user);
   console.log(currentUser);
-
+  const { signOut } = useUserSignOut();
+  const dispatch = useDispatch();
   const handleRoute = (route) => {
     if (location.pathname === route) {
       return true;
@@ -20,6 +24,20 @@ export default function Navbar() {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
+  const handleSignOut = async () => {
+    const res = await signOut();
+    if (res) {
+      dispatch(signOutSuccess(res.data));
+      Swal.fire({
+        icon: "success",
+        title: "Successfully Logout",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+  };
+
   return (
     <div className="max-w-8xl mx-auto p-4 bg-slate-100 ">
       {/* for desktop */}
@@ -62,7 +80,7 @@ export default function Navbar() {
                 </Link>
 
                 <Dropdown.Divider />
-                <Dropdown.Item>Sign out</Dropdown.Item>
+                <Dropdown.Item onClick={handleSignOut}>Sign out</Dropdown.Item>
               </Dropdown>
               {/* <Link
                 to="/user-credentials/login"

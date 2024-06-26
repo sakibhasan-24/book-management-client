@@ -4,8 +4,10 @@ import useApiCall from "../../apicall/publicApi/useApiCall";
 export default function useGetAllUsers() {
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
+  const [error, setError] = useState(null);
   const axiosPublic = useApiCall();
   const getAllUsers = async () => {
+    setError(null);
     setLoading(true);
     try {
       const response = await axiosPublic.get("api/user/get-users");
@@ -20,14 +22,16 @@ export default function useGetAllUsers() {
   };
   const deleteUser = async (id) => {
     setLoading(true);
+    setError(null);
     try {
       const res = await axiosPublic.delete(`/api/user/delete/${id}`);
       return res.data;
     } catch (error) {
-      console.log(error);
+      setError(error.response.data.message);
+      console.log(error.response.data.message);
     } finally {
       setLoading(false);
     }
   };
-  return { loading, getAllUsers, users, setUsers, deleteUser };
+  return { loading, error, getAllUsers, users, setUsers, deleteUser };
 }

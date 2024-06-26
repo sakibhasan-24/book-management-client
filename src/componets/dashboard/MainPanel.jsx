@@ -2,8 +2,10 @@ import { Sidebar } from "flowbite-react";
 import React, { useEffect } from "react";
 import {
   HiArrowSmRight,
+  HiBookOpen,
   HiChartPie,
   HiInbox,
+  HiOutlineBookOpen,
   HiShoppingBag,
   HiTable,
   HiUser,
@@ -48,9 +50,17 @@ export default function MainPanel() {
                   </Sidebar.Item>
                 </Link>
               )}
-              <Sidebar.Item href="#" icon={HiShoppingBag}>
-                Products
-              </Sidebar.Item>
+              {currentUser?.user?.isAdmin === false && (
+                <Link to="/dashboard/add-books">
+                  <Sidebar.Item
+                    icon={HiOutlineBookOpen}
+                    className={`cursor-pointer`}
+                    as={"div"}
+                  >
+                    Add Books
+                  </Sidebar.Item>
+                </Link>
+              )}
               <Sidebar.Item href="#" icon={HiArrowSmRight}>
                 Sign In
               </Sidebar.Item>

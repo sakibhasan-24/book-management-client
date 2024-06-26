@@ -7,7 +7,7 @@ import User from "./User";
 import Swal from "sweetalert2";
 
 export default function Users() {
-  const { loading, getAllUsers, users, setUsers, deleteUser } =
+  const { loading, getAllUsers, users, setUsers, deleteUser, error } =
     useGetAllUsers();
   //   const { deleting, deleteUser } = useDeleteUser();
   const [search, setSearch] = useState("");
@@ -50,11 +50,17 @@ export default function Users() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         const res = await deleteUser(id);
+        if (!res) {
+          return Swal.fire("Failed!", "User has not been deleted.", "error");
+        }
+
         if (res.success) {
           setFilteredUsers(filteredUsers.filter((user) => user._id !== id));
           setUsers(users.filter((user) => user._id !== id));
           console.log(users);
           Swal.fire("Deleted!", "User has been deleted.", "success");
+        } else {
+          Swal.fire("Failed!", "User has not been deleted.", "error");
         }
       }
     });
