@@ -8,12 +8,33 @@ import React, { useState } from "react";
 import app from "../../../firebase/firebase.config";
 import { Alert } from "flowbite-react";
 import { FaTrash, FaTrashArrowUp } from "react-icons/fa6";
+import { FaSpinner } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import useCreateBooks from "../../../hooks/books/useCreateBooks";
+import Swal from "sweetalert2";
 
 export default function Addbooks() {
+  const { currentUser } = useSelector((state) => state.user);
+  const { error, loading, createBook } = useCreateBooks();
   const [imageFiles, setImageFiles] = useState([]);
   const [imageError, setImageError] = useState(false);
+
+  const [imageUploading, setImageUploading] = useState(false);
   const [formData, setFormData] = useState({
     imageUrls: [],
+    title: "",
+    price: "",
+    description: "",
+    address: {
+      city: "",
+      area: "",
+      universityName: "",
+    },
+    category: "",
+    sell: false,
+    exchange: false,
+    fixedPrice: false,
+    conditions: "",
   });
   console.log(imageFiles);
 
@@ -23,6 +44,8 @@ export default function Addbooks() {
       imageFiles.length > 2 &&
       imageFiles.length + formData.imageUrls.length <= 10
     ) {
+      setImageError(false);
+      setImageUploading(true);
       const promises = [];
       for (let i = 0; i < imageFiles.length; i++) {
         promises.push(uploadImage(imageFiles[i]));
@@ -36,15 +59,18 @@ export default function Addbooks() {
           console.log(formData.imageUrls);
           //   console.log(formData);
           setImageError(false);
+          setImageUploading(false);
         })
         .catch((error) => {
           //   console.log(error);
           setImageError(true);
+          setImageUploading(false);
         });
     } else {
       setImageError(
         "Image Upload failed ! Maximum 10 images allowed or Minimum 3 images required !"
       );
+      setImageUploading(false);
     }
   };
   const uploadImage = async (file) => {
@@ -88,14 +114,71 @@ export default function Addbooks() {
       imageUrls: formData.imageUrls.filter((_, i) => i !== index),
     });
   };
+
+  const handleChangeValue = (e) => {
+    const { name, value, type, checked } = e.target;
+    if (type === "checkbox") {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: checked,
+      }));
+    } else if (
+      name === "city" ||
+      name === "area" ||
+      name === "universityName"
+    ) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        address: {
+          ...prevFormData.address,
+          [name]: value,
+        },
+      }));
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value,
+      }));
+    }
+  };
+  console.log(formData);
+  const handleCreateBook = async (e) => {
+    e.preventDefault();
+    try {
+      const data = {
+        ...formData,
+        bookOwnerEmail: currentUser.user.userEmail,
+        bookOwner: currentUser.user._id,
+      };
+      const res = await createBook(data);
+      console.log(res);
+      if (res.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Book Created Successfully",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        // setFormData(initialFormData);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <section className="p-3 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold text-center  text-slate-700">
         Please <span className="text-blue-700"> Create </span>A book{" "}
       </h1>
-      <form className=" flex flex-col sm:flex-row   gap-4 mt-10">
+      <form
+        className=" flex flex-col sm:flex-row   gap-4 mt-10"
+        onSubmit={handleCreateBook}
+      >
         <div className="flex flex-col gap-2 flex-1">
           <input
+            onChange={handleChangeValue}
+            value={formData.title}
             type="text"
             id="title"
             name="title"
@@ -110,6 +193,8 @@ export default function Addbooks() {
             placeholder="area"
             required
             className="w-full border-0 border-slate-50 outline-none focus:bottom-0 focus:outline-none p-2 rounded-md"
+            onChange={handleChangeValue}
+            value={formData.address.area}
           />
           <input
             type="text"
@@ -118,6 +203,8 @@ export default function Addbooks() {
             placeholder="city"
             required
             className="w-full border-0 border-slate-50 outline-none focus:bottom-0 focus:outline-none p-2 rounded-md"
+            onChange={handleChangeValue}
+            value={formData.address.city}
           />
           <input
             type="text"
@@ -126,6 +213,8 @@ export default function Addbooks() {
             placeholder="university Name"
             required
             className="w-full border-0 border-slate-50 outline-none focus:bottom-0 focus:outline-none p-2 rounded-md"
+            onChange={handleChangeValue}
+            value={formData.universityName}
           />
           <textarea
             type="text"
@@ -134,12 +223,16 @@ export default function Addbooks() {
             placeholder="Book Description"
             required
             className="w-full border-0 border-slate-50 outline-none focus:bottom-0 focus:outline-none p-2 rounded-md"
+            onChange={handleChangeValue}
+            value={formData.description}
           />
           <select
             id="category"
             name="category"
             className="w-full border-0 border-slate-50 outline-none focus:ring-0 focus:outline-none p-2 rounded-md"
             required
+            onChange={handleChangeValue}
+            value={formData.category}
           >
             <option value="">Select Category</option>
             <option value="Cse">Computer Science</option>
@@ -152,6 +245,22 @@ export default function Addbooks() {
             <option value="Software">Software</option>
             <option value="Hardware">Hardware</option>
           </select>
+          <select
+            id="conditions"
+            name="conditions"
+            required
+            // onChange={handleInputChange}
+            onChange={handleChangeValue}
+            value={formData.conditions}
+            className="w-full border-0 border-slate-50 outline-none focus:ring-0 focus:outline-none p-2 rounded-md"
+          >
+            <option value="">Select Condition</option>
+            <option value="New">New</option>
+            <option value="Like New">Like New</option>
+            <option value="Used - Good">Used - Good</option>
+            <option value="Used - Acceptable">Used - Acceptable</option>
+            <option value="Poor">Poor</option>
+          </select>
           <div className="flex gap-6 flex-wrap mt-4">
             <div className="flex items-center gap-2">
               <input
@@ -159,6 +268,8 @@ export default function Addbooks() {
                 id="sell"
                 name="sell"
                 className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                onChange={handleChangeValue}
+                checked={formData.sell}
               />
               <label htmlFor="sell" className="text-gray-700 text-lg">
                 Sell
@@ -170,6 +281,8 @@ export default function Addbooks() {
                 id="exchange"
                 name="exchange"
                 className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                onChange={handleChangeValue}
+                checked={formData.exchange}
               />
               <label htmlFor="exchange" className="text-gray-700 text-lg">
                 Exchange
@@ -181,6 +294,8 @@ export default function Addbooks() {
                 id="fixedPrice"
                 name="fixedPrice"
                 className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                onChange={handleChangeValue}
+                checked={formData.fixedPrice}
               />
               <label htmlFor="fixedPrice" className="text-gray-700 text-lg">
                 Fixed Price
@@ -196,6 +311,8 @@ export default function Addbooks() {
               id="price"
               name="price"
               className=" text-blue-900 font-extrabold border-gray-300 rounded "
+              onChange={handleChangeValue}
+              value={formData.price}
             />
           </div>
         </div>
@@ -214,9 +331,17 @@ export default function Addbooks() {
             <button
               onClick={handleUploadImage}
               type="button"
+              disabled={imageUploading}
               className="text-slate-100 bg-green-600 hover:bg-green-500 rounded-md w-full py-2 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Upload Images
+              {imageUploading ? (
+                <span className="flex items-center gap-2">
+                  <FaSpinner className="animate-spin text-center" />
+                  Uploading...
+                </span>
+              ) : (
+                "Upload Images"
+              )}
             </button>
             {imageError && (
               <p className="text-red-500 text-center mt-2 font-semibold">
