@@ -6,6 +6,7 @@ import {
   HiChartPie,
   HiInbox,
   HiOutlineBookOpen,
+  HiOutlineBookmarkAlt,
   HiShoppingBag,
   HiTable,
   HiUser,
@@ -61,9 +62,18 @@ export default function MainPanel() {
                   </Sidebar.Item>
                 </Link>
               )}
-              <Sidebar.Item href="#" icon={HiArrowSmRight}>
-                Sign In
-              </Sidebar.Item>
+              {currentUser?.user?.isAdmin === false && (
+                <Link to="/dashboard/mybooks">
+                  <Sidebar.Item
+                    icon={HiOutlineBookmarkAlt}
+                    className={`cursor-pointer`}
+                    as={"div"}
+                  >
+                    My Books
+                  </Sidebar.Item>
+                </Link>
+              )}
+
               <Sidebar.Item href="#" icon={HiTable}>
                 Sign Up
               </Sidebar.Item>

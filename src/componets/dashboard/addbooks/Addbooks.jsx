@@ -12,8 +12,10 @@ import { FaSpinner } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import useCreateBooks from "../../../hooks/books/useCreateBooks";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 export default function Addbooks() {
+  const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
   const { error, loading, createBook } = useCreateBooks();
   const [imageFiles, setImageFiles] = useState([]);
@@ -21,7 +23,7 @@ export default function Addbooks() {
 
   const [imageUploading, setImageUploading] = useState(false);
   const [formData, setFormData] = useState({
-    imageUrls: [],
+    imagesUrls: [],
     title: "",
     price: "",
     description: "",
@@ -36,13 +38,13 @@ export default function Addbooks() {
     fixedPrice: false,
     conditions: "",
   });
-  console.log(imageFiles);
+  //   console.log(imageFiles);
 
   const handleUploadImage = async (e) => {
     console.log("cle");
     if (
       imageFiles.length > 2 &&
-      imageFiles.length + formData.imageUrls.length <= 10
+      imageFiles.length + formData.imagesUrls.length <= 10
     ) {
       setImageError(false);
       setImageUploading(true);
@@ -54,9 +56,9 @@ export default function Addbooks() {
         .then((urls) => {
           setFormData({
             ...formData,
-            imageUrls: formData.imageUrls.concat(urls),
+            imagesUrls: formData.imagesUrls.concat(urls),
           });
-          console.log(formData.imageUrls);
+          console.log(formData.imagesUrls);
           //   console.log(formData);
           setImageError(false);
           setImageUploading(false);
@@ -111,7 +113,7 @@ export default function Addbooks() {
   const handleDeleteImage = (index) => {
     setFormData({
       ...formData,
-      imageUrls: formData.imageUrls.filter((_, i) => i !== index),
+      imagesUrls: formData.imagesUrls.filter((_, i) => i !== index),
     });
   };
 
@@ -151,7 +153,7 @@ export default function Addbooks() {
         bookOwner: currentUser.user._id,
       };
       const res = await createBook(data);
-      console.log(res);
+      //   console.log("rss", res);
       if (res.success) {
         Swal.fire({
           icon: "success",
@@ -159,13 +161,15 @@ export default function Addbooks() {
           showConfirmButton: false,
           timer: 1500,
         });
+        // console.log(data);
+        navigate("/dashboard/mybooks");
         // setFormData(initialFormData);
-        setLoading(false);
       }
     } catch (error) {
       console.log(error);
     }
   };
+  console.log(formData);
   return (
     <section className="p-3 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold text-center  text-slate-700">
@@ -348,9 +352,9 @@ export default function Addbooks() {
                 {imageError}
               </p>
             )}
-            {formData.imageUrls &&
-              formData.imageUrls.length > 0 &&
-              formData.imageUrls.map((image, idx) => (
+            {formData.imagesUrls &&
+              formData.imagesUrls.length > 0 &&
+              formData.imagesUrls.map((image, idx) => (
                 <div
                   key={idx}
                   className="flex items-center justify-between gap-2"
@@ -368,7 +372,14 @@ export default function Addbooks() {
           </div>
 
           <button className="w-full my-4  bg-blue-600 text-white font-bold hover:bg-blue-500 rounded-md py-2 text-lg disabled:opacity-50 disabled:cursor-not-allowed">
-            Create Book
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <FaSpinner className="animate-spin text-center" />
+                Loading...
+              </span>
+            ) : (
+              "Add Book"
+            )}
           </button>
         </div>
       </form>
