@@ -4,6 +4,7 @@ import { Table } from "flowbite-react";
 import Mybook from "./Mybook";
 import Spinner from "../../loader/Spinner";
 import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
 export default function MyBooks() {
   const { currentUser } = useSelector((state) => state.user);
@@ -16,6 +17,7 @@ export default function MyBooks() {
     getAllBooks,
     getUserBooks,
     userBooks,
+    deleteBook,
   } = useGetBooks();
   useEffect(() => {
     if (currentUser?.user.isAdmin) {
@@ -26,6 +28,28 @@ export default function MyBooks() {
   }, []);
   //   console.log(books);
   const displayedBooks = currentUser?.user.isAdmin ? books : userBooks;
+
+  const handleDeleteBook = async (bookId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await deleteBook(bookId);
+        console.log(res);
+        if (res.success) {
+          Swal.fire("Deleted!", "Your file has been deleted.", "success");
+        } else {
+          Swal.fire("Failed!", "Please Try after some time", "error");
+        }
+      }
+    });
+  };
   if (loading) return <Spinner />;
   return (
     <div className="w-full sm:max-w-3xl mx-auto bg-white shadow-md rounded-lg overflow-hidden my-10">
@@ -49,6 +73,7 @@ export default function MyBooks() {
                   book={book}
                   isAdmin={currentUser.user?.isAdmin}
                   // handleDeleteUser={handleDeleteUser}
+                  handleDeleteBook={handleDeleteBook}
                 />
               ))
             ) : (

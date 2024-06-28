@@ -34,5 +34,28 @@ export default function useGetBooks() {
       setLoading(false);
     }
   };
-  return { getAllBooks, books, loading, error, getUserBooks, userBooks };
+  const deleteBook = async (bookId) => {
+    setLoading(true);
+    try {
+      const res = await axiosPublic.delete(`/api/books/delete-book/${bookId}`);
+      setBooks(books.filter((book) => book._id !== bookId));
+      setUserBooks(userBooks.filter((book) => book._id !== bookId));
+      return res.data;
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  return {
+    getAllBooks,
+    books,
+    loading,
+    error,
+    getUserBooks,
+    userBooks,
+    deleteBook,
+    setBooks,
+    setUserBooks,
+  };
 }

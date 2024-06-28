@@ -2,7 +2,7 @@ import { Table } from "flowbite-react";
 import React from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
-export default function Mybook({ book, isAdmin }) {
+export default function Mybook({ book, isAdmin, handleDeleteBook }) {
   return (
     <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
       <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
@@ -30,7 +30,7 @@ export default function Mybook({ book, isAdmin }) {
           </p>
         </Table.Cell>
       )}
-      <Table.Cell>
+      <Table.Cell onClick={() => handleDeleteBook(book._id)}>
         <p
           className="font-medium text-red-600 hover:underline  cursor-pointer"
           //   onClick={() => handleDeletebook(book._id)}
