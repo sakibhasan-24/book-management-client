@@ -12,6 +12,7 @@ import PrivateRoutes from "./PrivateRoutes";
 import Users from "../componets/dashboard/users/Users";
 import Addbooks from "../componets/dashboard/addbooks/Addbooks";
 import MyBooks from "../componets/dashboard/mybooks/MyBooks";
+import UpdateBook from "../componets/dashboard/mybooks/updatebook/UpdateBook";
 
 const router = createBrowserRouter([
   {
@@ -57,6 +58,14 @@ const router = createBrowserRouter([
             element: (
               <PrivateRoutes>
                 <MyBooks />
+              </PrivateRoutes>
+            ),
+          },
+          {
+            path: "/dashboard/update-book/:bookId",
+            element: (
+              <PrivateRoutes>
+                <UpdateBook />
               </PrivateRoutes>
             ),
           },

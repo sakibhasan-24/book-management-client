@@ -41,7 +41,7 @@ export default function MyBooks() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         const res = await deleteBook(bookId);
-        console.log(res);
+        // console.log(res);
         if (res.success) {
           Swal.fire("Deleted!", "Your file has been deleted.", "success");
         } else {

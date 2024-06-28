@@ -47,6 +47,33 @@ export default function useGetBooks() {
       setLoading(false);
     }
   };
+
+  const getBookById = async (id) => {
+    setLoading(true);
+    try {
+      const res = await axiosPublic.get(`/api/books/get-book/${id}`);
+      return res.data;
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const updateBook = async (bookId, book) => {
+    setLoading(true);
+    try {
+      const res = await axiosPublic.put(
+        `/api/books/update-book/${bookId}`,
+        book
+      );
+
+      return res.data;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return {
     getAllBooks,
     books,
@@ -57,5 +84,7 @@ export default function useGetBooks() {
     deleteBook,
     setBooks,
     setUserBooks,
+    getBookById,
+    updateBook,
   };
 }

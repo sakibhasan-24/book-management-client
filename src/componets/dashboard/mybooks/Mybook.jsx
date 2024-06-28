@@ -1,6 +1,7 @@
 import { Table } from "flowbite-react";
 import React from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 export default function Mybook({ book, isAdmin, handleDeleteBook }) {
   return (
@@ -21,14 +22,16 @@ export default function Mybook({ book, isAdmin, handleDeleteBook }) {
         <p>{book.price} BDT</p>
       </Table.Cell>
       {!isAdmin && (
-        <Table.Cell>
-          <p
-            className="font-medium text-green-600 hover:underline  cursor-pointer"
-            //   onClick={() => handleDeletebook(book._id)}
-          >
-            <FaEdit />
-          </p>
-        </Table.Cell>
+        <Link to={`/dashboard/update-book/${book._id}`}>
+          <Table.Cell>
+            <p
+              className="font-medium text-green-600 hover:underline  cursor-pointer"
+              //   onClick={() => handleDeletebook(book._id)}
+            >
+              <FaEdit />
+            </p>
+          </Table.Cell>
+        </Link>
       )}
       <Table.Cell onClick={() => handleDeleteBook(book._id)}>
         <p
