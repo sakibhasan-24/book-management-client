@@ -5,7 +5,10 @@ import "./index.css";
 import { Provider } from "react-redux";
 import { persistor, store } from "./redux/store/store.js";
 import { PersistGate } from "redux-persist/integration/react";
+import Aos from "aos";
+import "aos/dist/aos.css";
 
+Aos.init();
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <PersistGate persistor={persistor}>

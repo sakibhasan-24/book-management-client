@@ -37,6 +37,11 @@ export default function Addbooks() {
     exchange: false,
     fixedPrice: false,
     conditions: "",
+    author: "",
+    publisher: "",
+    publicationYear: "",
+    isbn: "",
+    edition: "",
   });
   //   console.log(imageFiles);
 
@@ -162,7 +167,7 @@ export default function Addbooks() {
           timer: 1500,
         });
         // console.log(data);
-        navigate("/dashboard/mybooks");
+        // navigate("/dashboard/mybooks");
         // setFormData(initialFormData);
       }
     } catch (error) {
@@ -187,6 +192,59 @@ export default function Addbooks() {
             id="title"
             name="title"
             placeholder="Book Title"
+            required
+            className="w-full border-0 border-slate-50 outline-none focus:bottom-0 focus:outline-none p-2 rounded-md"
+          />
+          <input
+            onChange={handleChangeValue}
+            value={formData.author}
+            type="text"
+            id="author"
+            name="author"
+            placeholder="Book author"
+            required
+            className="w-full border-0 border-slate-50 outline-none focus:bottom-0 focus:outline-none p-2 rounded-md"
+          />
+          <input
+            onChange={handleChangeValue}
+            value={formData.edition}
+            type="text"
+            id="edition"
+            name="edition"
+            placeholder="Book Edition"
+            required
+            className="w-full border-0 border-slate-50 outline-none focus:bottom-0 focus:outline-none p-2 rounded-md"
+          />
+          <input
+            onChange={handleChangeValue}
+            value={formData.isbn}
+            type="text"
+            id="isbn"
+            name="isbn"
+            placeholder="Book isbn"
+            required
+            className="w-full border-0 border-slate-50 outline-none focus:bottom-0 focus:outline-none p-2 rounded-md"
+          />
+          <input
+            onChange={handleChangeValue}
+            value={formData.publisher}
+            type="text"
+            id="publisher"
+            name="publisher"
+            placeholder="Book publisher"
+            required
+            className="w-full border-0 border-slate-50 outline-none focus:bottom-0 focus:outline-none p-2 rounded-md"
+          />
+          <input
+            onChange={handleChangeValue}
+            value={formData.publicationYear}
+            type="text"
+            id="publicationYear"
+            name="publicationYear"
+            placeholder="Book publicationYear"
+            // title=""
+            pattern="^\d{4}$"
+            title="Please enter a valid year (e.g., 2023)"
             required
             className="w-full border-0 border-slate-50 outline-none focus:bottom-0 focus:outline-none p-2 rounded-md"
           />

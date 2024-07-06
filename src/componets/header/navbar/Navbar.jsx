@@ -10,7 +10,7 @@ import Swal from "sweetalert2";
 export default function Navbar() {
   const location = useLocation();
   const { currentUser } = useSelector((state) => state.user);
-  console.log(currentUser);
+  // console.log(currentUser);
   const { signOut } = useUserSignOut();
   const dispatch = useDispatch();
   const handleRoute = (route) => {
@@ -51,12 +51,12 @@ export default function Navbar() {
           </Link>
         </div>
         <div className="hidden sm:flex items-center justify-center gap-4 mr-12 text-md font-bold text-slate-600">
-          <Link
+          {/* <Link
             to="/add-books"
             className={`${handleRoute("/add-books") && "underline "}`}
           >
             Add Books
-          </Link>
+          </Link> */}
           {/* if user login then do here logout */}
           {currentUser?.user ? (
             <>

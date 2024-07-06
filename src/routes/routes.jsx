@@ -13,6 +13,7 @@ import Users from "../componets/dashboard/users/Users";
 import Addbooks from "../componets/dashboard/addbooks/Addbooks";
 import MyBooks from "../componets/dashboard/mybooks/MyBooks";
 import UpdateBook from "../componets/dashboard/mybooks/updatebook/UpdateBook";
+import BookDetails from "../pages/bookdetails/BookDetails";
 
 const router = createBrowserRouter([
   {
@@ -70,6 +71,10 @@ const router = createBrowserRouter([
             ),
           },
         ],
+      },
+      {
+        path: "/book/:bookId",
+        element: <BookDetails />,
       },
       {
         path: "/user-credentials",

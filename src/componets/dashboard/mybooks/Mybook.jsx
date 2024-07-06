@@ -11,13 +11,15 @@ export default function Mybook({ book, isAdmin, handleDeleteBook }) {
       </Table.Cell>
 
       <Table.Cell>{book.category}</Table.Cell>
-      <Table.Cell>
-        <img
-          src={book.imagesUrls[0]}
-          alt="img"
-          className="w-12 h-12 rounded-full object-contain cursor-pointer"
-        />
-      </Table.Cell>
+      <Link to={`/book/${book._id}`}>
+        <Table.Cell>
+          <img
+            src={book.imagesUrls[0]}
+            alt="img"
+            className="w-12 h-12 rounded-full object-contain cursor-pointer"
+          />
+        </Table.Cell>
+      </Link>
       <Table.Cell>
         <p>{book.price} BDT</p>
       </Table.Cell>

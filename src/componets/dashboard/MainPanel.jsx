@@ -16,6 +16,7 @@ import {
 import { useSelector } from "react-redux";
 import { Link, Outlet } from "react-router-dom";
 import useGetAllUsers from "../../hooks/user/useGetAllUsers";
+import { HiReceiptPercent } from "react-icons/hi2";
 
 export default function MainPanel() {
   const { users, getAllUsers } = useGetAllUsers();
@@ -41,8 +42,8 @@ export default function MainPanel() {
                   profile
                 </Sidebar.Item>
               </Link>
-              <Sidebar.Item href="#" icon={HiInbox} label="3">
-                Inbox
+              <Sidebar.Item href="#" icon={HiReceiptPercent} label="3">
+                Apply
               </Sidebar.Item>
               {currentUser?.user?.isAdmin && (
                 <Link to="/dashboard/users">

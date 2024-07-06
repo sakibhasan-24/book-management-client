@@ -74,6 +74,22 @@ export default function useGetBooks() {
       setLoading(false);
     }
   };
+
+  const getAllType = async (queryParams = {}) => {
+    setLoading(true);
+    try {
+      const res = await axiosPublic.get("/api/books/all-type", {
+        params: queryParams,
+      });
+      //   console.log(res.data);
+      setBooks(res.data.books);
+    } catch (error) {
+      console.log(error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   return {
     getAllBooks,
     books,
@@ -86,5 +102,6 @@ export default function useGetBooks() {
     setUserBooks,
     getBookById,
     updateBook,
+    getAllType,
   };
 }
