@@ -18,6 +18,7 @@ import { Link, Outlet } from "react-router-dom";
 import useGetAllUsers from "../../hooks/user/useGetAllUsers";
 import { HiReceiptPercent } from "react-icons/hi2";
 import { GrDeliver } from "react-icons/gr";
+import { BiBook } from "react-icons/bi";
 
 export default function MainPanel() {
   const { users, getAllUsers } = useGetAllUsers();
@@ -43,11 +44,20 @@ export default function MainPanel() {
                   profile
                 </Sidebar.Item>
               </Link>
-              <Link to={`/dashboard/apply/${currentUser?.user?._id}`}>
-                <Sidebar.Item as={"div"} icon={GrDeliver}>
-                  Apply for delivery Man
-                </Sidebar.Item>
-              </Link>
+              {currentUser?.user?.isAdmin ? (
+                <Link to={`/dashboard/applyStatus`}>
+                  <Sidebar.Item as={"div"} icon={BiBook}>
+                    ApplyStatus
+                  </Sidebar.Item>
+                </Link>
+              ) : (
+                <Link to={`/dashboard/apply/${currentUser?.user?._id}`}>
+                  <Sidebar.Item as={"div"} icon={GrDeliver}>
+                    Apply for delivery Man
+                  </Sidebar.Item>
+                </Link>
+              )}
+
               {currentUser?.user?.isAdmin && (
                 <Link to="/dashboard/users">
                   <Sidebar.Item icon={HiUser} as={"div"} label={users?.length}>

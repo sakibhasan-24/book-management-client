@@ -45,6 +45,14 @@ export default function ApplyForDelivery() {
   };
   console.log(formData);
 
+  //   console.log(user.isAdmin);
+  if (user.isDeliveryPersonApplied)
+    return (
+      <div className="flex flex-col items-center justify-center gap-6 text-2xl font-bold text-blue-500 p-4">
+        <h1>You Already Applied....</h1>
+        <h1>Wait for Admin Approval</h1>
+      </div>
+    );
   return (
     <div className="max-w-md mx-auto p-4 bg-white shadow-md rounded-lg">
       <h2 className="text-2xl font-bold mb-4">Apply to be a Delivery Person</h2>

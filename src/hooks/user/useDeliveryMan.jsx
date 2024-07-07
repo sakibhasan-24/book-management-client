@@ -20,5 +20,37 @@ export default function useDeliveryMan() {
       setLoading(false);
     }
   };
-  return { deliveryMan, applyForDelivery, loading };
+  const acceptUserRequest = async (id) => {
+    setLoading(true);
+    try {
+      const res = await axiosPublic.put(`/api/user/accept/${id}`, {});
+      setDeliveryMan(res.data);
+      console.log(res);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const rejectUserRequest = async (id) => {
+    // setLoading(true);
+    try {
+      const res = await axiosPublic.put(`/api/user/reject/${id}`, {});
+      setDeliveryMan(res.data);
+      console.log(res);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  return {
+    deliveryMan,
+    applyForDelivery,
+    loading,
+    acceptUserRequest,
+    rejectUserRequest,
+  };
 }
