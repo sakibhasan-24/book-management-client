@@ -7,6 +7,8 @@ import { persistor, store } from "./redux/store/store.js";
 import { PersistGate } from "redux-persist/integration/react";
 import Aos from "aos";
 import "aos/dist/aos.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 Aos.init();
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -16,5 +18,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <App />
       </Provider>
     </PersistGate>
+    <ToastContainer />
   </React.StrictMode>
 );

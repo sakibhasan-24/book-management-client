@@ -17,10 +17,11 @@ import { useSelector } from "react-redux";
 import { Link, Outlet } from "react-router-dom";
 import useGetAllUsers from "../../hooks/user/useGetAllUsers";
 import { HiReceiptPercent } from "react-icons/hi2";
+import { GrDeliver } from "react-icons/gr";
 
 export default function MainPanel() {
   const { users, getAllUsers } = useGetAllUsers();
-  console.log(users.length);
+  // const { currentUser } = console.log(users.length);
   useEffect(() => {
     getAllUsers();
   }, [users?.length]);
@@ -42,9 +43,11 @@ export default function MainPanel() {
                   profile
                 </Sidebar.Item>
               </Link>
-              <Sidebar.Item href="#" icon={HiReceiptPercent} label="3">
-                Apply
-              </Sidebar.Item>
+              <Link to={`/dashboard/apply/${currentUser?.user?._id}`}>
+                <Sidebar.Item as={"div"} icon={GrDeliver}>
+                  Apply for delivery Man
+                </Sidebar.Item>
+              </Link>
               {currentUser?.user?.isAdmin && (
                 <Link to="/dashboard/users">
                   <Sidebar.Item icon={HiUser} as={"div"} label={users?.length}>

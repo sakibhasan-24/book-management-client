@@ -20,6 +20,19 @@ export default function useGetAllUsers() {
       setLoading(false);
     }
   };
+  const getUserById = async (id) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await axiosPublic.get(`/api/user/get-user/${id}`);
+      return res.data;
+    } catch (error) {
+      setError(error.response.data.message);
+      console.log(error.response.data.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   const deleteUser = async (id) => {
     setLoading(true);
     setError(null);
@@ -33,5 +46,13 @@ export default function useGetAllUsers() {
       setLoading(false);
     }
   };
-  return { loading, error, getAllUsers, users, setUsers, deleteUser };
+  return {
+    loading,
+    error,
+    getAllUsers,
+    users,
+    setUsers,
+    deleteUser,
+    getUserById,
+  };
 }

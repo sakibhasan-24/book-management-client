@@ -14,6 +14,7 @@ import Addbooks from "../componets/dashboard/addbooks/Addbooks";
 import MyBooks from "../componets/dashboard/mybooks/MyBooks";
 import UpdateBook from "../componets/dashboard/mybooks/updatebook/UpdateBook";
 import BookDetails from "../pages/bookdetails/BookDetails";
+import ApplyForDelivery from "../componets/dashboard/delivery/ApplyForDelivery";
 
 const router = createBrowserRouter([
   {
@@ -63,6 +64,14 @@ const router = createBrowserRouter([
             ),
           },
           {
+            path: "/dashboard/apply/:id",
+            element: (
+              <PrivateRoutes>
+                <ApplyForDelivery />
+              </PrivateRoutes>
+            ),
+          },
+          {
             path: "/dashboard/update-book/:bookId",
             element: (
               <PrivateRoutes>
@@ -76,6 +85,7 @@ const router = createBrowserRouter([
         path: "/book/:bookId",
         element: <BookDetails />,
       },
+
       {
         path: "/user-credentials",
         element: <RegistrationLayout />,
