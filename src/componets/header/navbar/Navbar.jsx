@@ -6,10 +6,13 @@ import { Avatar, Dropdown } from "flowbite-react";
 import { signOutSuccess } from "../../../redux/user/user";
 import useUserSignOut from "../../../hooks/user/useUserSignOut";
 import Swal from "sweetalert2";
+import { FaShoppingCart } from "react-icons/fa";
 
 export default function Navbar() {
   const location = useLocation();
   const { currentUser } = useSelector((state) => state.user);
+  const { cartItems } = useSelector((state) => state.cart);
+  // console.log(cartItems.length);
   // console.log(currentUser);
   const { signOut } = useUserSignOut();
   const dispatch = useDispatch();
@@ -58,6 +61,16 @@ export default function Navbar() {
             Add Books
           </Link> */}
           {/* if user login then do here logout */}
+          {cartItems.length > 0 && (
+            <div className="relative hover:bg-slate-200  rounded-md">
+              <Link to="/cartItems">
+                <FaShoppingCart className="text-2xl font-bold text-slate-600" />
+                <p className="absolute -top-2 left-4 rounded-full bg-blue-500 text-white text-xs w-4 h-4 flex items-center justify-center p-2">
+                  {cartItems.length}
+                </p>
+              </Link>
+            </div>
+          )}
           {currentUser?.user ? (
             <>
               <Dropdown

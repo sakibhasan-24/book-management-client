@@ -4,9 +4,13 @@ import ModalImage from "react-modal-image";
 import useGetBooks from "../../hooks/books/useGetBooks";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../redux/cart/cartSlice";
 export default function BookDetails() {
   const params = useParams();
   const { getBookById } = useGetBooks();
+  const dispatch = useDispatch();
+  // addToCart
   const [demoPages, setDemoPages] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(null);
   const [book, setBook] = useState(null);
@@ -45,6 +49,9 @@ export default function BookDetails() {
     setCurrentIndex(index);
   };
 
+  const handleAddToCart = () => {
+    dispatch(addToCart({ ...book }));
+  };
   // console.log();
   return (
     <div className="container w-full sm:max-w-6xl mx-auto my-12 ">
@@ -93,6 +100,17 @@ export default function BookDetails() {
           <p className="text-gray-700">
             <strong>Description:</strong> {book?.description}
           </p>
+          <div className="flex gap-6">
+            <button
+              onClick={handleAddToCart}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+            >
+              Add to cart
+            </button>
+            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4">
+              Exchange Book
+            </button>
+          </div>
         </div>
       </section>
       <section>
