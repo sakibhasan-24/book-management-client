@@ -21,6 +21,7 @@ const cartSlice = createSlice({
       state.cartPrice = Number(
         state.cartItems.reduce((acc, item) => acc + item.price, 0).toFixed(2)
       );
+
       localStorage.setItem("cart", JSON.stringify(state));
       //   const exist = state.cartItem.find((it) => it._id === item._id);
     },

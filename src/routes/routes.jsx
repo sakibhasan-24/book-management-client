@@ -16,6 +16,7 @@ import UpdateBook from "../componets/dashboard/mybooks/updatebook/UpdateBook";
 import BookDetails from "../pages/bookdetails/BookDetails";
 import ApplyForDelivery from "../componets/dashboard/delivery/ApplyForDelivery";
 import ApplyStatus from "../componets/dashboard/applyStatus/ApplyStatus";
+import CartItems from "../pages/cartItems/CartItems";
 
 const router = createBrowserRouter([
   {
@@ -72,14 +73,7 @@ const router = createBrowserRouter([
               </PrivateRoutes>
             ),
           },
-          // {
-          //   path:"/dashboard/cartItems",
-          //     element: (
-          //       <PrivateRoutes>
 
-          //       </PrivateRoutes>
-          //     )
-          // }
           {
             path: "/dashboard/apply/:id",
             element: (
@@ -116,6 +110,14 @@ const router = createBrowserRouter([
             element: <Login />,
           },
         ],
+      },
+      {
+        path: "/cartItems",
+        element: (
+          <PrivateRoutes>
+            <CartItems />
+          </PrivateRoutes>
+        ),
       },
       { path: "*", element: <ErrorPage /> },
     ],

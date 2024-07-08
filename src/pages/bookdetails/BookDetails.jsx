@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ModalImage from "react-modal-image";
 import useGetBooks from "../../hooks/books/useGetBooks";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
@@ -15,6 +15,7 @@ export default function BookDetails() {
   const [currentIndex, setCurrentIndex] = useState(null);
   const [book, setBook] = useState(null);
   const modalRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -51,6 +52,7 @@ export default function BookDetails() {
 
   const handleAddToCart = () => {
     dispatch(addToCart({ ...book }));
+    navigate("/cartItems");
   };
   // console.log();
   return (

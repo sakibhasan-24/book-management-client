@@ -12,7 +12,7 @@ export default function Navbar() {
   const location = useLocation();
   const { currentUser } = useSelector((state) => state.user);
   const { cartItems } = useSelector((state) => state.cart);
-  // console.log(cartItems.length);
+  console.log(cartItems.length);
   // console.log(currentUser);
   const { signOut } = useUserSignOut();
   const dispatch = useDispatch();
