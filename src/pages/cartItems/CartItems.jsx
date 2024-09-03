@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { removeFromCart } from "../../redux/cart/cartSlice";
 import { FaTrashAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 export default function CartItems() {
   const { cartItems } = useSelector((state) => state.cart);
@@ -53,9 +54,11 @@ export default function CartItems() {
               {cartItems.reduce((acc, book) => acc + book.price, 0)}
               <span className="text-md font-semibold">BDT</span>
             </h1>
-            <button className="bg-blue-500 text-slate-200 font-semibold  text-xs px-2 py-1 rounded-md hover:bg-blue-800">
-              Checkout
-            </button>
+            <Link to="/address">
+              <button className="bg-blue-500 text-slate-200 font-semibold  text-xs px-2 py-1 rounded-md hover:bg-blue-800">
+                Checkout
+              </button>
+            </Link>
           </div>
         </div>
       </div>

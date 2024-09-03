@@ -17,6 +17,7 @@ import BookDetails from "../pages/bookdetails/BookDetails";
 import ApplyForDelivery from "../componets/dashboard/delivery/ApplyForDelivery";
 import ApplyStatus from "../componets/dashboard/applyStatus/ApplyStatus";
 import CartItems from "../pages/cartItems/CartItems";
+import Address from "../pages/address/Address";
 
 const router = createBrowserRouter([
   {
@@ -118,6 +119,10 @@ const router = createBrowserRouter([
             <CartItems />
           </PrivateRoutes>
         ),
+      },
+      {
+        path: "/address",
+        element: <Address />,
       },
       { path: "*", element: <ErrorPage /> },
     ],
