@@ -18,6 +18,7 @@ import ApplyForDelivery from "../componets/dashboard/delivery/ApplyForDelivery";
 import ApplyStatus from "../componets/dashboard/applyStatus/ApplyStatus";
 import CartItems from "../pages/cartItems/CartItems";
 import Address from "../pages/address/Address";
+import Payments from "../pages/payment/Payment";
 
 const router = createBrowserRouter([
   {
@@ -123,6 +124,10 @@ const router = createBrowserRouter([
       {
         path: "/address",
         element: <Address />,
+      },
+      {
+        path: "/payment",
+        element: <Payments />,
       },
       { path: "*", element: <ErrorPage /> },
     ],
