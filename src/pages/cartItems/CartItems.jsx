@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 export default function CartItems() {
   const { cartItems } = useSelector((state) => state.cart);
-  console.log(cartItems);
+  // console.log(cartItems);
   const dispatch = useDispatch();
   //   removeFromCart
   return (
@@ -47,19 +47,21 @@ export default function CartItems() {
           ))}
         </div>
         <div>
-          <div className="text-slate-800 text-2xl text-center font-bold ">
-            <h1>
-              {" "}
-              Total Price:{" "}
-              {cartItems.reduce((acc, book) => acc + book.price, 0)}
-              <span className="text-md font-semibold">BDT</span>
-            </h1>
-            <Link to="/address">
-              <button className="bg-blue-500 text-slate-200 font-semibold  text-xs px-2 py-1 rounded-md hover:bg-blue-800">
-                Checkout
-              </button>
-            </Link>
-          </div>
+          {cartItems.length > 0 && (
+            <div className="text-slate-800 text-2xl text-center font-bold ">
+              <h1>
+                {" "}
+                Total Price:{" "}
+                {cartItems.reduce((acc, book) => acc + book.price, 0)}
+                <span className="text-md font-semibold">BDT</span>
+              </h1>
+              <Link to="/address">
+                <button className="bg-blue-500 text-slate-200 font-semibold  text-xs px-2 py-1 rounded-md hover:bg-blue-800">
+                  Checkout
+                </button>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = localStorage.getItem("cart")
   ? JSON.parse(localStorage.getItem("cart"))
-  : { cartItems: [] };
+  : { cartItems: [], deliveryAddress: {}, paymentMethod: "SSL" };
 const cartSlice = createSlice({
   name: "cart",
   initialState,
@@ -34,8 +34,14 @@ const cartSlice = createSlice({
         state.cartItems.reduce((acc, item) => acc + item.price, 0).toFixed(2)
       );
     },
+    setDeliveryAddress: (state, action) => {
+      // console.log(action.payload);
+      state.deliveryAddress = action.payload;
+      localStorage.setItem("cart", JSON.stringify(state));
+    },
   },
 });
 
-export const { addToCart, removeFromCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, setDeliveryAddress } =
+  cartSlice.actions;
 export default cartSlice.reducer;
