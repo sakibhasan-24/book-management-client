@@ -19,6 +19,7 @@ import ApplyStatus from "../componets/dashboard/applyStatus/ApplyStatus";
 import CartItems from "../pages/cartItems/CartItems";
 import Address from "../pages/address/Address";
 import Payments from "../pages/payment/Payment";
+import PlaceOrders from "../pages/placeorders/PlaceOrders";
 
 const router = createBrowserRouter([
   {
@@ -128,6 +129,10 @@ const router = createBrowserRouter([
       {
         path: "/payment",
         element: <Payments />,
+      },
+      {
+        path: "/placeorder",
+        element: <PlaceOrders />,
       },
       { path: "*", element: <ErrorPage /> },
     ],

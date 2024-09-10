@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { savePaymentMethod } from "../../redux/cart/cartSlice";
 
 export default function Payments() {
-  const [paymentMethod, setPaymentMethod] = useState(""); // Initially no selection
+  const [paymentMethod, setPaymentMethod] = useState("sslcommerz"); // Initially no selection
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { cartItem } = useSelector((state) => state.cart);
   const { deliveryAddress } = useSelector((state) => state.cart);
-
+  // setPaymentMethod
   useEffect(() => {
     if (!deliveryAddress) {
       navigate("/address");
@@ -18,10 +19,13 @@ export default function Payments() {
   const handlePaymentChange = (e) => {
     setPaymentMethod(e.target.value);
   };
+  //   savePaymentMethod
 
+  //   setPaymentMethod
   const handlePaymentMethodSave = async (e) => {
     e.preventDefault();
-    // Save payment method logic here
+    dispatch(savePaymentMethod(paymentMethod));
+    navigate("/placeorder");
   };
 
   return (
@@ -39,14 +43,14 @@ export default function Payments() {
             <input
               type="radio"
               name="payment"
-              value="SSL"
-              checked={paymentMethod === "SSL"}
+              value="sslcommerz"
+              checked={paymentMethod === "sslcommerz"}
               onChange={handlePaymentChange}
               className="appearance-none w-5 h-5 border-2 border-gray-400 rounded-full transition duration-300 checked:bg-blue-600"
             />
             <span
               className={`checkmark absolute inset-0 flex items-center justify-center bg-blue-600 rounded-full transition-transform duration-300 ${
-                paymentMethod === "SSL"
+                paymentMethod === "sslcommerz"
                   ? "opacity-100 scale-50"
                   : "opacity-0 scale-0"
               }`}
