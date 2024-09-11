@@ -20,6 +20,7 @@ import CartItems from "../pages/cartItems/CartItems";
 import Address from "../pages/address/Address";
 import Payments from "../pages/payment/Payment";
 import PlaceOrders from "../pages/placeorders/PlaceOrders";
+import Orders from "../pages/Order/Orders";
 
 const router = createBrowserRouter([
   {
@@ -124,15 +125,35 @@ const router = createBrowserRouter([
       },
       {
         path: "/address",
-        element: <Address />,
+        element: (
+          <PrivateRoutes>
+            <Address />
+          </PrivateRoutes>
+        ),
       },
       {
         path: "/payment",
-        element: <Payments />,
+        element: (
+          <PrivateRoutes>
+            <Payments />
+          </PrivateRoutes>
+        ),
       },
       {
         path: "/placeorder",
-        element: <PlaceOrders />,
+        element: (
+          <PrivateRoutes>
+            <PlaceOrders />
+          </PrivateRoutes>
+        ),
+      },
+      {
+        path: "/order/:id",
+        element: (
+          <PrivateRoutes>
+            <Orders />
+          </PrivateRoutes>
+        ),
       },
       { path: "*", element: <ErrorPage /> },
     ],

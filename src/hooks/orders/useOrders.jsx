@@ -18,5 +18,19 @@ export default function useOrders() {
       setLoading(false);
     }
   };
-  return { loading, error, createOrder };
+  // get orders by ordersId
+  const getOrdersById = async (id) => {
+    setLoading(true);
+
+    try {
+      const res = await axiosPublic.get(`/api/order/getorder/${id}`);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  return { loading, error, createOrder, getOrdersById };
 }

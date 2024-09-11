@@ -1,10 +1,15 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useOrders from "../../hooks/orders/useOrders";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import { clearCart } from "../../redux/cart/cartSlice";
 
 export default function PlaceOrders() {
   const cart = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  //   clearCart
   console.log(cart.deliveryAddress);
   const shippingPrice = cart.cartPrice > 1000 ? 0.0 : cart.cartPrice * 0.02;
   const { loading, error, createOrder } = useOrders();
@@ -18,7 +23,17 @@ export default function PlaceOrders() {
       shippingPrice,
       totalPrice: cart.cartPrice + shippingPrice,
     });
-    console.log(res);
+    console.log(res.createdOrder._id);
+    if (res.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Order Placed Successfully",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      dispatch(clearCart());
+      navigate(`/order/${res.createdOrder._id}`);
+    }
   };
   return (
     <div className="max-w-5xl mx-auto my-12 p-4 sm:p-6 bg-gray-50 rounded-lg shadow-lg">
