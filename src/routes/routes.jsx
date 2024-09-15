@@ -156,6 +156,14 @@ const router = createBrowserRouter([
           </PrivateRoutes>
         ),
       },
+      {
+        path: "/order/:id",
+        element: (
+          <PrivateRoutes>
+            <Orders />
+          </PrivateRoutes>
+        ),
+      },
 
       { path: "*", element: <ErrorPage /> },
     ],
