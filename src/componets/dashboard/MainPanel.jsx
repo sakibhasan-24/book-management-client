@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import {
   HiArrowSmRight,
   HiBookOpen,
+  HiCash,
   HiChartPie,
   HiInbox,
   HiOutlineBookOpen,
@@ -62,6 +63,24 @@ export default function MainPanel() {
                 <Link to="/dashboard/users">
                   <Sidebar.Item icon={HiUser} as={"div"} label={users?.length}>
                     Users
+                  </Sidebar.Item>
+                </Link>
+              )}
+              {currentUser?.user?.isAdmin === false && (
+                <Link to="/dashboard/add-books">
+                  <Sidebar.Item
+                    icon={HiOutlineBookOpen}
+                    className={`cursor-pointer`}
+                    as={"div"}
+                  >
+                    Add Books
+                  </Sidebar.Item>
+                </Link>
+              )}
+              {currentUser?.user?.isAdmin === false && (
+                <Link to={`/dashboard/orders/${currentUser?.user._id}`}>
+                  <Sidebar.Item icon={HiCash} as={"div"}>
+                    Orders
                   </Sidebar.Item>
                 </Link>
               )}

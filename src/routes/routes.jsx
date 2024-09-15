@@ -21,6 +21,7 @@ import Address from "../pages/address/Address";
 import Payments from "../pages/payment/Payment";
 import PlaceOrders from "../pages/placeorders/PlaceOrders";
 import Orders from "../pages/Order/Orders";
+import OrderLists from "../componets/dashboard/orderlists/OrderLists";
 
 const router = createBrowserRouter([
   {
@@ -94,6 +95,14 @@ const router = createBrowserRouter([
               </PrivateRoutes>
             ),
           },
+          {
+            path: "/dashboard/orders/:id",
+            element: (
+              <PrivateRoutes>
+                <OrderLists />
+              </PrivateRoutes>
+            ),
+          },
         ],
       },
       {
@@ -147,14 +156,7 @@ const router = createBrowserRouter([
           </PrivateRoutes>
         ),
       },
-      {
-        path: "/order/:id",
-        element: (
-          <PrivateRoutes>
-            <Orders />
-          </PrivateRoutes>
-        ),
-      },
+
       { path: "*", element: <ErrorPage /> },
     ],
   },

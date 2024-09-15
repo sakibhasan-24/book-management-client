@@ -10,20 +10,22 @@ export default function PlaceOrders() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   //   clearCart
-  console.log(cart.deliveryAddress);
+  // console.log(cart.cartItems);
+  // console.log(cart.deliveryAddress);
   const shippingPrice = cart.cartPrice > 1000 ? 0.0 : cart.cartPrice * 0.02;
   const { loading, error, createOrder } = useOrders();
   const handlePlaceOrder = async () => {
     // console.log("c");
     const res = await createOrder({
       orderItems: cart.cartItems,
+      bookOwner: cart.cartItems.map((x) => x.bookOwner),
       deliveryAddress: cart.deliveryAddress,
       paymentMethod: cart.paymentMethod,
       productPrice: cart.cartPrice,
       shippingPrice,
       totalPrice: cart.cartPrice + shippingPrice,
     });
-    console.log(res.createdOrder._id);
+    // console.log(res.createdOrder);
     if (res.success) {
       Swal.fire({
         icon: "success",

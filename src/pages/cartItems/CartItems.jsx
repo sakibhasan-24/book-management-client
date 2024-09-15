@@ -3,12 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeFromCart } from "../../redux/cart/cartSlice";
 import { FaTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import Spinner from "../../componets/loader/Spinner";
 
 export default function CartItems() {
   const { cartItems } = useSelector((state) => state.cart);
-  // console.log(cartItems);
+  console.log(cartItems);
   const dispatch = useDispatch();
   //   removeFromCart
+  if (cartItems.length === 0) return <Spinner />;
   return (
     <div className="w-full sm:max-w-3xl mx-auto my-6  ">
       <h1 className="text-slate-800 text-2xl text-center font-bold ">
