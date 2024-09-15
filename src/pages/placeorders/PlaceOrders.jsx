@@ -19,13 +19,16 @@ export default function PlaceOrders() {
     const res = await createOrder({
       orderItems: cart.cartItems,
       bookOwner: cart.cartItems.map((x) => x.bookOwner),
+      bookStatus: cart.cartItems.map((x) => x.bookStatus),
+      isAvailable: cart.cartItems.map((x) => x.isAvailable),
       deliveryAddress: cart.deliveryAddress,
       paymentMethod: cart.paymentMethod,
       productPrice: cart.cartPrice,
       shippingPrice,
+
       totalPrice: cart.cartPrice + shippingPrice,
     });
-    // console.log(res.createdOrder);
+    console.log(res.createdOrder);
     if (res.success) {
       Swal.fire({
         icon: "success",

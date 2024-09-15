@@ -71,9 +71,9 @@ export default function OrderLists() {
             </tr>
           </thead>
           <tbody className="text-gray-700">
-            {ordersLists.orders?.map((order) =>
+            {/* {ordersLists.orders?.map((order) =>
               console.log(order.orderItems.map((order) => order.product))
-            )}
+            )} */}
             {ordersLists?.orders?.map((order, index) => (
               <tr
                 key={order._id}

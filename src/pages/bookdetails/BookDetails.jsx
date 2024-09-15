@@ -4,11 +4,13 @@ import ModalImage from "react-modal-image";
 import useGetBooks from "../../hooks/books/useGetBooks";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../redux/cart/cartSlice";
+import Spinner from "../../componets/loader/Spinner";
 export default function BookDetails() {
   const params = useParams();
   const { getBookById } = useGetBooks();
+  const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   // addToCart
   const [demoPages, setDemoPages] = useState([]);
@@ -54,7 +56,13 @@ export default function BookDetails() {
     dispatch(addToCart({ ...book }));
     navigate("/cartItems");
   };
-  // console.log();
+  console.log(book);
+  if (!book)
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
   return (
     <div className="container w-full sm:max-w-6xl mx-auto my-12 ">
       {/* details about books */}
@@ -102,17 +110,27 @@ export default function BookDetails() {
           <p className="text-gray-700">
             <strong>Description:</strong> {book?.description}
           </p>
-          <div className="flex gap-6">
-            <button
-              onClick={handleAddToCart}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-            >
-              Add to cart
-            </button>
-            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4">
-              Exchange Book
-            </button>
-          </div>
+          {currentUser?.user?._id !== book?.bookOwner && (
+            <div className="flex gap-6">
+              <button
+                onClick={handleAddToCart}
+                disabled={
+                  book.bookStatus === "sold" || book.bookStatus === "rent"
+                }
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+              >
+                Add to cart
+              </button>
+              <button
+                disabled={
+                  book.bookStatus === "sold" || book.bookStatus === "rent"
+                }
+                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4"
+              >
+                rent
+              </button>
+            </div>
+          )}
         </div>
       </section>
       <section>
