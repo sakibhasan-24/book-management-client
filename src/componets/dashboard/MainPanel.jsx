@@ -20,6 +20,7 @@ import useGetAllUsers from "../../hooks/user/useGetAllUsers";
 import { HiReceiptPercent } from "react-icons/hi2";
 import { GrDeliver } from "react-icons/gr";
 import { BiBook } from "react-icons/bi";
+import DeliveryMan from "./deliveryman/DeliveryMan";
 
 export default function MainPanel() {
   const { users, getAllUsers } = useGetAllUsers();
@@ -29,6 +30,11 @@ export default function MainPanel() {
   }, [users?.length]);
 
   const { currentUser } = useSelector((state) => state.user);
+  console.log(currentUser);
+  const { currentlyLogin } = useSelector((state) => state.deliveryMan);
+  if (currentlyLogin) {
+    return <DeliveryMan />;
+  }
   //   console.log(currentUser.user.isAdmin);
   return (
     <div className="w-full flex flex-col sm:flex-row bg-gray-100">

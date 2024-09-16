@@ -119,7 +119,9 @@ export default function BookDetails() {
                 }
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
               >
-                Add to cart
+                {book.bookStatus === "sold" || book.bookStatus === "rent"
+                  ? "Not Available"
+                  : "Add to Cart"}
               </button>
               <button
                 disabled={
@@ -127,7 +129,9 @@ export default function BookDetails() {
                 }
                 className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4"
               >
-                rent
+                {book.bookStatus === "sold" || book.bookStatus === "rent"
+                  ? "Not Available"
+                  : "Rent"}
               </button>
             </div>
           )}

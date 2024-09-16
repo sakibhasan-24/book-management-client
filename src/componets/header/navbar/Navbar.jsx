@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import MobileNav from "./MobileNav";
 import { useDispatch, useSelector } from "react-redux";
 import { Avatar, Dropdown } from "flowbite-react";
@@ -12,10 +12,11 @@ export default function Navbar() {
   const location = useLocation();
   const { currentUser } = useSelector((state) => state.user);
   const { cartItems } = useSelector((state) => state.cart);
-  console.log(cartItems.length);
+  // console.log(cartItems.length);
   // console.log(currentUser);
   const { signOut } = useUserSignOut();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleRoute = (route) => {
     if (location.pathname === route) {
       return true;
@@ -41,8 +42,25 @@ export default function Navbar() {
     }
   };
 
+  const handleJoinAsDeliveryMan = async () => {
+    if (currentUser) {
+      const res = await signOut();
+      if (res) {
+        dispatch(signOutSuccess(res.data));
+        Swal.fire({
+          icon: "success",
+          title: "Successfully in delivery man page",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    } else {
+      navigate("/deliveryMan-login");
+    }
+  };
+
   return (
-    <div className="max-w-8xl mx-auto p-4 bg-slate-100 ">
+    <div className={`${handleRoute("/deliveryMan-login") && "hidden"}`}>
       {/* for desktop */}
       <div className="flex flex-row items-center justify-between gap-8 ">
         <div>
@@ -51,6 +69,13 @@ export default function Navbar() {
             <span className="text-blue-500 text-3xl font-bold">
               Exchange
             </span>{" "}
+          </Link>
+        </div>
+        <div onClick={handleJoinAsDeliveryMan}>
+          <Link to="/deliveryMan-login">
+            <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold sm:font-bold p-1 sm:py-2 sm:px-4 rounded-full">
+              join as delivery boy
+            </button>
           </Link>
         </div>
         <div className="hidden sm:flex items-center justify-center gap-4 mr-12 text-md font-bold text-slate-600">

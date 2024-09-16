@@ -22,6 +22,8 @@ import Payments from "../pages/payment/Payment";
 import PlaceOrders from "../pages/placeorders/PlaceOrders";
 import Orders from "../pages/Order/Orders";
 import OrderLists from "../componets/dashboard/orderlists/OrderLists";
+import JoinAsDeliveryMan from "../componets/deliveryManButton/JoinAsDeliveryMan";
+import DeliveryMan from "../componets/dashboard/deliveryman/DeliveryMan";
 
 const router = createBrowserRouter([
   {
@@ -163,6 +165,14 @@ const router = createBrowserRouter([
             <Orders />
           </PrivateRoutes>
         ),
+      },
+      {
+        path: "/deliveryMan-login",
+        element: <JoinAsDeliveryMan />,
+      },
+      {
+        path: "/deliveryman",
+        element: <DeliveryMan />,
       },
 
       { path: "*", element: <ErrorPage /> },
