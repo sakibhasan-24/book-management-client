@@ -27,10 +27,27 @@ export default function useDeliveryMan() {
     const res = await axiosPublic.get("/api/deliveryman/logout");
     return res.data;
   };
+  const getAllDeliveryMan = async () => {
+    setLoading(true);
+    try {
+      const response = await axiosPublic.get(
+        "/api/deliveryman//getDeliveryMan"
+      );
+
+      setLoading(false);
+      return response.data;
+    } catch {
+      setLoading(false);
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
   return {
     deliveryManLogin,
     loading,
     error,
     deliveryManLogOut,
+    getAllDeliveryMan,
   };
 }

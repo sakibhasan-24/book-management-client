@@ -5,11 +5,24 @@ import useOrders from "../../hooks/orders/useOrders";
 import Spinner from "../../componets/loader/Spinner";
 import Swal from "sweetalert2";
 import { Alert } from "flowbite-react";
+import useDeliveryMan from "../../hooks/deliveryMan/useDeliveryMan";
 
 export default function Orders() {
   const { id: orderId } = useParams();
   const { currentUser } = useSelector((state) => state.user);
   const { loading, error, getOrdersById, paymentServer } = useOrders();
+  const { getAllDeliveryMan } = useDeliveryMan();
+  const [deliveryMan, setDeliveryMan] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await getAllDeliveryMan();
+      // console.log(res);
+      setDeliveryMan(res.deliveryman);
+    };
+    fetchData();
+  }, []);
+  // console.log(deliveryMan);
+
   const [order, setOrder] = useState({});
   const navigate = useNavigate();
   // console.log(currentUser.user._id);
@@ -247,9 +260,30 @@ export default function Orders() {
                 {order.isPaid ? "Paid,thank you" : "Pay Now"}
               </button>
             </div>
-            <div className="my-6">
-              <h1>delivery man functionlaity</h1>
-            </div>
+            {currentUser?.user.isAdmin && (
+              <div className="my-6">
+                <h1 className="text-xl font-bold text-gray-800 mb-4">
+                  Assign Delivery Man
+                </h1>
+                <select
+                  className="w-full p-2 border border-gray-300 rounded-lg mb-4"
+                  // onChange={(e) =>
+                  //   handleAssignDeliveryMan(order._id, e.target.value)
+                  // }
+                  defaultValue="" // Default empty option
+                >
+                  <option value="" disabled>
+                    Select Delivery Man
+                  </option>
+                  {deliveryMan.map((man) => (
+                    <option key={man._id} value={man._id}>
+                      {man.name} -{" "}
+                      {man.isAvailable ? "Available" : "Not Available"}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
         </section>
       </div>
