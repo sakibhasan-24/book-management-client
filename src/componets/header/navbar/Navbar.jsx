@@ -7,14 +7,20 @@ import { signOutSuccess } from "../../../redux/user/user";
 import useUserSignOut from "../../../hooks/user/useUserSignOut";
 import Swal from "sweetalert2";
 import { FaShoppingCart } from "react-icons/fa";
+import { logout } from "../../../redux/deliveryman/deliverymanSlice";
+import useDeliveryMan from "../../../hooks/deliveryMan/useDeliveryMan";
 
 export default function Navbar() {
   const location = useLocation();
   const { currentUser } = useSelector((state) => state.user);
   const { cartItems } = useSelector((state) => state.cart);
+  const { currentlyLogin } = useSelector((state) => state.deliveryMan);
+  // console.log(currentlyLogin);
+
   // console.log(cartItems.length);
   // console.log(currentUser);
   const { signOut } = useUserSignOut();
+  const { deliveryManLogOut } = useDeliveryMan();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleRoute = (route) => {
@@ -59,6 +65,17 @@ export default function Navbar() {
     }
   };
 
+  const handleLogOut = async () => {
+    const res = await deliveryManLogOut();
+    console.log(res);
+    if (res.success) {
+      console.log(res);
+      dispatch(logout(res));
+      navigate("/deliveryMan-login");
+    }
+    // logout
+  };
+
   return (
     <div className={`${handleRoute("/deliveryMan-login") && "hidden"}`}>
       {/* for desktop */}
@@ -71,13 +88,23 @@ export default function Navbar() {
             </span>{" "}
           </Link>
         </div>
-        <div onClick={handleJoinAsDeliveryMan}>
-          <Link to="/deliveryMan-login">
-            <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold sm:font-bold p-1 sm:py-2 sm:px-4 rounded-full">
-              join as delivery boy
-            </button>
-          </Link>
-        </div>
+        {currentlyLogin ? (
+          <div onClick={handleLogOut}>
+            <Link to="/deliveryMan-login">
+              <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold sm:font-bold p-1 sm:py-2 sm:px-4 rounded-lg">
+                Leave
+              </button>
+            </Link>
+          </div>
+        ) : (
+          <div onClick={handleJoinAsDeliveryMan}>
+            <Link to="/deliveryMan-login">
+              <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold sm:font-bold p-1 sm:py-2 sm:px-4 rounded-lg">
+                Join As Delivery Man
+              </button>
+            </Link>
+          </div>
+        )}
         <div className="hidden sm:flex items-center justify-center gap-4 mr-12 text-md font-bold text-slate-600">
           {/* <Link
             to="/add-books"

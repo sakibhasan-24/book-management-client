@@ -83,10 +83,17 @@ export default function MainPanel() {
                   </Sidebar.Item>
                 </Link>
               )}
-              {currentUser?.user?.isAdmin === false && (
+              {currentUser?.user && (
                 <Link to={`/dashboard/orders/${currentUser?.user._id}`}>
                   <Sidebar.Item icon={HiCash} as={"div"}>
                     Orders
+                  </Sidebar.Item>
+                </Link>
+              )}
+              {currentUser?.user?.isAdmin && (
+                <Link to={`/dashboard/deliveryManLists`}>
+                  <Sidebar.Item icon={HiCash} as={"div"}>
+                    Delivery Man
                   </Sidebar.Item>
                 </Link>
               )}

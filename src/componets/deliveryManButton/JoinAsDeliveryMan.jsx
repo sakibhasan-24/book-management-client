@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useDeliveryMan from "../../hooks/deliveryMan/useDeliveryMan";
 import {
   loginFail,
@@ -17,6 +17,12 @@ export default function JoinAsDeliveryMan() {
   const dispatch = useDispatch();
 
   const { loading, error, deliveryManLogin } = useDeliveryMan();
+  const { currentlyLogin } = useSelector((state) => state.deliveryMan);
+  useEffect(() => {
+    if (currentlyLogin) {
+      navigate("/deliveryman");
+    }
+  }, [currentlyLogin]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(loginStart());
@@ -93,6 +99,12 @@ export default function JoinAsDeliveryMan() {
             </button>
           </div>
         </form>
+        <p className="text-md font-semibold text-slate-700 mt-4">
+          Go To
+          <Link className="text-blue-600 hover:underline ml-1" to="/">
+            Home
+          </Link>
+        </p>
       </div>
     </div>
   );

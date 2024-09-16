@@ -24,6 +24,8 @@ import Orders from "../pages/Order/Orders";
 import OrderLists from "../componets/dashboard/orderlists/OrderLists";
 import JoinAsDeliveryMan from "../componets/deliveryManButton/JoinAsDeliveryMan";
 import DeliveryMan from "../componets/dashboard/deliveryman/DeliveryMan";
+import DeliveryManLists from "../pages/deliverymanlists/DeliveryManLists";
+import AdminRoutes from "./AdminRoutes";
 
 const router = createBrowserRouter([
   {
@@ -94,6 +96,16 @@ const router = createBrowserRouter([
             element: (
               <PrivateRoutes>
                 <UpdateBook />
+              </PrivateRoutes>
+            ),
+          },
+          {
+            path: "/dashboard/deliveryManLists",
+            element: (
+              <PrivateRoutes>
+                <AdminRoutes>
+                  <DeliveryManLists />
+                </AdminRoutes>
               </PrivateRoutes>
             ),
           },

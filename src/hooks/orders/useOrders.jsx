@@ -18,6 +18,19 @@ export default function useOrders() {
       setLoading(false);
     }
   };
+  // get all orders for Admin
+  const getAllOrders = async () => {
+    setLoading(true);
+    try {
+      const res = await axiosPublic.get("/api/order/getAllOrders");
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   // get orders by ordersId
   const getOrdersById = async (id) => {
     setLoading(true);
@@ -71,5 +84,6 @@ export default function useOrders() {
     getOrdersById,
     paymentServer,
     getOrdersByUserId,
+    getAllOrders,
   };
 }
