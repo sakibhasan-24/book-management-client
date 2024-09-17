@@ -77,6 +77,20 @@ export default function useOrders() {
       setLoading(false);
     }
   };
+  const assignDeliveryMan = async (orderId, deliveryManId) => {
+    setLoading(true);
+    try {
+      const res = await axiosPublic.put("/api/order/assignDeliveryMan", {
+        orderId,
+        deliveryManId,
+      });
+      return res;
+    } catch (error) {
+      console.log(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   return {
     loading,
     error,
@@ -85,5 +99,6 @@ export default function useOrders() {
     paymentServer,
     getOrdersByUserId,
     getAllOrders,
+    assignDeliveryMan,
   };
 }

@@ -30,11 +30,25 @@ export default function useDeliveryMan() {
   const getAllDeliveryMan = async () => {
     setLoading(true);
     try {
-      const response = await axiosPublic.get(
-        "/api/deliveryman//getDeliveryMan"
-      );
+      const response = await axiosPublic.get("/api/deliveryman/getDeliveryMan");
 
       setLoading(false);
+      return response.data;
+    } catch {
+      setLoading(false);
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const getAllDeliveryManById = async (id) => {
+    setLoading(true);
+    try {
+      const response = await axiosPublic.get(
+        `/api/deliveryman/getDeliveryManById/${id}`
+      );
+
+      // console.log(response);
       return response.data;
     } catch {
       setLoading(false);
@@ -49,5 +63,6 @@ export default function useDeliveryMan() {
     error,
     deliveryManLogOut,
     getAllDeliveryMan,
+    getAllDeliveryManById,
   };
 }

@@ -10,20 +10,38 @@ import useDeliveryMan from "../../hooks/deliveryMan/useDeliveryMan";
 export default function Orders() {
   const { id: orderId } = useParams();
   const { currentUser } = useSelector((state) => state.user);
-  const { loading, error, getOrdersById, paymentServer } = useOrders();
-  const { getAllDeliveryMan } = useDeliveryMan();
+  const { loading, error, getOrdersById, paymentServer, assignDeliveryMan } =
+    useOrders();
+  const { getAllDeliveryMan, getAllDeliveryManById } = useDeliveryMan();
   const [deliveryMan, setDeliveryMan] = useState([]);
+  const [assignedMan, setAssignedMan] = useState({});
+  const [order, setOrder] = useState({});
+  // load for set delivery man
   useEffect(() => {
     const fetchData = async () => {
       const res = await getAllDeliveryMan();
-      // console.log(res);
+
       setDeliveryMan(res.deliveryman);
     };
     fetchData();
-  }, []);
-  // console.log(deliveryMan);
+  }, [assignedMan, order]);
 
-  const [order, setOrder] = useState({});
+  // // console.log(deliveryMan);
+  // console.log(assignedMan);
+  // console.log(order?.assignedDeliveryMan);
+  // load for get deliveryMan details
+  useEffect(() => {
+    const fetchData = async (id) => {
+      const res = await getAllDeliveryManById(id);
+      // console.log(res);
+      setAssignedMan(res.deliveryman);
+    };
+    if (order?.assignedDeliveryMan) {
+      fetchData(order?.assignedDeliveryMan);
+    }
+  }, [order?.assignedDeliveryMan, order]);
+  // console.log("a", assignedMan);
+  // console.log("o", order?.assignedDeliveryMan);
   const navigate = useNavigate();
   // console.log(currentUser.user._id);
   // console.log(orderId);
@@ -93,6 +111,44 @@ export default function Orders() {
   // };
 
   // console.log(order);
+  const handleAssignDeliveryMan = async (orderId, deliveryManId) => {
+    try {
+      const res = await assignDeliveryMan(orderId, deliveryManId);
+      if (res?.data?.success) {
+        Swal.fire({
+          title: "Success",
+          text: "Delivery Man Assigned Successfully",
+          icon: "success",
+          confirmButtonText: "Ok",
+        });
+
+        // Update the order with the newly assigned delivery man
+        setOrder((prevOrder) => ({
+          ...prevOrder,
+          assignedDeliveryMan: deliveryManId,
+        }));
+
+        // Fetch the newly assigned delivery man's details
+        const deliveryManRes = await getAllDeliveryManById(deliveryManId);
+        setAssignedMan(deliveryManRes.deliveryman);
+      } else {
+        Swal.fire({
+          title: "Error",
+          text: res.data.message,
+          icon: "error",
+          confirmButtonText: "Ok",
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        title: "Error",
+        text: "Already Delivery Man Assigned",
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
+    }
+  };
+
   if (loading)
     return (
       <div className="max-w-6xl mx-auto flex items-center justify-center">
@@ -260,6 +316,7 @@ export default function Orders() {
                 {order.isPaid ? "Paid,thank you" : "Pay Now"}
               </button>
             </div>
+
             {currentUser?.user.isAdmin && (
               <div className="my-6">
                 <h1 className="text-xl font-bold text-gray-800 mb-4">
@@ -267,14 +324,23 @@ export default function Orders() {
                 </h1>
                 <select
                   className="w-full p-2 border border-gray-300 rounded-lg mb-4"
-                  // onChange={(e) =>
-                  //   handleAssignDeliveryMan(order._id, e.target.value)
-                  // }
-                  defaultValue="" // Default empty option
+                  onChange={(e) =>
+                    handleAssignDeliveryMan(order._id, e.target.value)
+                  }
+                  value={
+                    order.assignedDeliveryMan
+                      ? order.assignedDeliveryMan._id
+                      : ""
+                  }
                 >
+                  {/* Default option when no delivery man is assigned */}
                   <option value="" disabled>
-                    Select Delivery Man
+                    {order.assignedDeliveryMan
+                      ? "Assigned Delivery Man"
+                      : "Please select a member"}
                   </option>
+
+                  {/* Dynamically rendering delivery men */}
                   {deliveryMan.map((man) => (
                     <option key={man._id} value={man._id}>
                       {man.name} -{" "}
@@ -282,6 +348,22 @@ export default function Orders() {
                     </option>
                   ))}
                 </select>
+              </div>
+            )}
+            {order.assignedDeliveryMan && (
+              <div className="my-4 p-4 bg-gray-100 rounded-lg">
+                <h2 className="text-lg font-semibold text-gray-700 mb-2">
+                  Assigned Delivery Man Details:
+                </h2>
+                <p className="text-gray-700 mb-1">
+                  <strong>Name:</strong> {assignedMan?.name}
+                </p>
+                <p className="text-gray-700 mb-1">
+                  <strong>Email:</strong> {assignedMan?.email}
+                </p>
+                <p className="text-gray-700 mb-1">
+                  <strong>Phone:</strong> {assignedMan?.phone}
+                </p>
               </div>
             )}
           </div>
