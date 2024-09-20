@@ -10,8 +10,14 @@ import useDeliveryMan from "../../hooks/deliveryMan/useDeliveryMan";
 export default function Orders() {
   const { id: orderId } = useParams();
   const { currentUser } = useSelector((state) => state.user);
-  const { loading, error, getOrdersById, paymentServer, assignDeliveryMan } =
-    useOrders();
+  const {
+    loading,
+    error,
+    getOrdersById,
+    paymentServer,
+    assignDeliveryMan,
+    assignDeliveryManProduct,
+  } = useOrders();
   const { getAllDeliveryMan, getAllDeliveryManById } = useDeliveryMan();
   const [deliveryMan, setDeliveryMan] = useState([]);
   const [assignedMan, setAssignedMan] = useState({});
@@ -26,9 +32,6 @@ export default function Orders() {
     fetchData();
   }, [assignedMan, order]);
 
-  // // console.log(deliveryMan);
-  // console.log(assignedMan);
-  // console.log(order?.assignedDeliveryMan);
   // load for get deliveryMan details
   useEffect(() => {
     const fetchData = async (id) => {
@@ -114,6 +117,7 @@ export default function Orders() {
   const handleAssignDeliveryMan = async (orderId, deliveryManId) => {
     try {
       const res = await assignDeliveryMan(orderId, deliveryManId);
+      // console.log(res);
       if (res?.data?.success) {
         Swal.fire({
           title: "Success",
@@ -131,6 +135,11 @@ export default function Orders() {
         // Fetch the newly assigned delivery man's details
         const deliveryManRes = await getAllDeliveryManById(deliveryManId);
         setAssignedMan(deliveryManRes.deliveryman);
+        const productRes = await assignDeliveryManProduct(
+          orderId,
+          deliveryManId
+        );
+        console.log(productRes);
       } else {
         Swal.fire({
           title: "Error",

@@ -91,6 +91,22 @@ export default function useOrders() {
       setLoading(false);
     }
   };
+  const assignDeliveryManProduct = async (orderId, deliveryManId) => {
+    console.log(orderId, deliveryManId);
+    setLoading(true);
+    try {
+      const res = await axiosPublic.put("/api/order/assignDeliveryManProduct", {
+        orderId,
+        deliveryManId,
+      });
+      console.log(res);
+      return res;
+    } catch (error) {
+      console.log(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   return {
     loading,
     error,
@@ -100,5 +116,6 @@ export default function useOrders() {
     getOrdersByUserId,
     getAllOrders,
     assignDeliveryMan,
+    assignDeliveryManProduct,
   };
 }

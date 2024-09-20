@@ -107,7 +107,7 @@ export default function BookDetails() {
           <p className="text-gray-700 mb-2">
             <strong>Fixed Price:</strong> {book?.fixedPrice ? "Yes" : "No"}
           </p>
-          <p className="text-gray-700">
+          <p className="text-gray-700 w-1/4 text-wrap">
             <strong>Description:</strong> {book?.description}
           </p>
           {currentUser?.user?._id !== book?.bookOwner && (
