@@ -1,25 +1,61 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { FaMapMarkerAlt, FaUniversity } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Aos from "aos";
+import useCreateBooks from "../../hooks/books/useCreateBooks";
+import StarRatings from "react-star-ratings";
 
 export default function BookCard({ book }) {
+  // console.log(book);
   const { currentUser } = useSelector((state) => state.user);
+  console.log(currentUser.user);
+  const { loading, getReviewById } = useCreateBooks();
+  const [reviewInfo, setReviewInfo] = useState(null);
   useEffect(() => {
     Aos.init({ duration: 1000 });
   }, []);
+  // console.log(book.bookReviews.length);
+  useEffect(() => {
+    const fetchData = async (id) => {
+      const res = await getReviewById(id);
+      setReviewInfo(res);
+    };
+    if (book?._id) {
+      fetchData(book._id);
+    }
+  }, [book?._id]);
+  // console.log(reviewInfo?.data);
   return (
     <div
-      className="max-w-xs w-full p-6 rounded-lg shadow-lg bg-white hover:shadow-2xl transition-shadow duration-300 ease-in-out transform hover:-translate-y-1"
+      className="max-w-xs w-2/3 p-2 rounded-lg shadow-lg bg-white hover:shadow-2xl transition-shadow duration-300 ease-in-out transform hover:-translate-y-1"
       data-aos="fade-up"
     >
       <div className="overflow-hidden rounded-lg border border-gray-300 mb-4">
         <img
           src={book.imagesUrls[0]}
           alt={book.title}
-          className="w-full h-48 object-cover transition-transform duration-300 ease-in-out hover:scale-105"
+          className="w-full h-36 object-cover transition-transform duration-300 ease-in-out hover:scale-105"
         />
+      </div>
+      <div>
+        {book?.bookReviews?.length === 0 && (
+          <p className="my-2 text-sm text-gray-500 text-center">
+            No Reviews yet
+          </p>
+        )}
+        {reviewInfo && reviewInfo?.data?.totalReviews > 0 && (
+          <div className="flex items-center justify-center my-2">
+            <StarRatings
+              rating={reviewInfo?.data?.finalAverageRating}
+              starRatedColor="#f1c40f"
+              numberOfStars={5}
+              name="rating"
+              starDimension="20px"
+              starSpacing="5px"
+            />
+          </div>
+        )}
       </div>
       <div>
         <h1 className="text-2xl font-bold text-center text-gray-800 mb-2">
@@ -66,7 +102,7 @@ export default function BookCard({ book }) {
             </button>
           )} */}
           <Link to={`/book/${book._id}`}>
-            <button className="bg-gray-500 text-white px-1  rounded-md hover:bg-gray-600 transition-colors duration-300">
+            <button className="bg-gray-500 text-white p-2  rounded-md hover:bg-gray-600 transition-colors duration-300">
               Details
             </button>
           </Link>

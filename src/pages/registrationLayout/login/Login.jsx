@@ -26,6 +26,7 @@ export default function Login() {
 
     try {
       const res = await userLogin(formData);
+      // console.log(res.data.user.isDeliveryPerson);
       if (res.data.success) {
         Swal.fire({
           icon: "success",
@@ -35,6 +36,9 @@ export default function Login() {
           timer: 1500,
         });
         dispatch(loginSuccess(res.data));
+        if (res.data.user.isDeliveryPerson) {
+          navigate("/dashboard/profile");
+        }
         navigate(`${location.state?.from?.pathname || "/"}`);
       }
     } catch (e) {

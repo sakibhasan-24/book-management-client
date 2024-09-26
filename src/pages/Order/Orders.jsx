@@ -139,7 +139,7 @@ export default function Orders() {
           orderId,
           deliveryManId
         );
-        console.log(productRes);
+        // console.log(productRes);
       } else {
         Swal.fire({
           title: "Error",

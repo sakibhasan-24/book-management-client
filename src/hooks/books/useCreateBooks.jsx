@@ -5,6 +5,7 @@ export default function useCreateBooks() {
   const axiosPublic = useApiCall();
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [reviewInfo, setReviewInfo] = useState({});
   const createBook = async (data) => {
     setLoading(true);
     try {
@@ -18,5 +19,72 @@ export default function useCreateBooks() {
       setLoading(false);
     }
   };
-  return { error, loading, createBook };
+  const acceptBook = async (id, data) => {
+    // console.log(data);
+    setLoading(true);
+    try {
+      const response = await axiosPublic.put(`/api/books/confirmedBook/${id}`, {
+        data,
+      });
+      return response;
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const reviewBook = async (id, data) => {
+    setLoading(true);
+    try {
+      const response = await axiosPublic.put(`/api/books/review/${id}`, data);
+      return response;
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const getReviewById = async (id) => {
+    setLoading(true);
+    try {
+      const response = await axiosPublic.get(`/api/books/review/${id}`);
+      setReviewInfo(response.data);
+      return response;
+    } catch {
+      setError(error.message);
+      setLoading(false);
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const getAllReviews = async (bookId) => {
+    setLoading(true);
+    try {
+      const response = await axiosPublic.get(
+        `/api/books/getAllReview/${bookId}`
+      );
+      return response;
+    } catch {
+      setError(error.message);
+      setLoading(false);
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  return {
+    error,
+    loading,
+    createBook,
+    acceptBook,
+    reviewBook,
+    getReviewById,
+    reviewInfo,
+    getAllReviews,
+  };
 }

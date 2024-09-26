@@ -5,10 +5,10 @@ import { Navigate, useLocation } from "react-router-dom";
 export default function PrivateRoutes({ children }) {
   const location = useLocation();
   const { currentUser } = useSelector((state) => state.user);
-  const { currentlyLogin } = useSelector((state) => state.deliveryMan);
-  if (currentlyLogin) {
-    return <Navigate to="/deliveryman" />;
-  }
+  const deliveryManAccessiblePages = [
+    "/dashboard/profile",
+    "/dashboard/assigned-orders",
+  ];
 
   if (!currentUser) {
     return (
@@ -19,6 +19,13 @@ export default function PrivateRoutes({ children }) {
       />
     );
   }
-
+  if (
+    currentUser?.user?.role === "deliveryMan" &&
+    !deliveryManAccessiblePages.includes(location.pathname)
+  ) {
+    return (
+      <Navigate to="/dashboard/profile" state={{ from: location }} replace />
+    );
+  }
   return children;
 }

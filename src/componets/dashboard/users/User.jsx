@@ -18,11 +18,14 @@ export default function User({ user, handleDeleteUser }) {
               : ""
           }`}
         >
-          {user.isAdmin ? "Admin" : "User"}
+          {/* {user.isAdmin ? "Admin" : "User"} */}
+          {user?.isAdmin && "Admin"}
+          {user?.role === "deliveryMan" && "Delivery Man"}
+          {user?.role === "user" && "User"}
         </p>
       </Table.Cell>
       <Table.Cell>6</Table.Cell>
-      <Table.Cell>$2999</Table.Cell>
+      <Table.Cell>{user?.role === "user" && user?.totalEarnings}</Table.Cell>
       <Table.Cell>
         <p
           className="font-medium text-red-600 hover:underline  cursor-pointer"

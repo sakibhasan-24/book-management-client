@@ -30,107 +30,138 @@ export default function MainPanel() {
   }, [users?.length]);
 
   const { currentUser } = useSelector((state) => state.user);
-  console.log(currentUser);
-  const { currentlyLogin } = useSelector((state) => state.deliveryMan);
-  if (currentlyLogin) {
-    return <DeliveryMan />;
-  }
+  // console.log(currentUser.user.role);
+
   //   console.log(currentUser.user.isAdmin);
-  return (
-    <div className="w-full flex flex-col sm:flex-row bg-gray-100">
-      <div className="w-full sm:w-[300px] md:w-[300px]">
-        <Sidebar aria-label="Default sidebar example" as={"div"}>
-          <Sidebar.Items>
-            <Sidebar.ItemGroup>
-              <Sidebar.Item href="#" icon={HiChartPie} as={"div"}>
-                Dashboard
-              </Sidebar.Item>
-              <Link to="/dashboard/profile">
-                {" "}
-                <Sidebar.Item icon={HiUserAdd} as={"div"}>
-                  profile
+  if (currentUser?.user?.role === "deliveryMan") {
+    return (
+      <div className="w-full flex flex-col sm:flex-row bg-gray-100">
+        <div className="w-full sm:w-[300px] md:w-[300px]">
+          <Sidebar aria-label="Default sidebar example" as={"div"}>
+            <Sidebar.Items>
+              <Sidebar.ItemGroup>
+                <Link to="/dashboard/profile">
+                  <Sidebar.Item icon={HiUserAdd} as={"div"}>
+                    profile
+                  </Sidebar.Item>
+                </Link>
+
+                <Sidebar.Item href="#" icon={HiTable}>
+                  Sign Up
                 </Sidebar.Item>
-              </Link>
-              {currentUser?.user?.isAdmin ? (
-                <Link to={`/dashboard/applyStatus`}>
-                  <Sidebar.Item as={"div"} icon={BiBook}>
-                    ApplyStatus
-                  </Sidebar.Item>
-                </Link>
-              ) : (
-                <Link to={`/dashboard/apply/${currentUser?.user?._id}`}>
-                  <Sidebar.Item as={"div"} icon={GrDeliver}>
-                    Apply for delivery Man
-                  </Sidebar.Item>
-                </Link>
-              )}
+              </Sidebar.ItemGroup>
+            </Sidebar.Items>
+          </Sidebar>
+        </div>
 
-              {currentUser?.user?.isAdmin && (
-                <Link to="/dashboard/users">
-                  <Sidebar.Item icon={HiUser} as={"div"} label={users?.length}>
-                    Users
-                  </Sidebar.Item>
-                </Link>
-              )}
-              {currentUser?.user?.isAdmin === false && (
-                <Link to="/dashboard/add-books">
-                  <Sidebar.Item
-                    icon={HiOutlineBookOpen}
-                    className={`cursor-pointer`}
-                    as={"div"}
-                  >
-                    Add Books
-                  </Sidebar.Item>
-                </Link>
-              )}
-              {currentUser?.user && (
-                <Link to={`/dashboard/orders/${currentUser?.user._id}`}>
-                  <Sidebar.Item icon={HiCash} as={"div"}>
-                    Orders
-                  </Sidebar.Item>
-                </Link>
-              )}
-              {currentUser?.user?.isAdmin && (
-                <Link to={`/dashboard/deliveryManLists`}>
-                  <Sidebar.Item icon={HiCash} as={"div"}>
-                    Delivery Man
-                  </Sidebar.Item>
-                </Link>
-              )}
-              {currentUser?.user?.isAdmin === false && (
-                <Link to="/dashboard/add-books">
-                  <Sidebar.Item
-                    icon={HiOutlineBookOpen}
-                    className={`cursor-pointer`}
-                    as={"div"}
-                  >
-                    Add Books
-                  </Sidebar.Item>
-                </Link>
-              )}
-              {currentUser?.user?.isAdmin === false && (
-                <Link to="/dashboard/mybooks">
-                  <Sidebar.Item
-                    icon={HiOutlineBookmarkAlt}
-                    className={`cursor-pointer`}
-                    as={"div"}
-                  >
-                    My Books
-                  </Sidebar.Item>
-                </Link>
-              )}
-
-              <Sidebar.Item href="#" icon={HiTable}>
-                Sign Up
-              </Sidebar.Item>
-            </Sidebar.ItemGroup>
-          </Sidebar.Items>
-        </Sidebar>
+        <div className="w-full">
+          <Outlet />
+        </div>
       </div>
+    );
+  }
 
-      <div className="w-full">
-        <Outlet />
+  if (currentUser?.user?.role !== "deliveryMan") {
+    return (
+      <div className="w-full flex flex-col sm:flex-row bg-gray-100">
+        <div className="w-full sm:w-[300px] md:w-[300px]">
+          <Sidebar aria-label="Default sidebar example" as={"div"}>
+            <Sidebar.Items>
+              <Sidebar.ItemGroup>
+                <Sidebar.Item href="#" icon={HiChartPie} as={"div"}>
+                  Dashboard
+                </Sidebar.Item>
+                <Link to="/dashboard/profile">
+                  {" "}
+                  <Sidebar.Item icon={HiUserAdd} as={"div"}>
+                    profile
+                  </Sidebar.Item>
+                </Link>
+                {currentUser?.user?.isAdmin ? (
+                  <Link to={`/dashboard/applyStatus`}>
+                    <Sidebar.Item as={"div"} icon={BiBook}>
+                      ApplyStatus
+                    </Sidebar.Item>
+                  </Link>
+                ) : (
+                  <Link to={`/dashboard/apply/${currentUser?.user?._id}`}>
+                    <Sidebar.Item as={"div"} icon={GrDeliver}>
+                      Apply for delivery Man
+                    </Sidebar.Item>
+                  </Link>
+                )}
+
+                {currentUser?.user?.isAdmin && (
+                  <Link to="/dashboard/users">
+                    <Sidebar.Item
+                      icon={HiUser}
+                      as={"div"}
+                      label={users?.length}
+                    >
+                      Users
+                    </Sidebar.Item>
+                  </Link>
+                )}
+                {currentUser?.user?.isAdmin === false && (
+                  <Link to="/dashboard/add-books">
+                    <Sidebar.Item
+                      icon={HiOutlineBookOpen}
+                      className={`cursor-pointer`}
+                      as={"div"}
+                    >
+                      Add Books
+                    </Sidebar.Item>
+                  </Link>
+                )}
+                {currentUser?.user && (
+                  <Link to={`/dashboard/orders/${currentUser?.user._id}`}>
+                    <Sidebar.Item icon={HiCash} as={"div"}>
+                      Orders
+                    </Sidebar.Item>
+                  </Link>
+                )}
+                {currentUser?.user?.isAdmin && (
+                  <Link to={`/dashboard/deliveryManLists`}>
+                    <Sidebar.Item icon={HiCash} as={"div"}>
+                      Delivery Man
+                    </Sidebar.Item>
+                  </Link>
+                )}
+                {currentUser?.user?.isAdmin === false && (
+                  <Link to="/dashboard/add-books">
+                    <Sidebar.Item
+                      icon={HiOutlineBookOpen}
+                      className={`cursor-pointer`}
+                      as={"div"}
+                    >
+                      Add Books
+                    </Sidebar.Item>
+                  </Link>
+                )}
+                {currentUser?.user?.isAdmin === false && (
+                  <Link to="/dashboard/mybooks">
+                    <Sidebar.Item
+                      icon={HiOutlineBookmarkAlt}
+                      className={`cursor-pointer`}
+                      as={"div"}
+                    >
+                      My Books
+                    </Sidebar.Item>
+                  </Link>
+                )}
+
+                <Sidebar.Item href="#" icon={HiTable}>
+                  Sign Up
+                </Sidebar.Item>
+              </Sidebar.ItemGroup>
+            </Sidebar.Items>
+          </Sidebar>
+        </div>
+
+        <div className="w-full">
+          <Outlet />
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }

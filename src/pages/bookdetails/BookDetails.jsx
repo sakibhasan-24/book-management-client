@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Button, Modal, Spin } from "antd";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ModalImage from "react-modal-image";
 import useGetBooks from "../../hooks/books/useGetBooks";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
@@ -7,9 +8,18 @@ import "react-tabs/style/react-tabs.css";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../redux/cart/cartSlice";
 import Spinner from "../../componets/loader/Spinner";
+import Swal from "sweetalert2";
+import useCreateBooks from "../../hooks/books/useCreateBooks";
+import StarRatings from "react-star-ratings";
+import TextArea from "antd/es/input/TextArea";
+import Review from "./Review";
 export default function BookDetails() {
   const params = useParams();
   const { getBookById } = useGetBooks();
+
+  const { loading, acceptBook, reviewBook, getReviewById, getAllReviews } =
+    useCreateBooks();
+
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   // addToCart
@@ -19,14 +29,42 @@ export default function BookDetails() {
   const modalRef = useRef(null);
   const navigate = useNavigate();
 
+  // ratings
+  const [reviewInfo, setReviewInfo] = useState({});
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
+  const [userReview, setUserReview] = useState(null);
+  const [allReviews, setAllReviews] = useState([]);
+  // review Loading
+  useEffect(() => {
+    const fetchReview = async () => {
+      const fetchedReview = await getAllReviews(params.bookId);
+      // console.log(fetchedReview.data.reviews);
+      setAllReviews(fetchedReview.data.reviews);
+    };
+    fetchReview();
+  }, [params.bookId, userReview, reviewInfo]);
+  // console.log(allReviews);
   useEffect(() => {
     const fetchBook = async () => {
       const fetchedBook = await getBookById(params.bookId);
       setBook(fetchedBook.book);
+      setReviewInfo(fetchedBook?.book?.bookReviews);
+      const userBookReview = fetchedBook?.book?.bookReviews?.find(
+        (user) => user.user === currentUser?.user?._id
+      );
+
+      if (userBookReview) {
+        setReviewInfo(userBookReview);
+        setUserReview(userBookReview);
+        setRating(userBookReview.rating);
+        setComment(userBookReview.comment);
+      }
       setDemoPages(fetchedBook.book.imagesUrls.slice(1)); // Slice from index 1 to end
     };
     fetchBook();
   }, [params.bookId]);
+  // console.log(reviewInfo);
 
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % demoPages.length);
@@ -56,7 +94,77 @@ export default function BookDetails() {
     dispatch(addToCart({ ...book }));
     navigate("/cartItems");
   };
-  console.log(book);
+
+  useEffect(() => {
+    const fetchData = async (id) => {
+      const res = await getReviewById(id);
+      if (res.data) setReviewInfo(res.data);
+    };
+    if (book?._id) {
+      fetchData(book._id);
+    }
+  }, [book?._id, userReview]);
+  // hanlde accept Book
+  const profit = book?.price * 0.5;
+  const handleAcceptBook = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You have to pay ${book?.price * 0.5} to accept this book`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, accept it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        // call accept function
+        const res = await acceptBook(id, profit);
+        if (res?.data) window.open(res.data, "_blank");
+        // console.log(profit);
+        if (book?.isAccepted) {
+          setBook(...book);
+        }
+        Swal.fire("Accepted!", "Your file has been accepted.", "success");
+      }
+    });
+  };
+
+  // console.log(book);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleOk = async () => {
+    // console.log(rating, comment);
+    try {
+      const res = await reviewBook(book?._id, { rating, comment });
+      // console.log(res);
+      if (res.data) {
+        // console.log(res.data);
+        setBook({ ...book });
+        const reviewUpdate = await getReviewById(book?._id);
+        console.log(reviewUpdate);
+        setReviewInfo(reviewUpdate.data);
+        Swal.fire("Reviewed!", "Your review has been submitted.", "success");
+      }
+      setIsModalOpen(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+  const changeRating = (number) => {
+    setRating(Number(number));
+  };
+
+  useEffect(() => {
+    console.log(rating, comment);
+  }, [rating, comment]);
+
+  // console.log(rating, comment);
   if (!book)
     return (
       <div>
@@ -65,10 +173,6 @@ export default function BookDetails() {
     );
   return (
     <div className="container w-full sm:max-w-6xl mx-auto my-12 ">
-      {/* details about books */}
-      {/* details container */}
-      {/* img */}
-      {/* other information */}
       <section className="w-full  my-6 flex flex-col sm:flex-row gap-8 items-center justify-between">
         <div>
           <img
@@ -79,6 +183,26 @@ export default function BookDetails() {
         </div>
 
         <div className="w-full md:w-2/3 p-4">
+          <div>
+            {book?.bookReviews.length === 0 && (
+              <p className="text-gray-700 mb-2 text-center font-bold text-xl">
+                <strong>Review:</strong> No reviews yet
+              </p>
+            )}
+            {reviewInfo && reviewInfo?.totalReviews > 0 && (
+              <div className="flex items-center justify-center my-2">
+                <StarRatings
+                  // rating={reviewInfo?.finalAverageRating}
+                  rating={Number(reviewInfo?.finalAverageRating)}
+                  starRatedColor="#f1c40f"
+                  numberOfStars={5}
+                  name="rating"
+                  starDimension="20px"
+                  starSpacing="5px"
+                />
+              </div>
+            )}
+          </div>
           <h1 className="text-5xl font-bold mb-2">{book?.title}</h1>
           <p className="text-gray-700 mb-2">
             <strong>Author:</strong> {book?.author}
@@ -107,35 +231,93 @@ export default function BookDetails() {
           <p className="text-gray-700 mb-2">
             <strong>Fixed Price:</strong> {book?.fixedPrice ? "Yes" : "No"}
           </p>
-          <p className="text-gray-700 w-1/4 text-wrap">
+          <p className="text-gray-700 w-full text-wrap">
             <strong>Description:</strong> {book?.description}
           </p>
-          {currentUser?.user?._id !== book?.bookOwner && (
-            <div className="flex gap-6">
-              <button
-                onClick={handleAddToCart}
-                disabled={
-                  book.bookStatus === "sold" || book.bookStatus === "rent"
-                }
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-              >
-                {book.bookStatus === "sold" || book.bookStatus === "rent"
-                  ? "Not Available"
-                  : "Add to Cart"}
-              </button>
-              <button
-                disabled={
-                  book.bookStatus === "sold" || book.bookStatus === "rent"
-                }
-                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4"
-              >
-                {book.bookStatus === "sold" || book.bookStatus === "rent"
-                  ? "Not Available"
-                  : "Rent"}
-              </button>
-            </div>
+          {book.isAccepted === false &&
+            currentUser?.user?.isAdmin === false && (
+              <div>
+                <h1 className="text-red-500 text-2xl text-center">
+                  Book is Not in our Hand .it may take time
+                </h1>
+              </div>
+            )}
+          {currentUser?.user?._id !== book?.bookOwner &&
+            currentUser?.user?.isAdmin === false && (
+              <div className="flex gap-6">
+                <button
+                  onClick={handleAddToCart}
+                  disabled={
+                    book.bookStatus === "sold" || book.bookStatus === "rent"
+                  }
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+                >
+                  {book.bookStatus === "sold" || book.bookStatus === "rent"
+                    ? "Not Available"
+                    : "Add to Cart"}
+                </button>
+                <button
+                  disabled={
+                    book.bookStatus === "sold" || book.bookStatus === "rent"
+                  }
+                  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4"
+                >
+                  {book.bookStatus === "sold" || book.bookStatus === "rent"
+                    ? "Not Available"
+                    : "Rent"}
+                </button>
+              </div>
+            )}
+          {currentUser?.user?.isAdmin && book?.isAccepted === false && (
+            <button
+              onClick={() => handleAcceptBook(book._id)}
+              className="my-6 bg-green-700 text-white p-4 rounded-md "
+            >
+              Accept Book
+            </button>
           )}
         </div>
+      </section>
+      <section className="my-6 p-4 ">
+        {!currentUser?.user && (
+          <Link to="/user-credentials/login">Login for Give rating</Link>
+        )}
+        {currentUser?.user.isAdmin === false &&
+          book?.bookOwner !== currentUser?.user?._id && (
+            <>
+              <Button type="primary" onClick={showModal}>
+                Add Review
+              </Button>
+              {loading && <Spin />}
+              <Modal
+                title={currentUser?.user?.userName + ",Please Add Your Review"}
+                open={isModalOpen}
+                onOk={handleOk}
+                className="text-center"
+                onCancel={handleCancel}
+              >
+                <StarRatings
+                  rating={rating}
+                  starRatedColor="#f1c40f"
+                  numberOfStars={5}
+                  changeRating={changeRating}
+                  name="rating"
+                  starDimension="30px"
+                  starSpacing="15px"
+                />
+                <TextArea
+                  className="my-6 "
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  placeholder="Write Your Comment"
+                  autoSize={{
+                    minRows: 3,
+                    maxRows: 5,
+                  }}
+                />
+              </Modal>
+            </>
+          )}
       </section>
       <section>
         <Tabs>
@@ -217,12 +399,26 @@ export default function BookDetails() {
           </TabPanel>
 
           <TabPanel>
-            <div className="flex flex-col items-center gap-4">review</div>
+            <div className="flex flex-col items-center gap-4">
+              <h1 className="text-xl font-bold text-slate-600 my-6">
+                This is all reviews about this book
+              </h1>
+              <div className="w-full p-4 sm:max-w-4xl mx-auto ">
+                {allReviews.length === 0 && (
+                  <h1 className="text-3xl font-bold text-slate-600">
+                    No reviews yet
+                  </h1>
+                )}
+                {allReviews &&
+                  allReviews.length > 0 &&
+                  allReviews.map((review, index) => (
+                    <Review review={review} key={index} />
+                  ))}
+              </div>
+            </div>
           </TabPanel>
         </Tabs>
       </section>
-
-      <div>{}</div>
     </div>
   );
 }
