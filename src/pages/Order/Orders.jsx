@@ -5,7 +5,9 @@ import useOrders from "../../hooks/orders/useOrders";
 import Spinner from "../../componets/loader/Spinner";
 import Swal from "sweetalert2";
 import { Alert } from "flowbite-react";
-import useDeliveryMan from "../../hooks/deliveryMan/useDeliveryMan";
+
+import useGetAllUsers from "../../hooks/user/useGetAllUsers";
+import { toast } from "react-toastify";
 
 export default function Orders() {
   const { id: orderId } = useParams();
@@ -15,29 +17,31 @@ export default function Orders() {
     error,
     getOrdersById,
     paymentServer,
-    assignDeliveryMan,
     assignDeliveryManProduct,
   } = useOrders();
-  const { getAllDeliveryMan, getAllDeliveryManById } = useDeliveryMan();
+
+  const { getAllDeliveryMan, getUserById } = useGetAllUsers();
   const [deliveryMan, setDeliveryMan] = useState([]);
   const [assignedMan, setAssignedMan] = useState({});
+  const [selectedDeliveryMan, setSelectedDeliveryMan] = useState("");
   const [order, setOrder] = useState({});
   // load for set delivery man
   useEffect(() => {
     const fetchData = async () => {
       const res = await getAllDeliveryMan();
-
-      setDeliveryMan(res.deliveryman);
+      // console.log(res?.deliveryMan);
+      setDeliveryMan(res?.deliveryMan);
     };
     fetchData();
   }, [assignedMan, order]);
+  // console.log(deliveryMan);
 
   // load for get deliveryMan details
   useEffect(() => {
     const fetchData = async (id) => {
-      const res = await getAllDeliveryManById(id);
+      const res = await getUserById(id);
       // console.log(res);
-      setAssignedMan(res.deliveryman);
+      setAssignedMan(res.user);
     };
     if (order?.assignedDeliveryMan) {
       fetchData(order?.assignedDeliveryMan);
@@ -113,50 +117,34 @@ export default function Orders() {
   //   });
   // };
 
-  // console.log(order);
+  // console.log(assignedMan?.userName);
+  // console.log(deliveryMan);
   const handleAssignDeliveryMan = async (orderId, deliveryManId) => {
     try {
-      const res = await assignDeliveryMan(orderId, deliveryManId);
-      // console.log(res);
-      if (res?.data?.success) {
+      const res = await assignDeliveryManProduct(orderId, deliveryManId);
+      // console.log("fff", res);
+      if (res.data?.success) {
+        console.log(res);
         Swal.fire({
           title: "Success",
           text: "Delivery Man Assigned Successfully",
           icon: "success",
-          confirmButtonText: "Ok",
+          confirmButtonText: "OK",
         });
-
-        // Update the order with the newly assigned delivery man
-        setOrder((prevOrder) => ({
-          ...prevOrder,
-          assignedDeliveryMan: deliveryManId,
-        }));
-
-        // Fetch the newly assigned delivery man's details
-        const deliveryManRes = await getAllDeliveryManById(deliveryManId);
-        setAssignedMan(deliveryManRes.deliveryman);
-        const productRes = await assignDeliveryManProduct(
-          orderId,
-          deliveryManId
-        );
-        // console.log(productRes);
       } else {
+        // console.log(res);
         Swal.fire({
           title: "Error",
-          text: res.data.message,
+          text: "Something went wrong",
           icon: "error",
-          confirmButtonText: "Ok",
+          confirmButtonText: "OK",
         });
       }
     } catch (error) {
-      Swal.fire({
-        title: "Error",
-        text: "Already Delivery Man Assigned",
-        icon: "error",
-        confirmButtonText: "Ok",
-      });
+      console.log(error);
     }
   };
+  // console.log(order?.assignedDeliveryMan);
 
   if (loading)
     return (
@@ -325,50 +313,61 @@ export default function Orders() {
                 {order.isPaid ? "Paid,thank you" : "Pay Now"}
               </button>
             </div>
-
-            {currentUser?.user.isAdmin && (
-              <div className="my-6">
-                <h1 className="text-xl font-bold text-gray-800 mb-4">
+            {currentUser?.user?.isAdmin && (
+              <div className="my-8 p-6  shadow-lg rounded-xl">
+                <h1 className="text-3xl font-bold text-slate-700 mb-4">
                   Assign Delivery Man
                 </h1>
-                <select
-                  className="w-full p-2 border border-gray-300 rounded-lg mb-4"
-                  onChange={(e) =>
-                    handleAssignDeliveryMan(order._id, e.target.value)
-                  }
-                  value={
-                    order.assignedDeliveryMan
-                      ? order.assignedDeliveryMan._id
-                      : ""
-                  }
-                >
-                  {/* Default option when no delivery man is assigned */}
-                  <option value="" disabled>
-                    {order.assignedDeliveryMan
-                      ? "Assigned Delivery Man"
-                      : "Please select a member"}
-                  </option>
-
-                  {/* Dynamically rendering delivery men */}
-                  {deliveryMan.map((man) => (
-                    <option key={man._id} value={man._id}>
-                      {man.name} -{" "}
-                      {man.isAvailable ? "Available" : "Not Available"}
-                    </option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <select
+                    className="w-full px-4 py-3 rounded-lg bg-white text-gray-800 font-semibold appearance-none transition ease-in-out duration-300 focus:outline-none focus:ring-4 focus:ring-indigo-300 hover:bg-gray-100"
+                    onChange={(e) => setSelectedDeliveryMan(e.target.value)}
+                  >
+                    {deliveryMan?.map((man) => (
+                      <option key={man._id} value={man._id}>
+                        {man.userName}
+                      </option>
+                    ))}
+                  </select>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 text-gray-500 absolute right-4 top-3 pointer-events-none"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                  <button
+                    onClick={() =>
+                      handleAssignDeliveryMan(orderId, selectedDeliveryMan)
+                    }
+                    disabled={order?.assignedDeliveryMan}
+                    className="bg-gradient-to-r from-indigo-500 to-purple-600 my-4 rounded-md text-white font-bold py-2 px-4 "
+                  >
+                    {order?.assignedDeliveryMan
+                      ? "Already Assigned"
+                      : "Assign Delivery Man"}
+                  </button>
+                </div>
               </div>
             )}
+
             {order.assignedDeliveryMan && (
               <div className="my-4 p-4 bg-gray-100 rounded-lg">
                 <h2 className="text-lg font-semibold text-gray-700 mb-2">
                   Assigned Delivery Man Details:
                 </h2>
                 <p className="text-gray-700 mb-1">
-                  <strong>Name:</strong> {assignedMan?.name}
+                  <strong>Name:</strong> {assignedMan?.userName}
                 </p>
                 <p className="text-gray-700 mb-1">
-                  <strong>Email:</strong> {assignedMan?.email}
+                  <strong>Email:</strong> {assignedMan?.userEmail}
                 </p>
                 <p className="text-gray-700 mb-1">
                   <strong>Phone:</strong> {assignedMan?.phone}

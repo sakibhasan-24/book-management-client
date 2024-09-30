@@ -77,23 +77,23 @@ export default function useOrders() {
       setLoading(false);
     }
   };
-  const assignDeliveryMan = async (orderId, deliveryManId) => {
-    setLoading(true);
-    try {
-      const res = await axiosPublic.put("/api/order/assignDeliveryMan", {
-        orderId,
-        deliveryManId,
-      });
-      return res;
-    } catch (error) {
-      console.log(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const assignDeliveryMan = async (orderId, deliveryManId) => {
+  //   setLoading(true);
+  //   try {
+  //     const res = await axiosPublic.put("/api/order/assignDeliveryMan", {
+  //       orderId,
+  //       deliveryManId,
+  //     });
+  //     return res;
+  //   } catch (error) {
+  //     console.log(error.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const assignDeliveryManProduct = async (orderId, deliveryManId) => {
-    console.log(orderId, deliveryManId);
-    setLoading(true);
+    // console.log(orderId, deliveryManId);
+
     try {
       const res = await axiosPublic.put("/api/order/assignDeliveryManProduct", {
         orderId,
@@ -102,9 +102,9 @@ export default function useOrders() {
       console.log(res);
       return res;
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
   return {
@@ -115,7 +115,7 @@ export default function useOrders() {
     paymentServer,
     getOrdersByUserId,
     getAllOrders,
-    assignDeliveryMan,
+    // assignDeliveryMan,
     assignDeliveryManProduct,
   };
 }

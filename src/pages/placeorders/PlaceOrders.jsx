@@ -28,7 +28,7 @@ export default function PlaceOrders() {
 
       totalPrice: cart.cartPrice + shippingPrice,
     });
-    console.log(res.createdOrder);
+    // console.log(res.createdOrder);
     if (res.success) {
       Swal.fire({
         icon: "success",
@@ -87,6 +87,23 @@ export default function PlaceOrders() {
                     <p className="text-gray-800 text-md font-semibold underline">
                       {item.title}
                     </p>
+                    {item?.orderType === "rent" && (
+                      <div>
+                        <p className="text-gray-700 text-md font-medium">
+                          Rent for{" "}
+                          <span className="text-red-500 font-bold">
+                            {item.durationDate}
+                          </span>
+                          days
+                        </p>
+                        <p className="text-gray-700 text-xs font-medium">
+                          Return Date:
+                          <span>
+                            {new Date(item.returnDate).toDateString()}
+                          </span>
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <p className="text-gray-700 text-md font-medium">

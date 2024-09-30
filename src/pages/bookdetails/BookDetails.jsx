@@ -13,6 +13,8 @@ import useCreateBooks from "../../hooks/books/useCreateBooks";
 import StarRatings from "react-star-ratings";
 import TextArea from "antd/es/input/TextArea";
 import Review from "./Review";
+import { toast } from "react-toastify";
+import { Datepicker } from "flowbite-react";
 export default function BookDetails() {
   const params = useParams();
   const { getBookById } = useGetBooks();
@@ -26,7 +28,13 @@ export default function BookDetails() {
   const [demoPages, setDemoPages] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(null);
   const [book, setBook] = useState(null);
+
+  const [orderType, setOrderType] = useState("sell");
   const modalRef = useRef(null);
+  const [isRentModal, setIsRentModal] = useState(false);
+  const [rentDuration, setRentDuration] = useState(null);
+  const checkedOrderType = orderType === "rent" && rentDuration;
+
   const navigate = useNavigate();
 
   // ratings
@@ -35,6 +43,7 @@ export default function BookDetails() {
   const [comment, setComment] = useState("");
   const [userReview, setUserReview] = useState(null);
   const [allReviews, setAllReviews] = useState([]);
+
   // review Loading
   useEffect(() => {
     const fetchReview = async () => {
@@ -90,8 +99,57 @@ export default function BookDetails() {
     setCurrentIndex(index);
   };
 
+  const handleRentPrice = (d, price) => {
+    let rentPrice;
+    const date = calculateDays(d);
+
+    if (date <= 30) {
+      rentPrice = price * 0.2;
+    } else if (date <= 60) {
+      rentPrice = price * 0.3;
+    } else if (date <= 90) {
+      rentPrice = price * 0.4;
+    } else if (date <= 120) {
+      rentPrice = price * 0.5;
+    } else {
+      rentPrice = price * 0.6;
+    }
+
+    return rentPrice;
+  };
+
   const handleAddToCart = () => {
-    dispatch(addToCart({ ...book }));
+    console.log("Add to cart clicked", book);
+
+    const rentDays = calculateDays(rentDuration);
+
+    if (orderType === "rent" && (rentDays < 30 || rentDays > 180)) {
+      toast.error("Rent duration must be between 30 and 180 days.");
+      return;
+    }
+
+    if (currentUser) {
+      if (
+        currentUser?.user?.isAdmin ||
+        currentUser?.user?._id === book?.bookOwner
+      ) {
+        toast.error(`You can't add your own book to the cart`);
+        return;
+      }
+    }
+
+    dispatch(
+      addToCart({
+        ...book,
+        orderType,
+        returnDate: orderType === "rent" ? rentDuration : 0,
+        durationDate: orderType === "rent" ? rentDays : 0,
+        price:
+          orderType === "rent"
+            ? handleRentPrice(rentDuration, book.price)
+            : book.price,
+      })
+    );
     navigate("/cartItems");
   };
 
@@ -119,6 +177,7 @@ export default function BookDetails() {
       if (result.isConfirmed) {
         // call accept function
         const res = await acceptBook(id, profit);
+        // console.log(res.data);
         if (res?.data) window.open(res.data, "_blank");
         // console.log(profit);
         if (book?.isAccepted) {
@@ -135,6 +194,7 @@ export default function BookDetails() {
   const showModal = () => {
     setIsModalOpen(true);
   };
+
   const handleOk = async () => {
     // console.log(rating, comment);
     try {
@@ -165,12 +225,48 @@ export default function BookDetails() {
   }, [rating, comment]);
 
   // console.log(rating, comment);
+
+  console.log(isRentModal);
+  const handleRentModal = () => {
+    // setIsModalOpen(true);
+
+    // setIsRentModal(true);
+
+    setIsRentModal(false);
+    // toast.success(isRentModal);
+  };
+  const handleCloseRentModal = () => {
+    // setIsModalOpen(false);
+    setIsRentModal(false);
+    toast.success(isRentModal);
+  };
+  // console.log(rentDuration);
+
+  // Helper function to calculate days difference
+  const calculateDays = (date) => {
+    const today = new Date();
+    const timeDiff = date - today;
+    const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+    return daysDiff;
+  };
+  const handleToggle = (value) => {
+    setOrderType(value);
+    if (value === "rent") {
+      setIsRentModal(true);
+      return;
+    }
+    if (value === "sell") {
+      setIsRentModal(false);
+      setRentDuration(null);
+    }
+  };
   if (!book)
     return (
       <div>
         <Spinner />
       </div>
     );
+
   return (
     <div className="container w-full sm:max-w-6xl mx-auto my-12 ">
       <section className="w-full  my-6 flex flex-col sm:flex-row gap-8 items-center justify-between">
@@ -242,32 +338,64 @@ export default function BookDetails() {
                 </h1>
               </div>
             )}
-          {currentUser?.user?._id !== book?.bookOwner &&
-            currentUser?.user?.isAdmin === false && (
-              <div className="flex gap-6">
-                <button
-                  onClick={handleAddToCart}
-                  disabled={
-                    book.bookStatus === "sold" || book.bookStatus === "rent"
-                  }
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-                >
-                  {book.bookStatus === "sold" || book.bookStatus === "rent"
-                    ? "Not Available"
-                    : "Add to Cart"}
-                </button>
-                <button
-                  disabled={
-                    book.bookStatus === "sold" || book.bookStatus === "rent"
-                  }
-                  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4"
-                >
-                  {book.bookStatus === "sold" || book.bookStatus === "rent"
-                    ? "Not Available"
-                    : "Rent"}
-                </button>
-              </div>
-            )}
+          <div className="flex space-x-4">
+            <button
+              className={`${
+                orderType === "sell"
+                  ? "bg-slate-900 text-white py-1 px-4 rounded-md font-bold text-xl"
+                  : "bg-gray-200 text-black py-1 px-4 rounded-md font-bold text-xl"
+              }`}
+              onClick={() => handleToggle("sell")}
+            >
+              Sell
+            </button>
+
+            <button
+              className={`${
+                orderType === "rent"
+                  ? "bg-slate-900 text-white py-1 px-4 rounded-md font-bold text-xl"
+                  : "bg-gray-200 text-black py-1 px-4 rounded-md font-bold text-xl"
+              }`}
+              onClick={() => handleToggle("rent")}
+            >
+              Rent
+            </button>
+          </div>
+          <div className="flex gap-6">
+            <button
+              onClick={handleAddToCart}
+              disabled={
+                book.bookStatus === "sold" || book.bookStatus === "rent"
+              }
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+            >
+              {book.bookStatus === "sold" || book.bookStatus === "rent"
+                ? "Not Available"
+                : "Add to Cart"}
+            </button>
+          </div>
+
+          {orderType === "rent" && (
+            <>
+              <Modal
+                title="Select Your Duration"
+                open={isRentModal}
+                onOk={handleRentModal}
+                onCancel={handleCloseRentModal}
+              >
+                <input
+                  type="date"
+                  onChange={(e) => setRentDuration(new Date(e.target.value))}
+                />
+              </Modal>
+              {rentDuration > 0 && (
+                <p className="text-gray-700 mt-4">
+                  Rent duration selected: {calculateDays(rentDuration)} day(s)
+                </p>
+              )}
+            </>
+          )}
+
           {currentUser?.user?.isAdmin && book?.isAccepted === false && (
             <button
               onClick={() => handleAcceptBook(book._id)}
@@ -422,3 +550,8 @@ export default function BookDetails() {
     </div>
   );
 }
+
+// before add to cart create  a confirmation is rent or buy
+//if buy then go default way
+//if rent take rent duration option and change price;
+// during order status montior time and date...after 15days give a remainder and after time period end make this id disabled

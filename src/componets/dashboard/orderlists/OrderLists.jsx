@@ -14,8 +14,9 @@ export default function OrderLists() {
       const res = await getOrdersByUserId(id);
       setOrdersLists(res);
     };
-    fetchData(currentUser.user._id, ordersLists);
-  }, [currentUser.user._id]);
+    fetchData(currentUser?.user?._id, ordersLists);
+  }, [currentUser?.user?._id]);
+
   useEffect(() => {
     const fetchData = async () => {
       const res = await getAllOrders();
@@ -28,7 +29,7 @@ export default function OrderLists() {
     return <Spinner />;
   }
 
-  if (ordersLists.length === 0) {
+  if (ordersLists?.length === 0) {
     return (
       <h1 className="text-center text-xl font-bold text-slate-800">
         No Orders Found{" "}
@@ -131,7 +132,7 @@ export default function OrderLists() {
     //     </table>
     //   </div>
     // </div>
-    <div className="w-full sm:max-w-6xl mx-auto px-4">
+    <div className="w-full sm:max-w-5xl mx-auto px-4">
       {currentUser?.user.isAdmin ? (
         <h1 className="text-3xl font-bold text-center mb-10 text-gray-800">
           Order Lists for <span className="text-blue-600">Users</span>
@@ -143,20 +144,20 @@ export default function OrderLists() {
         </h1>
       )}
 
-      <div className="overflow-x-auto shadow-lg rounded-lg border border-gray-200">
+      <div className="overflow-x-auto w-full shadow-lg rounded-lg border border-gray-200 my-12">
         <table className="w-full bg-white table-auto">
           <thead className="bg-slate-200 text-slate-800">
             <tr className="text-left text-sm font-semibold uppercase">
-              <th className="p-4 text-center">Order ID</th>
-              <th className="p-4 text-center">Book ID</th>
-              <th className="p-4 text-center">Total Price</th>
-              <th className="p-4 text-center">Order Date</th>
-              <th className="p-4 text-center">Payment Method</th>
-              <th className="p-4 text-center">Delivery Status</th>
-              <th className="p-4 text-center">Paid/Not Paid</th>
+              <th className="p-2 text-center">Order ID</th>
+              <th className="p-2 text-center">Book ID</th>
+              <th className="p-2 text-center">Total Price</th>
+              <th className="p-2 text-center">Order Date</th>
+              <th className="p-2 text-center">Payment Method</th>
+              <th className="p-2 text-center">Delivery Status</th>
+              <th className="p-2 text-center">Paid/Not Paid</th>
             </tr>
           </thead>
-          <tbody className="text-gray-700 text-sm">
+          <tbody className="text-gray-700 w-full text-sm">
             {ordersLists?.orders?.map((order) => (
               <tr
                 key={order._id}
@@ -165,7 +166,7 @@ export default function OrderLists() {
                 <td className="p-4 text-center">
                   <Link
                     to={`/order/${order._id}`}
-                    className="text-blue-500 underline"
+                    className="text-blue-500 underline text-center w-1/3"
                   >
                     {order._id}
                   </Link>
@@ -175,7 +176,7 @@ export default function OrderLists() {
                     <Link
                       key={item._id}
                       to={`/book/${item.product}`}
-                      className="text-blue-500 underline"
+                      className="text-blue-500 underline text-center "
                     >
                       {item.product}
                     </Link>

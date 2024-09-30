@@ -9,13 +9,13 @@ import StarRatings from "react-star-ratings";
 export default function BookCard({ book }) {
   // console.log(book);
   const { currentUser } = useSelector((state) => state.user);
-  console.log(currentUser.user);
+  // console.log(currentUser.user);
   const { loading, getReviewById } = useCreateBooks();
   const [reviewInfo, setReviewInfo] = useState(null);
   useEffect(() => {
     Aos.init({ duration: 1000 });
   }, []);
-  // console.log(book.bookReviews.length);
+  console.log(book.bookReviews.length);
   useEffect(() => {
     const fetchData = async (id) => {
       const res = await getReviewById(id);

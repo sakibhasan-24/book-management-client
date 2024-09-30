@@ -46,6 +46,20 @@ export default function useGetAllUsers() {
       setLoading(false);
     }
   };
+  const getAllDeliveryMan = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axiosPublic.get("api/user/getDeliveryMan");
+      // console.log(response.data.users);
+      setUsers(response.data.users);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return {
     loading,
     error,
@@ -54,5 +68,6 @@ export default function useGetAllUsers() {
     setUsers,
     deleteUser,
     getUserById,
+    getAllDeliveryMan,
   };
 }
