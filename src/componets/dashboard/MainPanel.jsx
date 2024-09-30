@@ -45,6 +45,11 @@ export default function MainPanel() {
                     profile
                   </Sidebar.Item>
                 </Link>
+                <Link to="/dashboard/assigned-orders">
+                  <Sidebar.Item icon={HiUserAdd} as={"div"}>
+                    orders
+                  </Sidebar.Item>
+                </Link>
 
                 <Sidebar.Item href="#" icon={HiTable}>
                   Sign Up

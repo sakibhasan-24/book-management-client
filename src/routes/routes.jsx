@@ -26,6 +26,7 @@ import JoinAsDeliveryMan from "../componets/deliveryManButton/JoinAsDeliveryMan"
 import DeliveryMan from "../componets/dashboard/deliveryman/DeliveryMan";
 import DeliveryManLists from "../pages/deliverymanlists/DeliveryManLists";
 import AdminRoutes from "./AdminRoutes";
+import AssignedOrders from "../componets/dashboard/deliveryManOrdersPage/AssignedOrders";
 
 const router = createBrowserRouter([
   {
@@ -117,6 +118,14 @@ const router = createBrowserRouter([
               </PrivateRoutes>
             ),
           },
+          {
+            path: "/dashboard/assigned-orders",
+            element: (
+              <PrivateRoutes>
+                <AssignedOrders />
+              </PrivateRoutes>
+            ),
+          },
         ],
       },
       {
@@ -178,6 +187,8 @@ const router = createBrowserRouter([
           </PrivateRoutes>
         ),
       },
+
+      ,
       {
         path: "/deliveryMan-login",
         element: <JoinAsDeliveryMan />,
