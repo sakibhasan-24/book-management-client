@@ -119,7 +119,7 @@ export default function BookDetails() {
   };
 
   const handleAddToCart = () => {
-    console.log("Add to cart clicked", book);
+    // console.log("Add to cart clicked", book);
 
     const rentDays = calculateDays(rentDuration);
 
@@ -142,14 +142,16 @@ export default function BookDetails() {
       addToCart({
         ...book,
         orderType,
-        returnDate: orderType === "rent" ? rentDuration : 0,
-        durationDate: orderType === "rent" ? rentDays : 0,
+        returnDate: orderType === "rent" && rentDuration,
+        durationDate: orderType === "rent" && calculateDays(rentDuration),
+
         price:
           orderType === "rent"
             ? handleRentPrice(rentDuration, book.price)
             : book.price,
       })
     );
+
     navigate("/cartItems");
   };
 

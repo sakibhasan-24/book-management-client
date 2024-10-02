@@ -14,6 +14,13 @@ export default function PlaceOrders() {
   // console.log(cart.deliveryAddress);
   const shippingPrice = cart.cartPrice > 1000 ? 0.0 : cart.cartPrice * 0.02;
   const { loading, error, createOrder } = useOrders();
+  const calculateRemainingDays = (returnDate) => {
+    const currentDate = new Date();
+    const returnDateObj = new Date(returnDate);
+    const remainingTime = returnDateObj.getTime() - currentDate.getTime();
+    const remainingDays = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
+    return remainingDays > 0 ? remainingDays : 0; // Avoid negative days
+  };
   const handlePlaceOrder = async () => {
     // console.log("c");
     const res = await createOrder({
@@ -21,11 +28,11 @@ export default function PlaceOrders() {
       bookOwner: cart.cartItems.map((x) => x.bookOwner),
       bookStatus: cart.cartItems.map((x) => x.bookStatus),
       isAvailable: cart.cartItems.map((x) => x.isAvailable),
+
       deliveryAddress: cart.deliveryAddress,
       paymentMethod: cart.paymentMethod,
       productPrice: cart.cartPrice,
       shippingPrice,
-
       totalPrice: cart.cartPrice + shippingPrice,
     });
     // console.log(res.createdOrder);
@@ -40,6 +47,7 @@ export default function PlaceOrders() {
       navigate(`/order/${res.createdOrder._id}`);
     }
   };
+
   return (
     <div className="max-w-5xl mx-auto my-12 p-4 sm:p-6 bg-gray-50 rounded-lg shadow-lg">
       <div className="flex flex-col sm:flex-row justify-between gap-10">

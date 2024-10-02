@@ -5,13 +5,18 @@ import {
   HiBookOpen,
   HiCash,
   HiChartPie,
+  HiDocumentAdd,
   HiInbox,
   HiOutlineBookOpen,
   HiOutlineBookmarkAlt,
+  HiOutlineClipboardCheck,
+  HiOutlineClipboardList,
+  HiOutlineUserGroup,
   HiShoppingBag,
   HiTable,
   HiUser,
   HiUserAdd,
+  HiUserCircle,
   HiViewBoards,
 } from "react-icons/hi";
 import { useSelector } from "react-redux";
@@ -41,12 +46,12 @@ export default function MainPanel() {
             <Sidebar.Items>
               <Sidebar.ItemGroup>
                 <Link to="/dashboard/profile">
-                  <Sidebar.Item icon={HiUserAdd} as={"div"}>
+                  <Sidebar.Item icon={HiUserCircle} as={"div"}>
                     profile
                   </Sidebar.Item>
                 </Link>
                 <Link to="/dashboard/assigned-orders">
-                  <Sidebar.Item icon={HiUserAdd} as={"div"}>
+                  <Sidebar.Item icon={HiOutlineClipboardCheck} as={"div"}>
                     orders
                   </Sidebar.Item>
                 </Link>
@@ -73,12 +78,12 @@ export default function MainPanel() {
           <Sidebar aria-label="Default sidebar example" as={"div"}>
             <Sidebar.Items>
               <Sidebar.ItemGroup>
-                <Sidebar.Item href="#" icon={HiChartPie} as={"div"}>
+                <Sidebar.Item href="#" icon={HiOutlineClipboardList} as={"div"}>
                   Dashboard
                 </Sidebar.Item>
                 <Link to="/dashboard/profile">
                   {" "}
-                  <Sidebar.Item icon={HiUserAdd} as={"div"}>
+                  <Sidebar.Item icon={HiUserCircle} as={"div"}>
                     profile
                   </Sidebar.Item>
                 </Link>
@@ -99,7 +104,7 @@ export default function MainPanel() {
                 {currentUser?.user?.isAdmin && (
                   <Link to="/dashboard/users">
                     <Sidebar.Item
-                      icon={HiUser}
+                      icon={HiOutlineUserGroup}
                       as={"div"}
                       label={users?.length}
                     >
@@ -110,7 +115,7 @@ export default function MainPanel() {
                 {currentUser?.user?.isAdmin === false && (
                   <Link to="/dashboard/add-books">
                     <Sidebar.Item
-                      icon={HiOutlineBookOpen}
+                      icon={HiDocumentAdd}
                       className={`cursor-pointer`}
                       as={"div"}
                     >
@@ -120,7 +125,7 @@ export default function MainPanel() {
                 )}
                 {currentUser?.user && (
                   <Link to={`/dashboard/orders/${currentUser?.user._id}`}>
-                    <Sidebar.Item icon={HiCash} as={"div"}>
+                    <Sidebar.Item icon={HiShoppingBag} as={"div"}>
                       Orders
                     </Sidebar.Item>
                   </Link>
@@ -146,7 +151,7 @@ export default function MainPanel() {
                 {currentUser?.user?.isAdmin === false && (
                   <Link to="/dashboard/mybooks">
                     <Sidebar.Item
-                      icon={HiOutlineBookmarkAlt}
+                      icon={HiBookOpen}
                       className={`cursor-pointer`}
                       as={"div"}
                     >
@@ -154,8 +159,19 @@ export default function MainPanel() {
                     </Sidebar.Item>
                   </Link>
                 )}
+                {currentUser?.user?.role !== "deliveryMan" && (
+                  <Link to="/dashboard/rentBooks">
+                    <Sidebar.Item
+                      icon={HiBookOpen}
+                      className={`cursor-pointer`}
+                      as={"div"}
+                    >
+                      Rent Books
+                    </Sidebar.Item>
+                  </Link>
+                )}
 
-                <Sidebar.Item href="#" icon={HiTable}>
+                <Sidebar.Item href="#" icon={HiOutlineClipboardList}>
                   Sign Up
                 </Sidebar.Item>
               </Sidebar.ItemGroup>

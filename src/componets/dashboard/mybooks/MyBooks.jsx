@@ -63,7 +63,7 @@ export default function MyBooks() {
             {currentUser.user?.isAdmin === false && (
               <Table.HeadCell>Edit</Table.HeadCell>
             )}
-            <Table.HeadCell>Remove</Table.HeadCell>
+            <Table.HeadCell>Action</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
             {displayedBooks && displayedBooks.length > 0 ? (

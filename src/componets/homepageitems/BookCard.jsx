@@ -15,7 +15,7 @@ export default function BookCard({ book }) {
   useEffect(() => {
     Aos.init({ duration: 1000 });
   }, []);
-  console.log(book.bookReviews.length);
+  // console.log(book.bookReviews.length);
   useEffect(() => {
     const fetchData = async (id) => {
       const res = await getReviewById(id);

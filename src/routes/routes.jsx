@@ -27,6 +27,7 @@ import DeliveryMan from "../componets/dashboard/deliveryman/DeliveryMan";
 import DeliveryManLists from "../pages/deliverymanlists/DeliveryManLists";
 import AdminRoutes from "./AdminRoutes";
 import AssignedOrders from "../componets/dashboard/deliveryManOrdersPage/AssignedOrders";
+import RentBooks from "../pages/rentBooks/RentBooks";
 
 const router = createBrowserRouter([
   {
@@ -123,6 +124,14 @@ const router = createBrowserRouter([
             element: (
               <PrivateRoutes>
                 <AssignedOrders />
+              </PrivateRoutes>
+            ),
+          },
+          {
+            path: "/dashboard/rentBooks",
+            element: (
+              <PrivateRoutes>
+                <RentBooks />
               </PrivateRoutes>
             ),
           },

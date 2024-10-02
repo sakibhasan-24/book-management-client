@@ -86,25 +86,33 @@ export default function AssignedOrders() {
                 <td className="py-3 px-4">{item?.deliveryAddress?.phone}</td>
                 <td className="py-3 px-4">{item._id}</td>
                 <td className="py-3 px-4">{item?.deliveryStatus}</td>
-                <td className="py-3 px-4 text-center">
-                  <div className="w-full">
-                    <select
-                      className="w-full py-2 px-3 bg-gray-100 border border-gray-300 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-300"
-                      defaultValue="Update"
-                      onChange={(e) => handleUpdateOrderStatus(e, item._id)}
-                    >
-                      <option value="Update" disabled>
-                        Update
-                      </option>
-                      <option value="Delivery Man Collect From Store">
-                        Delivery Man Collect From Store
-                      </option>
-                      <option value="On the Way">On the Way</option>
-                      <option value="Pending">Pending</option>
-                      <option value="Delivered">Delivered</option>
-                    </select>
-                  </div>
-                </td>
+
+                {/* If deliveryStatus is "Delivered", show success message, otherwise show select dropdown */}
+                {item?.deliveryStatus === "Delivered" ? (
+                  <td className="py-3 px-4 text-green-600 font-bold text-center">
+                    Success
+                  </td>
+                ) : (
+                  <td className="py-3 px-4 text-center">
+                    <div className="w-full">
+                      <select
+                        className="w-full py-2 px-3 bg-gray-100 border border-gray-300 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                        defaultValue="Update"
+                        onChange={(e) => handleUpdateOrderStatus(e, item._id)}
+                      >
+                        <option value="Update" disabled>
+                          Update
+                        </option>
+                        <option value="Delivery Man Collect From Store">
+                          Delivery Man Collect From Store
+                        </option>
+                        <option value="On the Way">On the Way</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Delivered">Delivered</option>
+                      </select>
+                    </div>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>

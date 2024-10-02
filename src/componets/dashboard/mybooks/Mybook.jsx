@@ -1,4 +1,4 @@
-import { Table } from "flowbite-react";
+import { Table, TableCell } from "flowbite-react";
 import React from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -23,26 +23,29 @@ export default function Mybook({ book, isAdmin, handleDeleteBook }) {
       <Table.Cell>
         <p>{book.price} BDT</p>
       </Table.Cell>
-      {!isAdmin && (
+      {!isAdmin && book?.isAccepted ? (
+        <Table.Cell>Accepted</Table.Cell>
+      ) : (
         <Link to={`/dashboard/update-book/${book._id}`}>
           <Table.Cell>
-            <p
-              className="font-medium text-green-600 hover:underline  cursor-pointer"
-              //   onClick={() => handleDeletebook(book._id)}
-            >
+            <p className="font-medium text-green-600 hover:underline  cursor-pointer">
               <FaEdit />
             </p>
           </Table.Cell>
         </Link>
       )}
-      <Table.Cell onClick={() => handleDeleteBook(book._id)}>
-        <p
-          className="font-medium text-red-600 hover:underline  cursor-pointer"
-          //   onClick={() => handleDeletebook(book._id)}
-        >
-          <FaTrash />
-        </p>
-      </Table.Cell>
+      {book?.isAccepted ? (
+        <Table.Cell>Accepted</Table.Cell>
+      ) : (
+        <Table.Cell onClick={() => handleDeleteBook(book._id)}>
+          <p
+            className="font-medium text-red-600 hover:underline  cursor-pointer"
+            onClick={() => handleDeleteBook(book._id)}
+          >
+            <FaTrash />
+          </p>
+        </Table.Cell>
+      )}
     </Table.Row>
   );
 }
