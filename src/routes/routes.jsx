@@ -29,6 +29,7 @@ import AdminRoutes from "./AdminRoutes";
 import AssignedOrders from "../componets/dashboard/deliveryManOrdersPage/AssignedOrders";
 import RentBooks from "../pages/rentBooks/RentBooks";
 import AdminDashboard from "../componets/dashboard/adminDashboard/AdminDashboard";
+import UserDashboard from "../componets/dashboard/userDashboard/UserDashboard";
 
 const router = createBrowserRouter([
   {
@@ -141,6 +142,14 @@ const router = createBrowserRouter([
             element: (
               <PrivateRoutes>
                 <AdminDashboard />
+              </PrivateRoutes>
+            ),
+          },
+          {
+            path: "/dashboard/user",
+            element: (
+              <PrivateRoutes>
+                <UserDashboard />
               </PrivateRoutes>
             ),
           },

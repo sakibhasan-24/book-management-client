@@ -86,6 +86,14 @@ export default function MainPanel() {
                     </Sidebar.Item>
                   </Link>
                 )}
+                {currentUser?.user?.role === "user" && (
+                  <Link to="/dashboard/user">
+                    {" "}
+                    <Sidebar.Item icon={HiOutlineClipboardList} as={"div"}>
+                      Dashboard
+                    </Sidebar.Item>
+                  </Link>
+                )}
 
                 <Link to="/dashboard/profile">
                   {" "}
