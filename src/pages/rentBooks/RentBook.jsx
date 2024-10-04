@@ -6,8 +6,6 @@ export default function RentBook({
   idx,
   handleSendToStore,
   currentUser,
-  handleBlockUser,
-  handleUnBlockUser,
 }) {
   console.log(item);
   const today = new Date();
@@ -52,19 +50,7 @@ export default function RentBook({
             <p>Returned</p>
           ) : (
             <div>
-              {item?.user?.isRedAlert ? (
-                <button onClick={() => handleUnBlockUser(item?.user?._id)}>
-                  Unblock
-                </button>
-              ) : (
-                <button
-                  onClick={() =>
-                    handleBlockUser(item?.user?._id, remainingDays)
-                  }
-                >
-                  Take Action
-                </button>
-              )}
+              <p>Not Return Yet</p>
             </div>
           )}
         </td>

@@ -58,6 +58,25 @@ export default function useRentBooks() {
       setLoading(false);
     }
   };
-
-  return { loading, error, getAllRentBooks, backBook, blockUser, unBlockUser };
+  const getAllOverDueUsers = async (id) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await axiosPublic.get(`api/books/overDueUsers/${id}`);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  return {
+    loading,
+    error,
+    getAllRentBooks,
+    backBook,
+    blockUser,
+    unBlockUser,
+    getAllOverDueUsers,
+  };
 }

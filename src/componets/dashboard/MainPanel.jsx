@@ -78,9 +78,15 @@ export default function MainPanel() {
           <Sidebar aria-label="Default sidebar example" as={"div"}>
             <Sidebar.Items>
               <Sidebar.ItemGroup>
-                <Sidebar.Item href="#" icon={HiOutlineClipboardList} as={"div"}>
-                  Dashboard
-                </Sidebar.Item>
+                {currentUser?.user?.role === "admin" && (
+                  <Link to="/dashboard/admin">
+                    {" "}
+                    <Sidebar.Item icon={HiOutlineClipboardList} as={"div"}>
+                      Dashboard
+                    </Sidebar.Item>
+                  </Link>
+                )}
+
                 <Link to="/dashboard/profile">
                   {" "}
                   <Sidebar.Item icon={HiUserCircle} as={"div"}>

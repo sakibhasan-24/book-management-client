@@ -11,7 +11,7 @@ export default function useGetAllUsers() {
     setLoading(true);
     try {
       const response = await axiosPublic.get("api/user/get-users");
-      console.log(response.data.users);
+      // console.log(response.data.users);
       setUsers(response.data.users);
       return response.data;
     } catch (error) {

@@ -28,6 +28,7 @@ import DeliveryManLists from "../pages/deliverymanlists/DeliveryManLists";
 import AdminRoutes from "./AdminRoutes";
 import AssignedOrders from "../componets/dashboard/deliveryManOrdersPage/AssignedOrders";
 import RentBooks from "../pages/rentBooks/RentBooks";
+import AdminDashboard from "../componets/dashboard/adminDashboard/AdminDashboard";
 
 const router = createBrowserRouter([
   {
@@ -132,6 +133,14 @@ const router = createBrowserRouter([
             element: (
               <PrivateRoutes>
                 <RentBooks />
+              </PrivateRoutes>
+            ),
+          },
+          {
+            path: "/dashboard/admin",
+            element: (
+              <PrivateRoutes>
+                <AdminDashboard />
               </PrivateRoutes>
             ),
           },
