@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Card, Statistic, Row, Col } from "antd";
 import {
   UserOutlined,
   MailOutlined,
@@ -30,15 +29,16 @@ export default function UserDashboard() {
       setUser(res?.user);
     };
     fetchData(currentUser?.user?._id);
-  }, []);
+  }, [currentUser, getUserById]);
+
+  // Fetch orders by user ID
   useEffect(() => {
     const fetchData = async (id) => {
       const res = await getOrdersByUserId(id);
-      console.log(res);
       setOrders(res?.orders || []);
     };
     fetchData(currentUser?.user?._id);
-  }, []);
+  }, [currentUser, getOrdersByUserId]);
 
   // Fetch books owned by user
   useEffect(() => {
@@ -47,7 +47,7 @@ export default function UserDashboard() {
       setBooks(res?.books || []);
     };
     fetchBooks(currentUser?.user?._id);
-  }, []);
+  }, [currentUser, getUserBooks]);
 
   // Fetch currently rented books
   useEffect(() => {
@@ -56,78 +56,57 @@ export default function UserDashboard() {
       setCurrentlyRentBooks(res?.rentBooks || []);
     };
     fetchRentBooks(currentUser?.user?._id);
-  }, []);
+  }, [currentUser, getAllRentBooks]);
 
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-2xl font-bold mb-4">User Dashboard</h1>
 
-      {/* User Information */}
-      <Card bordered={false} className="mb-6">
-        <Row gutter={16}>
-          <Col span={8}>
-            <Statistic
-              title="User Name"
-              value={user?.userName || "N/A"}
-              prefix={<UserOutlined />}
-            />
-          </Col>
-          <Col span={8}>
-            <Statistic
-              title="Email"
-              value={user?.userEmail || "N/A"}
-              prefix={<MailOutlined />}
-            />
-          </Col>
-          <Col span={8}>
-            <Statistic
-              title=" ID Status"
-              value={user?.isRedAlert ? "Blocked" : "Active"}
-              valueStyle={{ color: user?.isRedAlert ? "#ff4d4f" : "#52c41a" }}
-            />
-          </Col>
-        </Row>
-      </Card>
+      <div className="mb-6">
+        <div className="flex items-center mb-4">
+          <UserOutlined className="text-lg mr-2" />
+          <span className="font-semibold">User Name:</span>
+          <span className="ml-2">{user?.userName || "N/A"}</span>
+        </div>
+        <div className="flex items-center mb-4">
+          <MailOutlined className="text-lg mr-2" />
+          <span className="font-semibold">Email:</span>
+          <span className="ml-2">{user?.userEmail || "N/A"}</span>
+        </div>
+        <div className="flex items-center mb-4">
+          <span className="font-semibold">ID Status:</span>
+          <span
+            className={`ml-2 ${
+              user?.isRedAlert ? "text-red-600" : "text-green-600"
+            }`}
+          >
+            {user?.isRedAlert ? "Blocked" : "Active"}
+          </span>
+        </div>
+      </div>
 
-      {/* Books Statistics */}
-      <Row gutter={16} className="mb-6">
-        <Col span={8}>
-          <Card>
-            <Statistic
-              title="Total Books"
-              value={books.length}
-              prefix={<BookOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col span={8}>
-          <Card>
-            <Statistic
-              title="Total Books Rented"
-              value={currentlyRentBooks.length}
-              prefix={<BookOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col span={8}>
-          <Card>
-            <Statistic
-              title="Total Books Ordered"
-              value={orders.length}
-              prefix={<BookOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col span={8}>
-          <Card>
-            <Statistic
-              title="Total Earnings"
-              value={user?.totalEarnings || 0}
-              prefix={<DollarOutlined />}
-            />
-          </Card>
-        </Col>
-      </Row>
+      <div className="mb-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="p-4 border rounded-lg shadow">
+          <BookOutlined className="text-lg mb-2" />
+          <h3 className="font-semibold">Total Books:</h3>
+          <p>{books.length}</p>
+        </div>
+        <div className="p-4 border rounded-lg shadow">
+          <BookOutlined className="text-lg mb-2" />
+          <h3 className="font-semibold">Total Books Rented:</h3>
+          <p>{currentlyRentBooks.length}</p>
+        </div>
+        <div className="p-4 border rounded-lg shadow">
+          <BookOutlined className="text-lg mb-2" />
+          <h3 className="font-semibold">Total Books Ordered:</h3>
+          <p>{orders.length}</p>
+        </div>
+        <div className="p-4 border rounded-lg shadow">
+          <DollarOutlined className="text-lg mb-2" />
+          <h3 className="font-semibold">Total Earnings:</h3>
+          <p>{user?.totalEarnings || 0}</p>
+        </div>
+      </div>
     </div>
   );
 }

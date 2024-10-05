@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import useOrders from "../../hooks/orders/useOrders";
@@ -8,6 +8,8 @@ import { Alert } from "flowbite-react";
 
 import useGetAllUsers from "../../hooks/user/useGetAllUsers";
 import { toast } from "react-toastify";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 export default function Orders() {
   const { id: orderId } = useParams();
@@ -146,6 +148,29 @@ export default function Orders() {
   };
   // console.log(order?.assignedDeliveryMan);
 
+  const orderRef = useRef(null);
+  const downloadPDF = async () => {
+    const canvas = await html2canvas(orderRef.current);
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF();
+
+    const imgWidth = 140;
+    const pageHeight = pdf.internal.pageSize.height;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    let heightLeft = imgHeight;
+    let position = 0;
+    pdf.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
+    while (heightLeft >= 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
+
+    // Save the PDF
+    pdf.save("Admin_Dashboard_Report.pdf");
+  };
   if (loading)
     return (
       <div className="max-w-6xl mx-auto flex items-center justify-center">
@@ -154,7 +179,15 @@ export default function Orders() {
     );
   return (
     <div className="w-full p-4 sm:max-w-6xl mx-auto my-12 ">
-      <div>
+      <div ref={orderRef}>
+        <div className="text-center my-4">
+          <button
+            onClick={downloadPDF}
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
+          >
+            download Report
+          </button>
+        </div>
         <h1 className="text-slate-700 font-semibold text-2xl ">
           Order <span className="font-bold text-slate-950">{orderId}</span>{" "}
         </h1>
@@ -313,50 +346,6 @@ export default function Orders() {
                 {order.isPaid ? "Paid,thank you" : "Pay Now"}
               </button>
             </div>
-            {currentUser?.user?.isAdmin && (
-              <div className="my-8 p-6  shadow-lg rounded-xl">
-                <h1 className="text-3xl font-bold text-slate-700 mb-4">
-                  Assign Delivery Man
-                </h1>
-                <div className="relative">
-                  <select
-                    className="w-full px-4 py-3 rounded-lg bg-white text-gray-800 font-semibold appearance-none transition ease-in-out duration-300 focus:outline-none focus:ring-4 focus:ring-indigo-300 hover:bg-gray-100"
-                    onChange={(e) => setSelectedDeliveryMan(e.target.value)}
-                  >
-                    {deliveryMan?.map((man) => (
-                      <option key={man._id} value={man._id}>
-                        {man.userName}
-                      </option>
-                    ))}
-                  </select>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 text-gray-500 absolute right-4 top-3 pointer-events-none"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                  <button
-                    onClick={() =>
-                      handleAssignDeliveryMan(orderId, selectedDeliveryMan)
-                    }
-                    disabled={order?.assignedDeliveryMan}
-                    className="bg-gradient-to-r from-indigo-500 to-purple-600 my-4 rounded-md text-white font-bold py-2 px-4 "
-                  >
-                    {order?.assignedDeliveryMan
-                      ? "Already Assigned"
-                      : "Assign Delivery Man"}
-                  </button>
-                </div>
-              </div>
-            )}
 
             {order.assignedDeliveryMan && (
               <div className="my-4 p-4 bg-gray-100 rounded-lg">
@@ -377,6 +366,51 @@ export default function Orders() {
           </div>
         </section>
       </div>
+
+      {currentUser?.user?.isAdmin && (
+        <div className="my-8 p-6  shadow-lg rounded-xl">
+          <h1 className="text-3xl font-bold text-slate-700 mb-4">
+            Assign Delivery Man
+          </h1>
+          <div className="relative">
+            <select
+              className="w-full px-4 py-3 rounded-lg bg-white text-gray-800 font-semibold appearance-none transition ease-in-out duration-300 focus:outline-none focus:ring-4 focus:ring-indigo-300 hover:bg-gray-100"
+              onChange={(e) => setSelectedDeliveryMan(e.target.value)}
+            >
+              {deliveryMan?.map((man) => (
+                <option key={man._id} value={man._id}>
+                  {man.userName}
+                </option>
+              ))}
+            </select>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 text-gray-500 absolute right-4 top-3 pointer-events-none"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+            <button
+              onClick={() =>
+                handleAssignDeliveryMan(orderId, selectedDeliveryMan)
+              }
+              disabled={order?.assignedDeliveryMan}
+              className="bg-gradient-to-r from-indigo-500 to-purple-600 my-4 rounded-md text-white font-bold py-2 px-4 "
+            >
+              {order?.assignedDeliveryMan
+                ? "Already Assigned"
+                : "Assign Delivery Man"}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

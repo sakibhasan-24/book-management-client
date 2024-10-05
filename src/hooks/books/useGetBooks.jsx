@@ -6,6 +6,7 @@ export default function useGetBooks() {
   const [userBooks, setUserBooks] = useState([]);
   const axiosPublic = useApiCall();
   const [loading, setLoading] = useState(false);
+  const [totalBooks, setTotalBooks] = useState(0);
   const [error, setError] = useState(null);
 
   const getAllBooks = async () => {
@@ -75,13 +76,17 @@ export default function useGetBooks() {
     }
   };
 
-  const getAllType = async (queryParams = {}) => {
+  const getAllType = async (queryParams = {}, startIndex = 0, limit = 3) => {
     setLoading(true);
     try {
-      const res = await axiosPublic.get("/api/books/all-type", {
-        params: queryParams,
-      });
-      //   console.log(res.data);
+      const res = await axiosPublic.get(
+        `/api/books/all-type?startIndex=${startIndex}&limit=${limit}`, // Corrected query parameter syntax
+        {
+          params: queryParams,
+        }
+      );
+      setTotalBooks(res.data.totalBook);
+
       setBooks(res.data.books);
     } catch (error) {
       console.log(error);
@@ -90,8 +95,10 @@ export default function useGetBooks() {
       setLoading(false);
     }
   };
+
   return {
     getAllBooks,
+    totalBooks,
     books,
     loading,
     error,
