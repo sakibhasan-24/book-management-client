@@ -30,6 +30,7 @@ import AssignedOrders from "../componets/dashboard/deliveryManOrdersPage/Assigne
 import RentBooks from "../pages/rentBooks/RentBooks";
 import AdminDashboard from "../componets/dashboard/adminDashboard/AdminDashboard";
 import UserDashboard from "../componets/dashboard/userDashboard/UserDashboard";
+import SearchResult from "../componets/homepageitems/SearchResult";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,7 @@ const router = createBrowserRouter([
 
     children: [
       { path: "/", element: <Home /> },
+      { path: "/search", element: <SearchResult /> },
       {
         path: "/dashboard",
         element: (

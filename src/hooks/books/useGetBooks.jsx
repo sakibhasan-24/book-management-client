@@ -85,12 +85,28 @@ export default function useGetBooks() {
           params: queryParams,
         }
       );
+      console.log(res);
       setTotalBooks(res.data.totalBook);
 
       setBooks(res.data.books);
     } catch (error) {
       console.log(error);
       setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const getBookBySearchAndCategory = async (queryParams = {}) => {
+    setLoading(true);
+    try {
+      const res = await axiosPublic.get(`/api/books/getBookBySearch`, {
+        params: queryParams,
+      });
+      console.log(res);
+      setBooks(res.data);
+      return res.data;
+    } catch {
+      setLoading(false);
     } finally {
       setLoading(false);
     }
@@ -103,6 +119,7 @@ export default function useGetBooks() {
     loading,
     error,
     getUserBooks,
+    getBookBySearchAndCategory,
     userBooks,
     deleteBook,
     setBooks,
