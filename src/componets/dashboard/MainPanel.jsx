@@ -173,6 +173,17 @@ export default function MainPanel() {
                     </Sidebar.Item>
                   </Link>
                 )}
+                {currentUser?.user?.isAdmin && (
+                  <Link to="/dashboard/mybooks">
+                    <Sidebar.Item
+                      icon={HiBookOpen}
+                      className={`cursor-pointer`}
+                      as={"div"}
+                    >
+                      Books
+                    </Sidebar.Item>
+                  </Link>
+                )}
                 {currentUser?.user?.role !== "deliveryMan" && (
                   <Link to="/dashboard/rentBooks">
                     <Sidebar.Item
