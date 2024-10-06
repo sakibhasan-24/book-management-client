@@ -85,7 +85,7 @@ export default function useGetBooks() {
           params: queryParams,
         }
       );
-      console.log(res);
+      // console.log(res);
       setTotalBooks(res.data.totalBook);
 
       setBooks(res.data.books);
