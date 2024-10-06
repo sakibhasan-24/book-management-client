@@ -94,6 +94,7 @@ import {
   HighlightOutlined,
   PicCenterOutlined, // Replacing PaintOutlined with PicCenterOutlined
 } from "@ant-design/icons";
+import BookCard from "../../../componets/homepageitems/BookCard";
 
 // Updated booksData using valid Ant Design icons
 const booksData = [
@@ -181,7 +182,7 @@ export default function CategoricalBooks() {
   useEffect(() => {
     const fetchData = async () => {
       const data = await getBookBySearchAndCategory({ category });
-      setBooks(data);
+      setBooks(data.books);
     };
     fetchData();
   }, [category]);
@@ -190,7 +191,7 @@ export default function CategoricalBooks() {
   return (
     <div className="conatainer my-6">
       <h1 className="text-center font-bold bg-green-800 text-white p-4 rounded-md text-2xl mb-6">
-        All {category} related Books
+        category related Books
       </h1>
       <div className="flex items-center cursor-pointer justify-center flex-wrap gap-6">
         {booksData.map((book) => (
@@ -216,6 +217,21 @@ export default function CategoricalBooks() {
             </p>
           </div>
         ))}
+        <h1 className="text-center font-bold bg-green-800 text-white p-4 rounded-md text-2xl mb-6">
+          All {category} related Books
+        </h1>
+      </div>
+      <div>
+        {books.length === 0 && (
+          <p className="text-red-400 font-semibold text-center my-6">
+            No Books Found for{" "}
+            <span className="text-red-600 font-bold">{category}</span>
+          </p>
+        )}
+        <div className="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-4 items-center">
+          {books.length > 0 &&
+            books.map((book) => <BookCard key={book._id} book={book} />)}
+        </div>
       </div>
     </div>
   );
