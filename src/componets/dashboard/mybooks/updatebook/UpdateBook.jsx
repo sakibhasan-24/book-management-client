@@ -162,7 +162,7 @@ export default function UpdateBook() {
       }));
     }
   };
-  console.log(formData);
+  // console.log(formData);
   const handleUpdateBook = async (e) => {
     e.preventDefault();
     try {
@@ -172,7 +172,7 @@ export default function UpdateBook() {
         bookOwner: currentUser.user._id,
       };
       const res = await bookUpdate(params.bookId, data);
-      //   console.log("rss", res);
+      // console.log("rss", res);
       if (res.success) {
         Swal.fire({
           icon: "success",
@@ -180,16 +180,23 @@ export default function UpdateBook() {
           showConfirmButton: false,
           timer: 1500,
         });
-        // console.log(data);
-        navigate("/dashboard/mybooks");
+        console.log(data);
+
         // setFormData(initialFormData);
+      }
+      if (res.response.data.success === false) {
+        Swal.fire({
+          icon: "error",
+          title: res.response.data.message,
+          showConfirmButton: false,
+        });
       }
     } catch (error) {
       console.log(error);
     }
   };
-  console.log(formData);
-  if (loading) return <Spinner />;
+  // console.log(formData);
+
   return (
     <section className="p-3 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold text-center  text-slate-700">

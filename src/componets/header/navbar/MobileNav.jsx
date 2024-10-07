@@ -79,9 +79,18 @@ const MobileNav = ({ isSidebarOpen, toggleSidebar }) => {
           )}
         </Link>
 
-        {currentUser?.user && (
+        {currentUser?.user && currentUser?.user?.role === "admin" && (
           <Link
-            to="/dashboard/profile"
+            to="/dashboard/admin"
+            className="text-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors rounded-lg p-2"
+            onClick={toggleSidebar}
+          >
+            Dashboard
+          </Link>
+        )}
+        {currentUser?.user && currentUser?.user?.role === "user" && (
+          <Link
+            to="/dashboard/user"
             className="text-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors rounded-lg p-2"
             onClick={toggleSidebar}
           >

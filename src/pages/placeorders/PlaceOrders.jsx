@@ -48,6 +48,29 @@ export default function PlaceOrders() {
     }
   };
 
+  const handleClearCart = () => {
+    console.log("clear");
+    Swal.fire({
+      icon: "warning",
+      title: "Are you sure?",
+      text: "You want to clear the cart?",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, clear it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(clearCart());
+        Swal.fire({
+          icon: "success",
+          title: "Cart Cleared Successfully",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        navigate("/");
+      }
+    });
+  };
   return (
     <div className="max-w-5xl mx-auto my-12 p-4 sm:p-6 bg-gray-50 rounded-lg shadow-lg">
       <div className="flex flex-col sm:flex-row justify-between gap-10">
@@ -155,6 +178,12 @@ export default function PlaceOrders() {
               Place Order
             </button>
           </div>
+          <button
+            onClick={handleClearCart}
+            className="w-full my-8 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition ease-in-out duration-300"
+          >
+            Clear Cart
+          </button>
         </section>
       </div>
     </div>

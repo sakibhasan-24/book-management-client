@@ -149,7 +149,7 @@ export default function OrderLists() {
           <thead className="bg-slate-200 text-slate-800">
             <tr className="text-left text-sm font-semibold uppercase">
               <th className="p-2 text-center">Order ID</th>
-              <th className="p-2 text-center">Book ID</th>
+
               <th className="p-2 text-center">Total Price</th>
               <th className="p-2 text-center">Order Date</th>
               <th className="p-2 text-center">Payment Method</th>
@@ -171,17 +171,7 @@ export default function OrderLists() {
                     {order._id}
                   </Link>
                 </td>
-                <td className="p-4 text-center">
-                  {order.orderItems.map((item) => (
-                    <Link
-                      key={item._id}
-                      to={`/book/${item.product}`}
-                      className="text-blue-500 underline text-center "
-                    >
-                      {item.product}
-                    </Link>
-                  ))}
-                </td>
+
                 <td className="p-4 text-center font-semibold">
                   BDT {order.totalPrice}
                 </td>

@@ -62,12 +62,6 @@ export default function Navbar() {
         </div>
 
         <div className="hidden sm:flex items-center justify-center gap-4 mr-12 text-md font-bold text-slate-600">
-          {/* <Link
-            to="/add-books"
-            className={`${handleRoute("/add-books") && "underline "}`}
-          >
-            Add Books
-          </Link> */}
           {/* if user login then do here logout */}
           {cartItems.length > 0 && (
             <div className="relative hover:bg-slate-200  rounded-md">
@@ -96,9 +90,16 @@ export default function Navbar() {
                     {currentUser?.user?.userEmail}
                   </span>
                 </Dropdown.Header>
-                <Link to="/dashboard/profile">
-                  <Dropdown.Item>Dashboard</Dropdown.Item>
-                </Link>
+                {currentUser?.user?.role === "admin" && (
+                  <Link to="/dashboard/admin">
+                    <Dropdown.Item>Dashboard</Dropdown.Item>
+                  </Link>
+                )}
+                {currentUser?.user?.role === "user" && (
+                  <Link to="/dashboard/user">
+                    <Dropdown.Item>Dashboard</Dropdown.Item>
+                  </Link>
+                )}
 
                 <Dropdown.Divider />
                 <Dropdown.Item onClick={handleSignOut}>Sign out</Dropdown.Item>

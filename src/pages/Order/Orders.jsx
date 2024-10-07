@@ -178,7 +178,7 @@ export default function Orders() {
       </div>
     );
   return (
-    <div className="w-full p-4 sm:max-w-6xl mx-auto my-12 ">
+    <div className="w-full  p-2 sm:p-4 sm:max-w-6xl mx-auto my-12 ">
       <div ref={orderRef}>
         <div className="text-center my-4">
           <button
@@ -191,8 +191,8 @@ export default function Orders() {
         <h1 className="text-slate-700 font-semibold text-2xl ">
           Order <span className="font-bold text-slate-950">{orderId}</span>{" "}
         </h1>
-        <section className="flex">
-          <div className="flex-1 basis-[60%]">
+        <section className="flex flex-col sm:flex-row">
+          <div className="flex-1  sm:basis-[60%]">
             <div className="my-4 ">
               <h1 className="text-4xl font-bold text-slate-700 my-4">
                 Shipping
@@ -224,9 +224,9 @@ export default function Orders() {
                   </span>
                 </p>
               </div>
-              <div className="w-1/4 my-6">
+              <div className="w-full sm:w-1/4 my-6">
                 <p
-                  className={`px-3 py-2 rounded-lg text-center font-bold text-white ${
+                  className={`px-3 py-2  rounded-lg text-center font-bold text-white ${
                     order.deliveryStatus === "Not Delivered"
                       ? "bg-red-500"
                       : order.deliveryStatus === "On the Way"

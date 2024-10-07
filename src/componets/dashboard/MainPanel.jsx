@@ -101,19 +101,6 @@ export default function MainPanel() {
                     profile
                   </Sidebar.Item>
                 </Link>
-                {currentUser?.user?.isAdmin ? (
-                  <Link to={`/dashboard/applyStatus`}>
-                    <Sidebar.Item as={"div"} icon={BiBook}>
-                      ApplyStatus
-                    </Sidebar.Item>
-                  </Link>
-                ) : (
-                  <Link to={`/dashboard/apply/${currentUser?.user?._id}`}>
-                    <Sidebar.Item as={"div"} icon={GrDeliver}>
-                      Apply for delivery Man
-                    </Sidebar.Item>
-                  </Link>
-                )}
 
                 {currentUser?.user?.isAdmin && (
                   <Link to="/dashboard/users">
