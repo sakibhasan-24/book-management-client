@@ -59,6 +59,11 @@ export default function Login() {
       <h1 className="text-xl text-center font-semibold text-slate-500 mb-2">
         Welcome Back
       </h1>
+      <div className="my-4 mx-auto text-xs text-slate-600">
+        <h1>Admin:adminOne@gmail.com pass:12345678</h1>
+        <h1>user:userOne@gmail.com pass:12345678</h1>
+        <h1>deliveryMan:deliveryman3@gmail.com pass:123456</h1>
+      </div>
       <div className="w-full">
         <form
           className="flex items-center flex-col gap-4"
