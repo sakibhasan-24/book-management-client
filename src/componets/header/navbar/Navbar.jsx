@@ -124,9 +124,31 @@ export default function Navbar() {
           )}
         </div>
         {/* start of mobile view */}
+
         <div
           className={`flex  justify-between sm:hidden bg-slate-300 rounded-full p-2 `}
         >
+          <div className="sm:hidden">
+            <button
+              onClick={toggleSidebar}
+              className="text-gray-600 cursor-pointer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16m-7 6h7"
+                />
+              </svg>
+            </button>
+          </div>
           <MobileNav
             className={`transform  transition-transform duration-700 ${
               isSidebarOpen ? "translate-x-0" : "translate-x-full"
@@ -135,9 +157,7 @@ export default function Navbar() {
             toggleSidebar={toggleSidebar}
           />
         </div>
-        {/* end of mobile view */}
       </div>
-      {/* end of desktop */}
     </div>
   );
 }

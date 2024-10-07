@@ -102,7 +102,7 @@ export default function useGetBooks() {
       const res = await axiosPublic.get(`/api/books/getBookBySearch`, {
         params: queryParams,
       });
-      console.log(res);
+      console.log(res.data);
       setBooks(res.data);
       return res.data;
     } catch {

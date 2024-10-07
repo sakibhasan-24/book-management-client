@@ -95,6 +95,7 @@ import {
   PicCenterOutlined, // Replacing PaintOutlined with PicCenterOutlined
 } from "@ant-design/icons";
 import BookCard from "../../../componets/homepageitems/BookCard";
+import Spinner from "../../../componets/loader/Spinner";
 
 // Updated booksData using valid Ant Design icons
 const booksData = [
@@ -176,7 +177,7 @@ const booksData = [
 ];
 
 export default function CategoricalBooks() {
-  const { getBookBySearchAndCategory } = useGetBooks();
+  const { getBookBySearchAndCategory, loading } = useGetBooks();
   const [category, setCategory] = useState("Cse");
   const [books, setBooks] = useState([]);
   useEffect(() => {
@@ -187,7 +188,9 @@ export default function CategoricalBooks() {
     fetchData();
   }, [category]);
 
-  console.log(books);
+  // console.log(books);
+  if (loading) return <Spinner />;
+  if (booksData.length === 0) return <Spinner />;
   return (
     <div className="conatainer my-6">
       <h1 className="text-center font-bold bg-green-800 text-white p-4 rounded-md text-2xl mb-6">
