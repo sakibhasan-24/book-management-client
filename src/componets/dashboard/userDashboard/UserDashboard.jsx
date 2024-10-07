@@ -24,39 +24,47 @@ export default function UserDashboard() {
 
   // Fetch user information
   useEffect(() => {
-    const fetchData = async (id) => {
-      const res = await getUserById(id);
-      setUser(res?.user);
-    };
-    fetchData(currentUser?.user?._id);
-  }, [currentUser, getUserById]);
+    if (currentUser?.user?._id) {
+      const fetchData = async (id) => {
+        const res = await getUserById(id);
+        setUser(res?.user);
+      };
+      fetchData(currentUser?.user?._id);
+    }
+  }, []);
 
   // Fetch orders by user ID
   useEffect(() => {
-    const fetchData = async (id) => {
-      const res = await getOrdersByUserId(id);
-      setOrders(res?.orders || []);
-    };
-    fetchData(currentUser?.user?._id);
-  }, [currentUser, getOrdersByUserId]);
+    if (currentUser?.user?._id) {
+      const fetchData = async (id) => {
+        const res = await getOrdersByUserId(id);
+        setOrders(res?.orders || []);
+      };
+      fetchData(currentUser?.user?._id);
+    }
+  }, []);
 
   // Fetch books owned by user
   useEffect(() => {
-    const fetchBooks = async (id) => {
-      const res = await getUserBooks(id);
-      setBooks(res?.books || []);
-    };
-    fetchBooks(currentUser?.user?._id);
-  }, [currentUser, getUserBooks]);
+    if (currentUser?.user?._id) {
+      const fetchBooks = async (id) => {
+        const res = await getUserBooks(id);
+        setBooks(res?.books || []);
+      };
+      fetchBooks(currentUser?.user?._id);
+    }
+  }, []);
 
   // Fetch currently rented books
   useEffect(() => {
-    const fetchRentBooks = async (id) => {
-      const res = await getAllRentBooks(id);
-      setCurrentlyRentBooks(res?.rentBooks || []);
-    };
-    fetchRentBooks(currentUser?.user?._id);
-  }, [currentUser, getAllRentBooks]);
+    if (currentUser?.user?._id) {
+      const fetchRentBooks = async (id) => {
+        const res = await getAllRentBooks(id);
+        setCurrentlyRentBooks(res?.rentBooks || []);
+      };
+      fetchRentBooks(currentUser?.user?._id);
+    }
+  }, []);
 
   return (
     <div className="container mx-auto p-6">

@@ -39,11 +39,13 @@ export default function useCreateBooks() {
     setLoading(true);
     try {
       const response = await axiosPublic.put(`/api/books/review/${id}`, data);
+      console.log("s", response);
       return response;
     } catch (error) {
       setError(error.message);
       setLoading(false);
-      console.log(error);
+      // console.log(error);
+      return error;
     } finally {
       setLoading(false);
     }

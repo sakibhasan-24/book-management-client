@@ -201,7 +201,12 @@ export default function BookDetails() {
     // console.log(rating, comment);
     try {
       const res = await reviewBook(book?._id, { rating, comment });
-      // console.log(res);
+
+      if (res.data === undefined || !res.data || res.data === false) {
+        Swal.fire("Error!", res, "error");
+        console.log(res);
+        return;
+      }
       if (res.data) {
         // console.log(res.data);
         setBook({ ...book });
@@ -209,11 +214,12 @@ export default function BookDetails() {
         console.log(reviewUpdate);
         setReviewInfo(reviewUpdate.data);
         Swal.fire("Reviewed!", "Your review has been submitted.", "success");
+        return;
       }
-      setIsModalOpen(false);
     } catch (error) {
       console.log(error);
     }
+    setIsModalOpen(false);
   };
   const handleCancel = () => {
     setIsModalOpen(false);
