@@ -158,7 +158,7 @@ export default function Addbooks() {
         bookOwner: currentUser.user._id,
       };
       const res = await createBook(data);
-      //   console.log("rss", res);
+      console.log(res.response?.data);
       if (res.success) {
         Swal.fire({
           icon: "success",
@@ -169,6 +169,13 @@ export default function Addbooks() {
         // console.log(data);
         // navigate("/dashboard/mybooks");
         // setFormData(initialFormData);
+      } else {
+        console.log(error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: res.response?.data.message,
+        });
       }
     } catch (error) {
       console.log(error);

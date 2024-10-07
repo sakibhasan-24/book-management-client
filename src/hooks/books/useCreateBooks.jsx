@@ -14,6 +14,7 @@ export default function useCreateBooks() {
     } catch (error) {
       setError(error.message);
       setLoading(false);
+      return error;
       console.log(error);
     } finally {
       setLoading(false);
