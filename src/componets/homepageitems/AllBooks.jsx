@@ -36,7 +36,10 @@ export default function AllBooks() {
     <div className="container mx-auto p-4">
       {error && <Alert color="failure">{error}</Alert>}
 
-      <h1 className="text-3xl font-bold text-center mb-8"> Books</h1>
+      <h1 className="text-3xl bg-green-600 p-4 text-white rounded-md font-bold text-center mb-8">
+        {" "}
+        Books
+      </h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {books.map((book) => (

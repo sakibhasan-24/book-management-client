@@ -74,6 +74,11 @@ export default function SearchResult() {
     }
   };
 
+  const handleClearSearch = () => {
+    setSearchData({});
+    localStorage.removeItem("searchData");
+    navigate("/search");
+  };
   return (
     <div className="w-full sm:max-w-6xl p-4 my-12 mx-4">
       <section className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-10 gap-4">
@@ -85,7 +90,7 @@ export default function SearchResult() {
               name="search"
               id="search"
               placeholder="Search"
-              value={searchData.searchTerm}
+              value={searchData.searchTerm || ""}
               onChange={handleChange}
               className="px-4 py-2 rounded-md focus:outline-none w-full bg-slate-200 select-none"
             />
@@ -141,10 +146,7 @@ export default function SearchResult() {
 
           <button
             className="bg-slate-800 text-white p-2 my-6 rounded-lg cursor-pointer"
-            onClick={() => {
-              localStorage.removeItem("searchData");
-              navigate("/search");
-            }}
+            onClick={handleClearSearch}
           >
             Clear Search
           </button>

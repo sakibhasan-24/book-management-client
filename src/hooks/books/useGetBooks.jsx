@@ -112,7 +112,17 @@ export default function useGetBooks() {
       setLoading(false);
     }
   };
-
+  const getBooksByLatest = async () => {
+    setLoading(true);
+    try {
+      const res = await axiosPublic.get("/api/books/latest");
+      return res.data;
+    } catch (error) {
+      return error;
+    } finally {
+      setLoading(false);
+    }
+  };
   return {
     getAllBooks,
     totalBooks,
@@ -121,6 +131,7 @@ export default function useGetBooks() {
     error,
     getUserBooks,
     getBookBySearchAndCategory,
+    getBooksByLatest,
     userBooks,
     deleteBook,
     setBooks,

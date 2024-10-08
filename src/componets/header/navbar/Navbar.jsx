@@ -51,7 +51,7 @@ export default function Navbar() {
   return (
     <div className={`${handleRoute("/deliveryMan-login") && "hidden"}`}>
       {/* for desktop */}
-      <div className="flex flex-row items-center justify-between gap-8 ">
+      <div className="flex flex-row items-center justify-between gap-8 p-4 md:px-8 lg:px-12  ">
         <div>
           <Link to="" className="text-2xl font-semibold text-slate-600">
             Book

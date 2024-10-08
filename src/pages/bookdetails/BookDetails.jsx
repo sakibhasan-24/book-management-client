@@ -120,7 +120,10 @@ export default function BookDetails() {
 
   const handleAddToCart = () => {
     // console.log("Add to cart clicked", book);
-
+    if (!currentUser) {
+      navigate("/user-credentials/login");
+      return;
+    }
     const rentDays = calculateDays(rentDuration);
 
     if (orderType === "rent" && (rentDays < 30 || rentDays > 180)) {
@@ -416,7 +419,12 @@ export default function BookDetails() {
       </section>
       <section className="my-6 p-4 ">
         {!currentUser?.user && (
-          <Link to="/user-credentials/login">Login for Give rating</Link>
+          <Link
+            className="bg-blue-600 rounded-md p-4 text-white font-bold hover:bg-blue-800"
+            to="/user-credentials/login"
+          >
+            Login for Give rating
+          </Link>
         )}
         {currentUser?.user.isAdmin === false &&
           book?.bookOwner !== currentUser?.user?._id && (
