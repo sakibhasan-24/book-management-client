@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import useOrders from "../../hooks/orders/useOrders";
 import Spinner from "../../componets/loader/Spinner";
 import Swal from "sweetalert2";
@@ -10,9 +10,14 @@ import useGetAllUsers from "../../hooks/user/useGetAllUsers";
 import { toast } from "react-toastify";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import PdfReport from "../../componets/PdfGenerator/PdfReport";
 
 export default function Orders() {
   const { id: orderId } = useParams();
+  const location = useLocation();
+  const url = window.location.href;
+
   const { currentUser } = useSelector((state) => state.user);
   const {
     loading,
@@ -159,28 +164,8 @@ export default function Orders() {
   // console.log(order?.assignedDeliveryMan);
 
   const orderRef = useRef(null);
-  const downloadPDF = async () => {
-    const canvas = await html2canvas(orderRef.current);
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF();
 
-    const imgWidth = 140;
-    const pageHeight = pdf.internal.pageSize.height;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    let heightLeft = imgHeight;
-    let position = 0;
-    pdf.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
-    heightLeft -= pageHeight;
-    while (heightLeft >= 0) {
-      position = heightLeft - imgHeight;
-      pdf.addPage();
-      pdf.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-    }
-
-    // Save the PDF
-    pdf.save("Admin_Dashboard_Report.pdf");
-  };
+  // console.log(order);
   if (loading)
     return (
       <div className="max-w-6xl mx-auto flex items-center justify-center">
@@ -189,15 +174,7 @@ export default function Orders() {
     );
   return (
     <div className="w-full  p-2 sm:p-4 sm:max-w-6xl mx-auto my-12 ">
-      <div ref={orderRef}>
-        <div className="text-center my-4">
-          <button
-            onClick={downloadPDF}
-            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
-          >
-            download Report
-          </button>
-        </div>
+      <div>
         <h1 className="text-slate-700 font-semibold text-2xl ">
           Order <span className="font-bold text-slate-950">{orderId}</span>{" "}
         </h1>
@@ -375,6 +352,17 @@ export default function Orders() {
             )}
           </div>
         </section>
+      </div>
+      <div className="bg-green-500 font-bold tex-xl cursor-pointer text-white text-center rounded-md p-2 w-1/6">
+        <PDFDownloadLink
+          document={<PdfReport invoiceData={order} url={url} />}
+          fileName={`${currentUser?.user?.userName}-${order?._id}.pdf`}
+        >
+          {({ loading }) =>
+            loading ? "Generating PDF..." : "Download Invoice"
+          }
+        </PDFDownloadLink>
+        {/* <PdfReport */}
       </div>
 
       {currentUser?.user?.isAdmin && (
