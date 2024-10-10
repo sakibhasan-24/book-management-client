@@ -25,14 +25,15 @@ export default function OrderLists() {
     fetchData();
   }, [currentUser?.user?._id]);
 
+  // console.log(ordersLists.length);
   if (loading) {
     return <Spinner />;
   }
 
-  if (ordersLists?.length === 0) {
+  if (ordersLists?.orders?.length === 0) {
     return (
-      <h1 className="text-center text-xl font-bold text-slate-800">
-        No Orders Found{" "}
+      <h1 className="text-center   my-6 text-xl font-bold text-slate-800">
+        No Orders Found
         <Link
           className="text-slate-200 bg-blue-900 p-2 text-xs rounded-lg"
           to="/"

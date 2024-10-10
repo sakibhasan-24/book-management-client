@@ -60,9 +60,7 @@ export default function MyBooks() {
             <Table.HeadCell>Category</Table.HeadCell>
             <Table.HeadCell>Image</Table.HeadCell>
             <Table.HeadCell>Price</Table.HeadCell>
-            {currentUser.user?.isAdmin === false && (
-              <Table.HeadCell>Edit</Table.HeadCell>
-            )}
+            <Table.HeadCell>Edit</Table.HeadCell>
             <Table.HeadCell>Action</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">

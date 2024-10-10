@@ -128,7 +128,12 @@ export default function RentBooks() {
       }
     });
   };
-  if (!rentBooks) return <h1>No rent Books found</h1>;
+  if (!rentBooks || rentBooks.length === 0)
+    return (
+      <div className="flex items-center justify-center my-12 text-4xl font-bold ">
+        <p className="text-green-600">Currently You have no rent books</p>
+      </div>
+    );
   // console.log(users, "users");
 
   return (

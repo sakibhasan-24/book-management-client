@@ -23,8 +23,22 @@ export default function Mybook({ book, isAdmin, handleDeleteBook }) {
       <Table.Cell>
         <p>{book.price} BDT</p>
       </Table.Cell>
+
       {!isAdmin && book?.isAccepted ? (
         <Table.Cell>Accepted</Table.Cell>
+      ) : (
+        isAdmin === false && (
+          <Link to={`/dashboard/update-book/${book._id}`}>
+            <Table.Cell>
+              <p className="font-medium text-green-600 hover:underline  cursor-pointer">
+                <FaEdit />
+              </p>
+            </Table.Cell>
+          </Link>
+        )
+      )}
+      {isAdmin && book?.isAccepted === false ? (
+        <Table.Cell>Not Accepted Yet</Table.Cell>
       ) : (
         <Link to={`/dashboard/update-book/${book._id}`}>
           <Table.Cell>
@@ -34,8 +48,16 @@ export default function Mybook({ book, isAdmin, handleDeleteBook }) {
           </Table.Cell>
         </Link>
       )}
-      {book?.isAccepted ? (
-        <Table.Cell>Accepted</Table.Cell>
+
+      {book?.isAccepted && !isAdmin ? (
+        <Table.Cell>
+          <Link
+            className="text-xl font-semibold text-blue-500 underline"
+            to="/dashboard/user"
+          >
+            Check
+          </Link>
+        </Table.Cell>
       ) : (
         <Table.Cell onClick={() => handleDeleteBook(book._id)}>
           <p

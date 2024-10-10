@@ -180,15 +180,18 @@ export default function BookDetails() {
       confirmButtonText: "Yes, accept it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        // call accept function
+        // Call accept function
         const res = await acceptBook(id, profit);
-        // console.log(res.data);
-        if (res?.data) window.open(res.data, "_blank");
-        // console.log(profit);
-        if (book?.isAccepted) {
-          setBook(...book);
+        // Check if the response data is present
+        if (res?.data) {
+          // Redirect to the new URL in the same tab
+          window.location.href = res.data;
         }
-        Swal.fire("Accepted!", "Your file has been accepted.", "success");
+
+        // Optionally update book state if it's accepted
+        if (book?.isAccepted) {
+          setBook({ ...book }); // Ensure correct state update syntax
+        }
       }
     });
   };
@@ -373,17 +376,19 @@ export default function BookDetails() {
             </button>
           </div>
           <div className="flex gap-6">
-            <button
-              onClick={handleAddToCart}
-              disabled={
-                book.bookStatus === "sold" || book.bookStatus === "rent"
-              }
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-            >
-              {book.bookStatus === "sold" || book.bookStatus === "rent"
-                ? "Not Available"
-                : "Add to Cart"}
-            </button>
+            {book?.isAccepted && (
+              <button
+                onClick={handleAddToCart}
+                disabled={
+                  book.bookStatus === "sold" || book.bookStatus === "rent"
+                }
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+              >
+                {book.bookStatus === "sold" || book.bookStatus === "rent"
+                  ? "Not Available"
+                  : "Add to Cart"}
+              </button>
+            )}
           </div>
 
           {orderType === "rent" && (

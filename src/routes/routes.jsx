@@ -31,6 +31,7 @@ import RentBooks from "../pages/rentBooks/RentBooks";
 import AdminDashboard from "../componets/dashboard/adminDashboard/AdminDashboard";
 import UserDashboard from "../componets/dashboard/userDashboard/UserDashboard";
 import SearchResult from "../componets/homepageitems/SearchResult";
+import PaymentSuccess from "../pages/paymentSuccess/PaymentSuccess";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,7 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <Home /> },
       { path: "/search", element: <SearchResult /> },
+      { path: "/success/:tran_id", element: <PaymentSuccess /> },
       {
         path: "/dashboard",
         element: (

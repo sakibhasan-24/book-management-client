@@ -77,7 +77,7 @@ export default function Orders() {
           setPolling(false);
           clearInterval(interval);
         }
-      }, 5000);
+      }, 15000);
     }
     return () => clearInterval(interval);
   }, [polling, orderId, getOrdersById]);
@@ -91,9 +91,19 @@ export default function Orders() {
       confirmButtonText: "Yes, continue it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
+        // console.log(order, orderId);
         const res = await paymentServer(order, orderId);
-        if (res?.data) window.open(res.data, "_blank");
-        console.log(res);
+
+        if (res?.data) {
+          console.log("Opening URL: ", res.data);
+
+          window.open(res.data?.url, "_blank");
+        } else {
+          console.error("Invalid URL");
+          console.log(res);
+        }
+
+        // console.log(res);
         setPolling(true);
       }
     });

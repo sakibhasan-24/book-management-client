@@ -62,7 +62,7 @@ export default function useOrders() {
   const paymentServer = async (data, id) => {
     setLoading(true);
     try {
-      console.log("f", data, id);
+      // console.log("f", data, id);
       const res = await axiosPublic.put(
         `/api/order/createPayment/${id}`,
         data,
@@ -73,6 +73,7 @@ export default function useOrders() {
       return res;
     } catch (error) {
       console.log(error);
+      return error;
     } finally {
       setLoading(false);
     }
