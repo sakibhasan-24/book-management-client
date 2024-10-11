@@ -1,6 +1,7 @@
 import React from "react";
 import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
 
+// Define styles
 const styles = StyleSheet.create({
   page: {
     padding: 40,
@@ -13,16 +14,17 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: "center",
     fontWeight: "bold",
-    color: "#4A4A4A",
+    color: "#2C3E50",
   },
   section: {
     marginBottom: 15,
+    paddingBottom: 10,
+    borderBottom: "1px solid #ddd",
   },
   table: {
     width: "100%",
     marginBottom: 20,
-    borderTop: "1px solid #ccc",
-    borderBottom: "1px solid #ccc",
+    borderBottom: "1px solid #ddd",
   },
   tableRow: {
     flexDirection: "row",
@@ -33,7 +35,7 @@ const styles = StyleSheet.create({
   tableCellHeader: {
     fontWeight: "bold",
     paddingRight: 15,
-    color: "#4A4A4A",
+    color: "#2C3E50",
     flex: 1,
   },
   tableCell: {
@@ -41,39 +43,63 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   total: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
     textAlign: "right",
-    marginTop: 10,
+    marginTop: 20,
     color: "#2C3E50",
+    borderTop: "1px solid #ddd",
+    paddingTop: 10,
   },
   footer: {
     textAlign: "center",
     fontSize: 10,
-    color: "#666",
+    color: "#999",
     marginTop: 40,
   },
   status: {
-    padding: 10,
+    padding: 12,
     borderRadius: 8,
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 10,
-    color: "#fff", // Text color for better contrast
+    marginHorizontal: 20,
   },
   paid: {
-    backgroundColor: "#28a745", // Green for paid status
+    backgroundColor: "#28a745",
   },
   notPaid: {
-    backgroundColor: "#dc3545", // Red for not paid status
+    backgroundColor: "#dc3545",
   },
   link: {
     fontSize: 12,
     color: "#007bff",
     textDecoration: "underline",
+    marginTop: 5,
+  },
+  statusText: {
+    color: "#fff",
+    fontSize: 14,
   },
 });
 
+// Function to get styles based on delivery status
+const getStatusStyle = (status) => {
+  switch (status) {
+    case "Not Delivered":
+      return { backgroundColor: "#dc3545", color: "#fff" }; // Red
+    case "Delivery Man Collect From Store":
+      return { backgroundColor: "#ffc107", color: "#000" }; // Yellow
+    case "On the Way":
+      return { backgroundColor: "#17a2b8", color: "#fff" }; // Blue
+    case "Delivered":
+      return { backgroundColor: "#28a745", color: "#fff" }; // Green
+    default:
+      return { backgroundColor: "#6c757d", color: "#fff" }; // Grey for unknown
+  }
+};
+
+// Main component
 export default function PdfReport({ invoiceData, url }) {
   const getPaidStyle = (isPaid) => {
     return isPaid
@@ -84,12 +110,17 @@ export default function PdfReport({ invoiceData, url }) {
   return (
     <Document>
       <Page style={styles.page}>
-        {/* Company Logo and Header */}
+        {/* Header with invoice info */}
         <View style={styles.header}>
           <Text>Invoice: Order {invoiceData?._id}</Text>
-          <Text style={styles.link} onPress={() => window.open(url, "_blank")}>
-            View Details: {url}
-          </Text>
+          {url && (
+            <Text
+              style={styles.link}
+              onPress={() => window.open(url, "_blank")}
+            >
+              View Details: {url}
+            </Text>
+          )}
         </View>
 
         {/* Customer Info */}
@@ -117,13 +148,19 @@ export default function PdfReport({ invoiceData, url }) {
         </View>
 
         {/* Delivery Status */}
-        <View style={styles.status}>
-          <Text>Delivery Status: {invoiceData.deliveryStatus}</Text>
+        <View
+          style={[styles.status, getStatusStyle(invoiceData.deliveryStatus)]}
+        >
+          <Text style={styles.statusText}>
+            Delivery Status: {invoiceData.deliveryStatus}
+          </Text>
         </View>
 
         {/* Paid Status */}
         <View style={getPaidStyle(invoiceData.isPaid)}>
-          <Text>Paid Status: {invoiceData.isPaid ? "Paid" : "Not Paid"}</Text>
+          <Text style={styles.statusText}>
+            Paid Status: {invoiceData.isPaid ? "Paid" : "Not Paid"}
+          </Text>
         </View>
         {invoiceData.isPaid && (
           <Text>
@@ -134,7 +171,7 @@ export default function PdfReport({ invoiceData, url }) {
           <Text>Transaction ID: {invoiceData.transactionId}</Text>
         )}
 
-        {/* Total */}
+        {/* Total Price */}
         <Text style={styles.total}>Total: BDT {invoiceData.totalPrice}</Text>
 
         {/* Footer */}
