@@ -5,11 +5,13 @@ import UserSearchBooks from "../../componets/homepageitems/UserSearchBooks";
 import TopBooks from "../../componets/topRatedBooks/TopBooks";
 import CategoricalBooks from "../cartItems/categoricalBooks/CategoricalBooks";
 import LatestBooks from "../../componets/latestBooks/LatestBooks";
+import Banner from "../../componets/Banner/Banner";
 
 export default function Home() {
   return (
     <div>
       <UserSearchBooks />
+      <Banner />
       <LatestBooks />
       <TopBooks />
       <CategoricalBooks />

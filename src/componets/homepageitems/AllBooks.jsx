@@ -37,17 +37,16 @@ export default function AllBooks() {
       {error && <Alert color="failure">{error}</Alert>}
 
       <h1 className="text-3xl bg-green-600 p-4 text-white rounded-md font-bold text-center mb-8">
-        {" "}
         Books
       </h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid my-12 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {books.map((book) => (
           <BookCard key={book._id} book={book} />
         ))}
       </div>
 
-      <div className="mt-8 flex justify-center items-center space-x-2">
+      <div className="my-8 flex justify-center items-center space-x-2">
         <button
           disabled={currentPage === 0}
           onClick={() => handleCurrentPage(currentPage - 1)}

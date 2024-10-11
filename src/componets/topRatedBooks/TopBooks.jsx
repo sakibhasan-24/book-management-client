@@ -13,6 +13,7 @@ export default function TopBooks() {
     fetchData();
   }, []);
   if (topBooks.length === 0) return null;
+  // console.log(topBooks);
   return (
     <div className="container mx-auto p-4 ">
       <h1 className="text-3xl font-bold text-center my-4 bg-green-500 text-white p-4 rounded-lg">

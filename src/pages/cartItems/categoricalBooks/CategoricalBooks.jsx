@@ -166,7 +166,7 @@ const booksData = [
   },
   {
     id: 14,
-    title: "Philosophy: The Quest for Truth",
+    title: "Philosophy",
     logo: <HighlightOutlined />, // Ant Design highlight icon for Philosophy
   },
   {
@@ -178,7 +178,7 @@ const booksData = [
 
 export default function CategoricalBooks() {
   const { getBookBySearchAndCategory, loading } = useGetBooks();
-  const [category, setCategory] = useState("Cse");
+  const [category, setCategory] = useState("Hardware");
   const [books, setBooks] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
@@ -194,7 +194,7 @@ export default function CategoricalBooks() {
   return (
     <div className="conatainer my-6">
       <h1 className="text-center font-bold bg-green-800 text-white p-4 rounded-md text-2xl mb-6">
-        category related Books
+        Browse By Category
       </h1>
       <div className="flex items-center cursor-pointer justify-center flex-wrap gap-6">
         {booksData.map((book) => (
