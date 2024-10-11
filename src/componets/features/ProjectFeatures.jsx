@@ -7,8 +7,9 @@ import {
   CheckOutlined,
   ShoppingOutlined,
   ExclamationCircleOutlined,
-  MoneyCollectOutlined, // Icon for Payment
-  TruckOutlined, // Icon for Delivery
+  MoneyCollectOutlined,
+  TruckOutlined,
+  BookOutlined,
 } from "@ant-design/icons";
 
 const projectFeaturesData = [
@@ -65,6 +66,12 @@ const projectFeaturesData = [
     description:
       "Users cannot purchase their own books; late returns may lead to account blocks.",
     icon: <ExclamationCircleOutlined style={{ color: "#C0392B" }} />,
+  },
+  {
+    name: "Demo Book Read",
+    description:
+      "Users can read demo pages of books before making a purchase decision.",
+    icon: <BookOutlined style={{ color: "#8E44AD" }} />,
   },
 ];
 

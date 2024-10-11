@@ -33,14 +33,14 @@ export default function AllBooks() {
   }, [currentPage, numberOfItemsPerPage]);
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="w-full sm:max-w-6xl  mx-auto p-4">
       {error && <Alert color="failure">{error}</Alert>}
 
       <h1 className="text-3xl bg-green-600 p-4 text-white rounded-md font-bold text-center mb-8">
         Books
       </h1>
 
-      <div className="grid my-12 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid  my-12 grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-6">
         {books.map((book) => (
           <BookCard key={book._id} book={book} />
         ))}

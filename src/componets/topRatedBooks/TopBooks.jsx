@@ -15,11 +15,11 @@ export default function TopBooks() {
   if (topBooks.length === 0) return null;
   // console.log(topBooks);
   return (
-    <div className="container mx-auto p-4 ">
+    <div className="w-full sm:max-w-6xl mx-auto   p-4">
       <h1 className="text-3xl font-bold text-center my-4 bg-green-500 text-white p-4 rounded-lg">
         Top Rated Books
       </h1>
-      <div className="flex items-center justify-center gap-6 flex-wrap">
+      <div className="flex flex-wrap gap-1">
         {topBooks.map((book) => (
           <BookCard key={book._id} book={book} />
         ))}

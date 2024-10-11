@@ -192,7 +192,7 @@ export default function CategoricalBooks() {
   if (loading) return <Spinner />;
   if (booksData.length === 0) return <Spinner />;
   return (
-    <div className="conatainer my-6">
+    <div className="w-full sm:max-w-6xl mx-auto p-4 my-6">
       <h1 className="text-center font-bold bg-green-800 text-white p-4 rounded-md text-2xl mb-6">
         Browse By Category
       </h1>
@@ -201,7 +201,7 @@ export default function CategoricalBooks() {
           <div
             onClick={() => setCategory(book.title)}
             key={book.id}
-            className={`flex flex-col items-center justify-center gap-2 mb-4 p-4 w-32 h-32 bg-white 
+            className={`flex  flex-col items-center justify-center gap-2 mb-4 p-4 w-32 h-32 bg-white 
       rounded-xl shadow-md transform transition-transform hover:scale-105 hover:bg-gradient-to-br hover:from-green-400 hover:to-blue-500 hover:shadow-2xl 
       border-4 border-transparent hover:border-yellow-300 ${
         category === book.title
@@ -220,18 +220,18 @@ export default function CategoricalBooks() {
             </p>
           </div>
         ))}
-        <h1 className="text-center font-bold bg-green-800 text-white p-4 rounded-md text-2xl mb-6">
-          All {category} related Books
-        </h1>
       </div>
+      <h1 className="text-center font-bold bg-green-800 text-white p-4 rounded-md text-2xl mb-6">
+        All {category} related Books
+      </h1>
       <div>
         {books.length === 0 && (
-          <p className="text-red-400 font-semibold text-center my-6">
+          <p className="text-red-400    font-semibold text-center my-6">
             No Books Found for{" "}
             <span className="text-red-600 font-bold">{category}</span>
           </p>
         )}
-        <div className="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-4 items-center">
+        <div className="flex flex-col sm:flex-row gap-2 my-6">
           {books.length > 0 &&
             books.map((book) => <BookCard key={book._id} book={book} />)}
         </div>

@@ -25,10 +25,9 @@ export default function BookCard({ book }) {
       fetchData(book._id);
     }
   }, [book?._id]);
-  // console.log(reviewInfo?.data);
   return (
     <div
-      className="max-w-xs w-2/3 p-2 rounded-lg shadow-lg bg-white hover:shadow-2xl transition-shadow duration-300 ease-in-out transform hover:-translate-y-1"
+      className="max-w-xs w-full sm:w-72 my-6 p-4 rounded-lg mx-auto shadow-lg bg-white hover:shadow-2xl transition-shadow duration-300 ease-in-out transform hover:-translate-y-1"
       data-aos="fade-up"
     >
       <div className="overflow-hidden rounded-lg border border-gray-300 mb-4">
@@ -96,11 +95,7 @@ export default function BookCard({ book }) {
               Edit
             </Link>
           )}
-          {/* {currentUser && currentUser.user._id !== book.bookOwner && (
-            <button className="bg-orange-500 text-white px-1 py-0 rounded-md hover:bg-orange-600 transition-colors duration-300">
-              Exchange Book
-            </button>
-          )} */}
+
           <Link to={`/book/${book._id}`}>
             <button className="bg-gray-500 text-white p-2  rounded-md hover:bg-gray-600 transition-colors duration-300">
               Details
