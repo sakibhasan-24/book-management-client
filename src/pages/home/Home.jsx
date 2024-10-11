@@ -7,6 +7,8 @@ import CategoricalBooks from "../cartItems/categoricalBooks/CategoricalBooks";
 import LatestBooks from "../../componets/latestBooks/LatestBooks";
 import Banner from "../../componets/Banner/Banner";
 import ProjectFeatures from "../../componets/features/ProjectFeatures";
+import AboutUs from "../../componets/about/AboutUs";
+import UpcomingFeatures from "../../componets/upcomingFeatures/UpcomingFeatures";
 
 export default function Home() {
   return (
@@ -18,6 +20,8 @@ export default function Home() {
       <CategoricalBooks />
       <AllBooks />
       <ProjectFeatures />
+      <UpcomingFeatures />
+      <AboutUs />
     </div>
   );
 }

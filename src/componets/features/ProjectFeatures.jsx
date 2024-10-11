@@ -71,10 +71,10 @@ const projectFeaturesData = [
 export default function ProjectFeatures() {
   return (
     <div className="container mx-auto px-4 py-10">
-      <h2 className="text-4xl font-bold text-center text-gray-800 mb-10">
+      <h2 className="text-4xl font-bold text-center text-gray-100 bg-green-600 p-4 rounded-md mb-10">
         Our Features
       </h2>
-      <p className="text-center text-gray-700 font-semibold mb-8">
+      <p className="text-center text-gray-500 font-semibold mb-8">
         Discover a range of features designed to enhance your experience,
         ensuring seamless book management, efficient delivery, and user-friendly
         payment options. We strive to provide an exceptional platform for book
