@@ -108,6 +108,22 @@ export default function useOrders() {
       // setLoading(false);
     }
   };
+  const deleteOrder = async (userId, orderId) => {
+    setLoading(true);
+    try {
+      const res = await axiosPublic.delete(
+        `/api/order/deleteOrder/${orderId}`,
+        {
+          data: { userId },
+        }
+      );
+      return res;
+    } catch (err) {
+      console.log(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   return {
     loading,
     error,
@@ -116,6 +132,7 @@ export default function useOrders() {
     paymentServer,
     getOrdersByUserId,
     getAllOrders,
+    deleteOrder,
     // assignDeliveryMan,
     assignDeliveryManProduct,
   };

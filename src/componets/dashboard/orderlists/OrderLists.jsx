@@ -3,10 +3,13 @@ import { useSelector } from "react-redux";
 import useOrders from "../../../hooks/orders/useOrders";
 import Spinner from "../../loader/Spinner";
 import { Link } from "react-router-dom";
+import { FaTrash, FaTrashAlt } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 export default function OrderLists() {
   const { currentUser } = useSelector((state) => state.user);
-  const { loading, error, getOrdersByUserId, getAllOrders } = useOrders();
+  const { loading, error, getOrdersByUserId, getAllOrders, deleteOrder } =
+    useOrders();
   const [ordersLists, setOrdersLists] = useState([]);
 
   useEffect(() => {
@@ -43,6 +46,31 @@ export default function OrderLists() {
       </h1>
     );
   }
+
+  const handleDeleteOrder = async (userId, orderId) => {
+    // console.log(userID, orderID);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await deleteOrder(userId, orderId);
+        if (res.data.success) {
+          Swal.fire("Deleted!", "Your file has been deleted.", "success");
+          const fetchData = async (id) => {
+            const res = await getOrdersByUserId(id);
+            setOrdersLists(res);
+          };
+          fetchData(userId);
+        }
+      }
+    });
+  };
 
   return (
     // <div className="w-full sm:max-w-6xl">
@@ -156,6 +184,7 @@ export default function OrderLists() {
               <th className="p-2 text-center">Payment Method</th>
               <th className="p-2 text-center">Delivery Status</th>
               <th className="p-2 text-center">Paid/Not Paid</th>
+              <th className="p-2 text-center">Delete</th>
             </tr>
           </thead>
           <tbody className="text-gray-700 w-full text-sm">
@@ -197,6 +226,20 @@ export default function OrderLists() {
                   }`}
                 >
                   {order.isPaid ? "Paid" : "Unpaid"}
+                </td>
+                <td>
+                  <button
+                    disabled={
+                      order?.deliveryStatus !== "Delivered" &&
+                      order?.isPaid === true
+                    }
+                    onClick={() =>
+                      handleDeleteOrder(currentUser?.user?._id, order._id)
+                    }
+                    className="btn btn-sm btn-error"
+                  >
+                    <FaTrashAlt className="text-red-500 hover:rounded-full text-xl text-center mx-0 sm:mx-6" />
+                  </button>
                 </td>
               </tr>
             ))}

@@ -1,18 +1,35 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import {
+  setFromNowRemainingDays,
+  setNotice,
+} from "../../redux/notifications/notificationSlice";
 
 export default function RentBook({
   item,
   idx,
   handleSendToStore,
   currentUser,
+  numberOfRentBooks,
 }) {
-  console.log(item);
+  const dispatch = useDispatch();
+  // console.log(item.isBack);
+
+  // console.log(item);
   const today = new Date();
   const returnDate = new Date(item.returnDate);
   const diffTime = returnDate.getTime() - today.getTime();
   const remainingDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   const isOverdue = remainingDays < 0;
+  // if (remainingDays === 55 || remainingDays === 34) {
+  //   dispatch(setNotice("You have One book to return"));
+  //   dispatch(setFromNowRemainingDays(remainingDays));
+  // }
+  if (numberOfRentBooks.length > 0) {
+    dispatch(setNotice("You have One book to return"));
+    dispatch(setFromNowRemainingDays(remainingDays));
+  }
 
   const [bookStatus, setBookStatus] = useState(
     item.bookStatus === "rent" ? "rent" : item.bookStatus

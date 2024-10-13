@@ -1,14 +1,26 @@
 import React, { useEffect, useState } from "react";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useGetBooks from "../../hooks/books/useGetBooks";
 import useRentBooks from "../../hooks/books/useRentBooks";
 import RentBook from "./RentBook";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import useGetAllUsers from "../../hooks/user/useGetAllUsers";
+import {
+  clearNotice,
+  setFromNowRemainingDays,
+  setNotice,
+  setNumberOfBooks,
+} from "../../redux/notifications/notificationSlice";
 
 export default function RentBooks() {
+  const dispatch = useDispatch();
+  const { notification } = useSelector((state) => state);
+  // console.log(notification);
+  // setFromNowRemainingDays
+  // setNotice
+
   const [rentBooks, setRentBooks] = useState([]);
   const [overDueUsers, setOverDueUsers] = useState([]);
   const [users, setUsers] = useState([]);
@@ -57,6 +69,7 @@ export default function RentBooks() {
       productId: productId,
     });
 
+    // console.log(res);
     if (res?.success) {
       toast.success("Book returned successfully");
 
@@ -76,6 +89,26 @@ export default function RentBooks() {
     }
   };
 
+  const numberOfRentBooks = rentBooks.filter((b) => b.isBack === false);
+  if (numberOfRentBooks.length === 0) {
+    dispatch(clearNotice());
+  }
+  if (numberOfRentBooks.length > 0) {
+    // setNumberOfBooks
+    dispatch(setNumberOfBooks(numberOfRentBooks.length));
+  }
+  // console.log(notification);
+  // console.log(numberOfRentBooks?.length);
+  useEffect(() => {
+    if (numberOfRentBooks.length > 0) {
+      Swal.fire({
+        title: "You have some books not returned yet",
+        text: "Please return the books",
+        icon: "warning",
+        confirmButtonColor: "#3085d6",
+      });
+    }
+  }, [numberOfRentBooks]);
   const handleBlockUser = async (id) => {
     console.log(id);
 
@@ -173,6 +206,7 @@ export default function RentBooks() {
                 idx={idx}
                 handleSendToStore={handleSendToStore}
                 currentUser={currentUser}
+                numberOfRentBooks={numberOfRentBooks}
               />
             ))}
           </tbody>

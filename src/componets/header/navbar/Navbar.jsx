@@ -1,20 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import MobileNav from "./MobileNav";
 import { useDispatch, useSelector } from "react-redux";
-import { Avatar, Dropdown } from "flowbite-react";
+import { Avatar, Badge, Card, Dropdown } from "flowbite-react";
 import { signOutSuccess } from "../../../redux/user/user";
 import useUserSignOut from "../../../hooks/user/useUserSignOut";
 import Swal from "sweetalert2";
 import { FaShoppingCart } from "react-icons/fa";
 import { logout } from "../../../redux/deliveryman/deliverymanSlice";
 import useDeliveryMan from "../../../hooks/deliveryMan/useDeliveryMan";
+import { BellOutlined, NotificationOutlined } from "@ant-design/icons";
+import { Space } from "antd";
 
 export default function Navbar() {
   const location = useLocation();
   const { currentUser } = useSelector((state) => state.user);
   const { cartItems } = useSelector((state) => state.cart);
 
+  const { notification } = useSelector((state) => state);
+  // console.log(notification.fromNowRemainingDays);
   // console.log(currentlyLogin);
 
   // console.log(cartItems.length);
@@ -48,6 +52,9 @@ export default function Navbar() {
     }
   };
 
+  const handleShow = () => {
+    navigate("/dashboard/rentBooks");
+  };
   return (
     <div className={`${handleRoute("/deliveryMan-login") && "hidden"}`}>
       {/* for desktop */}
@@ -60,7 +67,30 @@ export default function Navbar() {
             </span>{" "}
           </Link>
         </div>
-
+        {currentUser?.user?.role === "user" && notification && (
+          <div
+            title={notification?.notice}
+            className={`${
+              location.pathname === "/dashboard/rentBooks" && "hidden"
+            }`}
+          >
+            <Space>
+              <Badge dot style={{ backgroundColor: "#fff" }}>
+                <div
+                  onClick={handleShow}
+                  className="relative cursor-pointer flex items-center"
+                >
+                  <NotificationOutlined
+                    style={{ fontSize: 24, color: "#1890ff" }}
+                  />
+                  <span className="absolute -top-2 -right-2 text-xs font-bold text-white bg-red-500 rounded-full px-1">
+                    1
+                  </span>
+                </div>
+              </Badge>
+            </Space>
+          </div>
+        )}
         <div className="hidden sm:flex items-center justify-center gap-4 mr-12 text-md font-bold text-slate-600">
           {/* if user login then do here logout */}
           {cartItems.length > 0 && (

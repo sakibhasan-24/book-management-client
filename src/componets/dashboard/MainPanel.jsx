@@ -20,7 +20,7 @@ import {
   HiViewBoards,
 } from "react-icons/hi";
 import { useSelector } from "react-redux";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import useGetAllUsers from "../../hooks/user/useGetAllUsers";
 import { HiReceiptPercent } from "react-icons/hi2";
 import { GrDeliver } from "react-icons/gr";
@@ -30,6 +30,10 @@ import DeliveryMan from "./deliveryman/DeliveryMan";
 export default function MainPanel() {
   const { users, getAllUsers } = useGetAllUsers();
   // const { currentUser } = console.log(users.length);
+  const location = useLocation();
+  const handleRoutes = (path) => {
+    if (location.pathname === path) return true;
+  };
   useEffect(() => {
     getAllUsers();
   }, [users?.length]);
@@ -79,7 +83,13 @@ export default function MainPanel() {
             <Sidebar.Items>
               <Sidebar.ItemGroup>
                 {currentUser?.user?.role === "admin" && (
-                  <Link to="/dashboard/admin">
+                  <Link
+                    className={`${
+                      handleRoutes("/dashboard/admin") &&
+                      "bg-slate-600 text-slate-200 p-4 rounded-md"
+                    }`}
+                    to="/dashboard/admin"
+                  >
                     {" "}
                     <Sidebar.Item icon={HiOutlineClipboardList} as={"div"}>
                       Dashboard
@@ -88,8 +98,16 @@ export default function MainPanel() {
                 )}
                 {currentUser?.user?.role === "user" && (
                   <Link to="/dashboard/user">
-                    {" "}
-                    <Sidebar.Item icon={HiOutlineClipboardList} as={"div"}>
+                    <Sidebar.Item
+                      className={`flex items-center gap-3 p-4 rounded-md transition-colors duration-200 ease-in-out cursor-pointer
+                        ${
+                          handleRoutes("/dashboard/user")
+                            ? "bg-slate-900 text-slate-100"
+                            : ""
+                        }`}
+                      icon={HiOutlineClipboardList}
+                      as={"div"}
+                    >
                       Dashboard
                     </Sidebar.Item>
                   </Link>
@@ -97,7 +115,16 @@ export default function MainPanel() {
 
                 <Link to="/dashboard/profile">
                   {" "}
-                  <Sidebar.Item icon={HiUserCircle} as={"div"}>
+                  <Sidebar.Item
+                    className={`flex items-center gap-3 p-4 rounded-md transition-colors duration-200 ease-in-out cursor-pointer
+                        ${
+                          handleRoutes("/dashboard/profile")
+                            ? "bg-slate-900 text-slate-100"
+                            : ""
+                        }`}
+                    icon={HiUserCircle}
+                    as={"div"}
+                  >
                     profile
                   </Sidebar.Item>
                 </Link>
@@ -105,6 +132,12 @@ export default function MainPanel() {
                 {currentUser?.user?.isAdmin && (
                   <Link to="/dashboard/users">
                     <Sidebar.Item
+                      className={`flex items-center gap-3 p-4 rounded-md transition-colors duration-200 ease-in-out cursor-pointer
+                      ${
+                        handleRoutes("/dashboard/users")
+                          ? "bg-slate-900 text-slate-100"
+                          : ""
+                      }`}
                       icon={HiOutlineUserGroup}
                       as={"div"}
                       label={users?.length}
@@ -116,8 +149,13 @@ export default function MainPanel() {
                 {currentUser?.user?.isAdmin === false && (
                   <Link to="/dashboard/add-books">
                     <Sidebar.Item
+                      className={`flex items-center gap-3 p-4 rounded-md transition-colors duration-200 ease-in-out cursor-pointer
+                      ${
+                        handleRoutes("/dashboard/add-books")
+                          ? "bg-slate-900 text-slate-100"
+                          : ""
+                      }`}
                       icon={HiDocumentAdd}
-                      className={`cursor-pointer`}
                       as={"div"}
                     >
                       Add Books
@@ -126,19 +164,39 @@ export default function MainPanel() {
                 )}
                 {currentUser?.user && (
                   <Link to={`/dashboard/orders/${currentUser?.user._id}`}>
-                    <Sidebar.Item icon={HiShoppingBag} as={"div"}>
+                    <Sidebar.Item
+                      className={`flex items-center gap-3 p-4 rounded-md transition-colors duration-200 ease-in-out cursor-pointer
+                      ${
+                        handleRoutes(
+                          `/dashboard/orders/${currentUser?.user._id}`
+                        )
+                          ? "bg-slate-900 text-slate-100"
+                          : ""
+                      }`}
+                      icon={HiShoppingBag}
+                      as={"div"}
+                    >
                       Orders
                     </Sidebar.Item>
                   </Link>
                 )}
                 {currentUser?.user?.isAdmin && (
                   <Link to={`/dashboard/deliveryManLists`}>
-                    <Sidebar.Item icon={HiCash} as={"div"}>
+                    <Sidebar.Item
+                      className={`flex items-center gap-3 p-4 rounded-md transition-colors duration-200 ease-in-out cursor-pointer
+                      ${
+                        handleRoutes("/dashboard/deliveryManLists")
+                          ? "bg-slate-900 text-slate-100"
+                          : ""
+                      }`}
+                      icon={HiCash}
+                      as={"div"}
+                    >
                       Delivery Man
                     </Sidebar.Item>
                   </Link>
                 )}
-                {currentUser?.user?.isAdmin === false && (
+                {/* {currentUser?.user?.isAdmin === false && (
                   <Link to="/dashboard/add-books">
                     <Sidebar.Item
                       icon={HiOutlineBookOpen}
@@ -148,12 +206,17 @@ export default function MainPanel() {
                       Add Books
                     </Sidebar.Item>
                   </Link>
-                )}
+                )} */}
                 {currentUser?.user?.isAdmin === false && (
                   <Link to="/dashboard/mybooks">
                     <Sidebar.Item
                       icon={HiBookOpen}
-                      className={`cursor-pointer`}
+                      className={`flex items-center gap-3 p-4 rounded-md transition-colors duration-200 ease-in-out cursor-pointer
+                        ${
+                          handleRoutes("/dashboard/mybooks")
+                            ? "bg-slate-900 text-slate-100"
+                            : ""
+                        }`}
                       as={"div"}
                     >
                       My Books
@@ -164,7 +227,12 @@ export default function MainPanel() {
                   <Link to="/dashboard/mybooks">
                     <Sidebar.Item
                       icon={HiBookOpen}
-                      className={`cursor-pointer`}
+                      className={`flex items-center gap-3 p-4 rounded-md transition-colors duration-200 ease-in-out cursor-pointer
+                        ${
+                          handleRoutes("/dashboard/mybooks")
+                            ? "bg-slate-900 text-slate-100"
+                            : ""
+                        }`}
                       as={"div"}
                     >
                       Books
@@ -175,17 +243,18 @@ export default function MainPanel() {
                   <Link to="/dashboard/rentBooks">
                     <Sidebar.Item
                       icon={HiBookOpen}
-                      className={`cursor-pointer`}
+                      className={`flex items-center gap-3 p-4 rounded-md transition-colors duration-200 ease-in-out cursor-pointer
+                        ${
+                          handleRoutes("/dashboard/rentBooks")
+                            ? "bg-slate-900 text-slate-600"
+                            : ""
+                        }`}
                       as={"div"}
                     >
                       Rent Books
                     </Sidebar.Item>
                   </Link>
                 )}
-
-                <Sidebar.Item href="#" icon={HiOutlineClipboardList}>
-                  Sign Up
-                </Sidebar.Item>
               </Sidebar.ItemGroup>
             </Sidebar.Items>
           </Sidebar>

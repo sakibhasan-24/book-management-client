@@ -29,6 +29,7 @@ export default function BookDetails() {
   const [currentIndex, setCurrentIndex] = useState(null);
   const [book, setBook] = useState(null);
 
+  console.log(book);
   const [orderType, setOrderType] = useState("sell");
   const modalRef = useRef(null);
   const [isRentModal, setIsRentModal] = useState(false);
@@ -380,11 +381,15 @@ export default function BookDetails() {
               <button
                 onClick={handleAddToCart}
                 disabled={
-                  book.bookStatus === "sold" || book.bookStatus === "rent"
+                  book.bookStatus === "sell" || book.bookStatus === "rent"
                 }
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+                className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 ${
+                  book.bookStatus === "sell" || book.bookStatus === "rent"
+                    ? "bg-blue-400 cursor-not-allowed"
+                    : ""
+                } `}
               >
-                {book.bookStatus === "sold" || book.bookStatus === "rent"
+                {book.bookStatus === "sell" || book.bookStatus === "rent"
                   ? "Not Available"
                   : "Add to Cart"}
               </button>

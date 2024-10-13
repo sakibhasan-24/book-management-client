@@ -34,6 +34,7 @@ export default function BooksAdminDashboard() {
       const rentedBooks = data.books.filter(
         (book) => book.bookStatus === "rent"
       ).length;
+      console.log(rentedBooks);
       const pendingBooks = data.books.filter((book) => !book.isAccepted).length;
       const soldBooks = data.books.filter(
         (book) => book.bookStatus === "sell"

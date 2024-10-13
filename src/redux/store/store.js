@@ -5,11 +5,12 @@ import storage from "redux-persist/lib/storage";
 import persistStore from "redux-persist/lib/persistStore";
 import cartReducer from "../cart/cartSlice";
 import deliverymanSlice from "../deliveryman/deliverymanSlice";
-
+import notificationSlice from "../notifications/notificationSlice";
 const rootReducer = combineReducers({
   user: user,
   cart: cartReducer,
   deliveryMan: deliverymanSlice,
+  notification: notificationSlice,
 });
 const persistConfig = {
   key: "root",
