@@ -2,6 +2,7 @@ import { Carousel } from "antd";
 import React, { useState, useEffect } from "react";
 import useGetBooks from "../../hooks/books/useGetBooks";
 import { Link } from "react-router-dom";
+import SkeletonDesign from "../skeleton/SkeletonDesign";
 
 export default function Banner() {
   const { loading, getBooksByLatest, getAllBooks } = useGetBooks();
@@ -31,6 +32,9 @@ export default function Banner() {
     }
   }, [books, topBooks]);
 
+  if (loading) {
+    return <SkeletonDesign />;
+  }
   return (
     <div className="w-full sm:max-w-6xl mx-auto p-4 rounded-md my-12">
       <Carousel autoplay>

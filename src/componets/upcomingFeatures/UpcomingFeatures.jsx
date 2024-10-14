@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   SwapOutlined,
   SolutionOutlined,
@@ -25,8 +25,11 @@ const futurePlansData = [
       "Introducing community features that enhance student collaboration and foster knowledge-sharing.",
   },
 ];
-
+import Aos from "aos";
 export default function UpcomingFeatures() {
+  useEffect(() => {
+    Aos.init({ duration: 1000 });
+  }, []);
   return (
     <div className="my-12 w-full p-4 sm:max-w-6xl mx-auto">
       <div className="text-center mb-12">

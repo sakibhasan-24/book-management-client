@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   UserOutlined,
   UploadOutlined,
@@ -11,7 +11,7 @@ import {
   TruckOutlined,
   BookOutlined,
 } from "@ant-design/icons";
-
+import { useSpring, animated } from "react-spring";
 const projectFeaturesData = [
   {
     name: "User Account Management",
@@ -74,24 +74,42 @@ const projectFeaturesData = [
     icon: <BookOutlined style={{ color: "#8E44AD" }} />,
   },
 ];
-
+import Aos from "aos";
 export default function ProjectFeatures() {
+  const fadeIn = useSpring({
+    opacity: 1,
+    transform: "translateY(0)",
+    from: { opacity: 0, transform: "translateY(30px)" },
+    delay: 200,
+  });
+  useEffect(() => {
+    Aos.init({ duration: 1000 });
+  }, []);
   return (
     <div className="container mx-auto px-4 py-10">
-      <h2 className="text-4xl font-bold text-center text-gray-100 bg-green-600 p-4 rounded-md mb-10">
+      <h2
+        data-aos="fade-up"
+        className="text-4xl font-bold text-center text-gray-100 bg-green-600 p-4 rounded-md mb-10"
+      >
         Our Features
       </h2>
-      <p className="text-center text-gray-500 font-semibold mb-8">
+      <p
+        data-aos="fade-down"
+        className="text-center text-gray-500 font-semibold mb-8"
+      >
         Discover a range of features designed to enhance your experience,
         ensuring seamless book management, efficient delivery, and user-friendly
         payment options. We strive to provide an exceptional platform for book
         lovers and sellers alike.
       </p>
+
       <div className="flex flex-wrap justify-center gap-10">
         {projectFeaturesData.map((feature, index) => (
           <div
+            data-aos={index % 2 === 0 ? "fade-up" : "fade-down"}
+            data-aos-anchor-placement="top-bottom"
             key={index}
-            className="flex flex-col items-center transition-transform duration-300 transform hover:scale-105"
+            className="flex my-6 flex-col items-center transition-transform duration-300 transform hover:scale-105"
           >
             <div className="flex items-center justify-center w-24 h-24 bg-blue-100 rounded-full mb-4 shadow-lg transition-shadow duration-300 hover:shadow-2xl ">
               <div

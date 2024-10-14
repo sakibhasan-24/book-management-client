@@ -15,6 +15,7 @@ import TextArea from "antd/es/input/TextArea";
 import Review from "./Review";
 import { toast } from "react-toastify";
 import { Datepicker } from "flowbite-react";
+import SkeletonDesign from "../../componets/skeleton/SkeletonDesign";
 export default function BookDetails() {
   const params = useParams();
   const { getBookById } = useGetBooks();
@@ -209,11 +210,6 @@ export default function BookDetails() {
     try {
       const res = await reviewBook(book?._id, { rating, comment });
 
-      if (res.data === undefined || !res.data || res.data === false) {
-        Swal.fire("Error!", res, "error");
-        console.log(res);
-        return;
-      }
       if (res.data) {
         // console.log(res.data);
         setBook({ ...book });
@@ -221,6 +217,13 @@ export default function BookDetails() {
         console.log(reviewUpdate);
         setReviewInfo(reviewUpdate.data);
         Swal.fire("Reviewed!", "Your review has been submitted.", "success");
+        const fetchedBook = await getBookById(params.bookId);
+        setBook(fetchedBook.book);
+        return;
+      }
+      if (res.data === undefined || !res.data || res.data === false) {
+        Swal.fire("Error!", res, "error");
+        console.log(res);
         return;
       }
     } catch (error) {
@@ -275,10 +278,10 @@ export default function BookDetails() {
       setRentDuration(null);
     }
   };
-  if (!book)
+  if (!book || loading)
     return (
       <div>
-        <Spinner />
+        <SkeletonDesign />
       </div>
     );
 

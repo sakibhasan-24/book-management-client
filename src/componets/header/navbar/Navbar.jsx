@@ -11,6 +11,7 @@ import { logout } from "../../../redux/deliveryman/deliverymanSlice";
 import useDeliveryMan from "../../../hooks/deliveryMan/useDeliveryMan";
 import { BellOutlined, NotificationOutlined } from "@ant-design/icons";
 import { Space } from "antd";
+import { clearNotice } from "../../../redux/notifications/notificationSlice";
 
 export default function Navbar() {
   const location = useLocation();
@@ -43,6 +44,7 @@ export default function Navbar() {
     const res = await signOut();
     if (res) {
       dispatch(signOutSuccess(res.data));
+      dispatch(clearNotice());
       Swal.fire({
         icon: "success",
         title: "Successfully Logout",
@@ -67,30 +69,32 @@ export default function Navbar() {
             </span>{" "}
           </Link>
         </div>
-        {currentUser?.user?.role === "user" && notification && (
-          <div
-            title={notification?.notice}
-            className={`${
-              location.pathname === "/dashboard/rentBooks" && "hidden"
-            }`}
-          >
-            <Space>
-              <Badge dot style={{ backgroundColor: "#fff" }}>
-                <div
-                  onClick={handleShow}
-                  className="relative cursor-pointer flex items-center"
-                >
-                  <NotificationOutlined
-                    style={{ fontSize: 24, color: "#1890ff" }}
-                  />
-                  <span className="absolute -top-2 -right-2 text-xs font-bold text-white bg-red-500 rounded-full px-1">
-                    1
-                  </span>
-                </div>
-              </Badge>
-            </Space>
-          </div>
-        )}
+        {currentUser?.user?.role === "user" &&
+          notification &&
+          notification.numberOfBooks > 0 && (
+            <div
+              title={notification?.notice}
+              className={`${
+                location.pathname === "/dashboard/rentBooks" && "hidden"
+              }`}
+            >
+              <Space>
+                <Badge dot style={{ backgroundColor: "#fff" }}>
+                  <div
+                    onClick={handleShow}
+                    className="relative cursor-pointer flex items-center"
+                  >
+                    <NotificationOutlined
+                      style={{ fontSize: 24, color: "#1890ff" }}
+                    />
+                    <span className="absolute -top-2 -right-2 text-xs font-bold text-white bg-red-500 rounded-full px-1">
+                      1
+                    </span>
+                  </div>
+                </Badge>
+              </Space>
+            </div>
+          )}
         <div className="hidden sm:flex items-center justify-center gap-4 mr-12 text-md font-bold text-slate-600">
           {/* if user login then do here logout */}
           {cartItems.length > 0 && (

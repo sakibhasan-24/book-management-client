@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   RocketOutlined,
   AimOutlined,
@@ -6,7 +6,7 @@ import {
   FlagOutlined,
   ClockCircleOutlined,
 } from "@ant-design/icons";
-
+import Aos from "aos";
 export default function AboutUs() {
   // Data for the About Us sections and Future Plans
   const aboutUsData = [
@@ -43,11 +43,17 @@ export default function AboutUs() {
         "To build a sustainable platform that promotes buying, renting, and exchanging books with ease.",
     },
   ];
+  useEffect(() => {
+    Aos.init({ duration: 1000 });
+  }, []);
 
   return (
     <div className="w-full sm:max-w-5xl  mx-auto px-6 py-16 ">
       <div className="text-center my-16">
-        <h2 className="text-3xl font-bold text-gray-100 bg-green-600 p-4 rounded-md mb-4">
+        <h2
+          data-aos="fade-down"
+          className="text-3xl font-bold text-gray-100 bg-green-600 p-4 rounded-md mb-4"
+        >
           About Us
         </h2>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
