@@ -24,26 +24,19 @@ export default function UserSearchBooks() {
   const handleSearch = (e) => {
     e.preventDefault();
 
-    // Fetch the stored data from localStorage
     const storedSearchData = JSON.parse(localStorage.getItem("searchData"));
 
-    // Determine the search term to use
     const searchTermData =
       searchTerm || (storedSearchData && storedSearchData.searchTerm) || "";
 
-    // Get the category from localStorage (if available)
     const category =
       storedSearchData && storedSearchData.category
         ? storedSearchData.category
         : "";
-
-    // If no search term and no category, navigate to default /search
     if (!searchTermData && !category) {
       navigate("/search");
       return;
     }
-
-    // If searchTerm or category exists, navigate using those values
     const searchUrl = `/search?searchTerm=${searchTermData}&category=${category}`;
     localStorage.setItem(
       "searchData",

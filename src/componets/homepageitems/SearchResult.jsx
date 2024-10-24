@@ -46,8 +46,6 @@ export default function SearchResult() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Ensure searchData does not contain "null" or empty values
     const cleanedSearchData = {
       searchTerm: searchData.searchTerm || "",
       category: searchData.category || "",
@@ -77,6 +75,7 @@ export default function SearchResult() {
   const handleClearSearch = () => {
     setSearchData({});
     localStorage.removeItem("searchData");
+    localStorage.removeItem("searchTerm");
     navigate("/search");
   };
   return (

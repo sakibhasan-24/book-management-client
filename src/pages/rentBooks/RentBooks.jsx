@@ -13,16 +13,22 @@ import {
   setNotice,
   setNumberOfBooks,
 } from "../../redux/notifications/notificationSlice";
+import RentBooksPdf from "./RentBooksPdf";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 
 export default function RentBooks() {
   const dispatch = useDispatch();
-  const { notification } = useSelector((state) => state);
+  // const { fromNowRemainingDays, notice, numberOfBooks } = useSelector(
+  //   (state) => state.notification
+  // );
   // console.log(notification);
   // setFromNowRemainingDays
   // setNotice
 
   const [rentBooks, setRentBooks] = useState([]);
   const [overDueUsers, setOverDueUsers] = useState([]);
+  const [modifyReturnDate, setModifyReturnDate] = useState(null);
+
   const [users, setUsers] = useState([]);
   const { getAllUsers } = useGetAllUsers();
   useEffect(() => {
@@ -48,7 +54,8 @@ export default function RentBooks() {
   useEffect(() => {
     const fetchData = async (id) => {
       const res = await getAllOverDueUsers(id);
-      setOverDueUsers(res.overdueUsers);
+      console.log(res);
+      if (res.success === true) setOverDueUsers(res.overdueUsers);
     };
     if (currentUser?.user?.role === "admin") fetchData(currentUser?.user?._id);
   }, []);
@@ -57,11 +64,12 @@ export default function RentBooks() {
     const fetchData = async (id) => {
       const res = await getAllRentBooks(id);
       // console.log(res?.rentBooks);
+      setModifyReturnDate(res?.modifyReturnedDate);
       setRentBooks(res.rentBooks);
     };
     fetchData(currentUser?.user?._id);
   }, [currentUser?.user?._id]);
-  // console.log(rentBooks);
+  // console.log(modifyReturnDate);
   const handleSendToStore = async (id, productId, onUpdateBookStatus) => {
     const res = await backBook(id, {
       bookStatus: "available",
@@ -89,7 +97,13 @@ export default function RentBooks() {
     }
   };
 
-  const numberOfRentBooks = rentBooks.filter((b) => b.isBack === false);
+  const today = new Date();
+  const numberOfRentBooks = rentBooks.filter((b) => {
+    const returnDate = new Date(b.returnDate);
+    // console.log(returnDate < today);
+    return !b.isBack && returnDate < today;
+  });
+  // console.log(numberOfRentBooks);
   if (numberOfRentBooks.length === 0) {
     dispatch(clearNotice());
   }
@@ -110,7 +124,7 @@ export default function RentBooks() {
     }
   }, [numberOfRentBooks]);
   const handleBlockUser = async (id) => {
-    console.log(id);
+    // console.log(id);
 
     Swal.fire({
       title: "Are you sure?",
@@ -123,6 +137,11 @@ export default function RentBooks() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         const res = await blockUser(id);
+        if (!res) {
+          toast.error("No valid Reason for blocked");
+          return;
+        }
+        console.log(res);
         if (res.success) {
           toast.success("User blocked successfully");
           const res = await getAllOverDueUsers(currentUser?.user?._id);
@@ -168,7 +187,17 @@ export default function RentBooks() {
       </div>
     );
   // console.log(users, "users");
-
+  // console.log(rentBooks, "rentBooks");
+  console.log(overDueUsers, "overDueUsers");
+  // if (overDueUsers?.length === 0) {
+  //   if (currentUser?.user?.role === "admin") {
+  //     return (
+  //       <div className="flex items-center justify-center my-12 text-4xl font-bold ">
+  //         <p className="text-green-600">Currently no OverDue User</p>
+  //       </div>
+  //     );
+  //   }
+  // }
   return (
     <div className="w-full sm:max-w-4xl mx-auto">
       <div className="overflow-x-auto">
@@ -182,10 +211,16 @@ export default function RentBooks() {
                 book Id
               </th>
               <th className="py-3 px-4 font-semibold uppercase text-left">
-                User Email
+                Customer Email
+              </th>
+              <th className="py-3 px-4 font-semibold uppercase text-left">
+                Owner Email
               </th>
               <th className="py-3 px-4 font-semibold uppercase text-left">
                 Return Date
+              </th>
+              <th className="py-3 px-4 font-semibold uppercase text-left">
+                Adjust Date
               </th>
               <th className="py-3 px-4 font-semibold uppercase text-left">
                 Remaining Days
@@ -207,11 +242,29 @@ export default function RentBooks() {
                 handleSendToStore={handleSendToStore}
                 currentUser={currentUser}
                 numberOfRentBooks={numberOfRentBooks}
+                modifyReturnDate={modifyReturnDate}
               />
             ))}
           </tbody>
         </table>
       </div>
+      {/* {rentBooks?.length > 0 && currentUser?.user?.role === "admin" && "elll"} */}
+      {rentBooks?.length > 0 && currentUser?.user?.role === "admin" && (
+        <PDFDownloadLink
+          document={<RentBooksPdf rentBooks={rentBooks} />}
+          fileName="rented_books_report.pdf"
+        >
+          <button className="bg-green-500 text-slate-100 p-2 rounded-md mt-4">
+            Download Rented Books Report
+          </button>
+        </PDFDownloadLink>
+      )}
+
+      {overDueUsers?.length === 0 && currentUser?.user?.role === "admin" && (
+        <div className="flex items-center justify-center">
+          <h2 className="text-2xl font-bold mb-4">No Overdue Users</h2>
+        </div>
+      )}
       {overDueUsers &&
         overDueUsers?.length > 0 &&
         currentUser?.user?.role === "admin" && (
@@ -240,7 +293,10 @@ export default function RentBooks() {
                 </thead>
                 <tbody className="text-gray-600">
                   {overDueUsers?.map((user, idx) => (
-                    <tr className="hover:bg-gray-100 border-b border-gray-200 transition duration-200">
+                    <tr
+                      key={idx}
+                      className="hover:bg-gray-100 border-b border-gray-200 transition duration-200"
+                    >
                       <td className="py-3 px-4">{idx + 1}</td>
                       <td>{user?.userName}</td>
                       <td>{user?.userEmail}</td>
@@ -253,7 +309,10 @@ export default function RentBooks() {
                       </td>
                       <td>
                         {user?.isRedAlert ? (
-                          <button className="text-red-800 hover:underline">
+                          <button
+                            onClick={() => handleUnBlockUser(user?._id)}
+                            className="text-red-800 hover:underline"
+                          >
                             Blocked
                           </button>
                         ) : (
@@ -272,7 +331,8 @@ export default function RentBooks() {
             </div>
           </div>
         )}
-      {currentUser?.user?.role === "admin" && (
+
+      {/* {currentUser?.user?.role === "admin" && (
         <div className="mt-10">
           <h2 className="text-2xl font-bold mb-4">Overdue Users</h2>
           <div className="overflow-x-auto">
@@ -335,7 +395,7 @@ export default function RentBooks() {
             </table>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

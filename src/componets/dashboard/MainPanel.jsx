@@ -83,15 +83,17 @@ export default function MainPanel() {
             <Sidebar.Items>
               <Sidebar.ItemGroup>
                 {currentUser?.user?.role === "admin" && (
-                  <Link
-                    className={`${
-                      handleRoutes("/dashboard/admin") &&
-                      "bg-slate-600 text-slate-200 p-4 rounded-md"
-                    }`}
-                    to="/dashboard/admin"
-                  >
-                    {" "}
-                    <Sidebar.Item icon={HiOutlineClipboardList} as={"div"}>
+                  <Link to="/dashboard/admin">
+                    <Sidebar.Item
+                      className={`flex items-center gap-3 p-4 rounded-md transition-colors duration-200 ease-in-out cursor-pointer
+                        ${
+                          handleRoutes("/dashboard/admin")
+                            ? "bg-slate-900 text-slate-100"
+                            : ""
+                        }`}
+                      icon={HiOutlineClipboardList}
+                      as={"div"}
+                    >
                       Dashboard
                     </Sidebar.Item>
                   </Link>

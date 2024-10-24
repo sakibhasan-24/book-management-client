@@ -382,6 +382,7 @@ export default function Addbooks() {
               className=" text-blue-900 font-extrabold border-gray-300 rounded "
               onChange={handleChangeValue}
               value={formData.price}
+              min="100"
             />
           </div>
         </div>
@@ -436,8 +437,11 @@ export default function Addbooks() {
               ))}
           </div>
 
-          <button className="w-full my-4  bg-blue-600 text-white font-bold hover:bg-blue-500 rounded-md py-2 text-lg disabled:opacity-50 disabled:cursor-not-allowed">
-            {loading ? (
+          <button
+            disabled={imageUploading || loading}
+            className="w-full my-4  bg-blue-600 text-white font-bold hover:bg-blue-500 rounded-md py-2 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading || imageUploading ? (
               <span className="flex items-center justify-center gap-2">
                 <FaSpinner className="animate-spin text-center" />
                 Loading...

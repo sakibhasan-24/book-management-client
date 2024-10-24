@@ -34,7 +34,12 @@ export default function Home() {
     };
     fetchData(currentUser?.user?._id);
   }, [currentUser?.user?._id]);
-  const numberOfRentBooks = rentBooks.filter((b) => b.isBack === false);
+  const today = new Date(); // Get today's date
+  const numberOfRentBooks = rentBooks.filter((b) => {
+    const returnDate = new Date(b.returnDate);
+    return !b.isBack && returnDate < today; // Check if the book is not returned and the return date has passed
+  });
+  // const numberOfRentBooks = rentBooks.filter((b) => b.isBack === false);
   if (numberOfRentBooks.length === 0) {
     dispatch(clearNotice());
   }

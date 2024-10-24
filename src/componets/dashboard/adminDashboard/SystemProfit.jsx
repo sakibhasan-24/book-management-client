@@ -16,6 +16,8 @@ export default function AdminDashboard() {
   const { getAllOrders } = useOrders();
   const [orders, setOrders] = useState([]);
   const { currentUser } = useSelector((state) => state.user);
+  const [message, setMessage] = useState(""); // State for messages
+  const [isSuccess, setIsSuccess] = useState(false); // State to determine success or warning
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,30 +25,47 @@ export default function AdminDashboard() {
       setOrders(data);
     };
     fetchData();
-  }, []);
+  }, [getAllOrders]);
 
-  // Calculate total and pending orders percentage
   const totalOrders = orders?.orders?.length || 0;
   const pendingOrders = orders?.shippedOrders?.length || 0;
   const pendingPercentage = totalOrders
     ? ((pendingOrders / totalOrders) * 100).toFixed(2)
     : 0;
 
-  // Calculate profit percentage
   const totalEarnings = Number(orders?.adminUser?.totalEarnings) || 0;
   const totalExpense = Number(orders?.adminUser?.expense) || 0;
-  const profit = totalEarnings - totalExpense;
-  const profitPercentage =
-    totalEarnings > 0 ? ((profit / totalEarnings) * 100).toFixed(2) : 0;
 
-  // Chart data for pending orders
+  const profit = Number(orders?.adminUser?.profits) || 0;
+
+  const profitPercentage =
+    totalEarnings !== 0
+      ? ((profit / totalEarnings) * 100).toFixed(2)
+      : profit < 0 && totalExpense > 0
+      ? ((profit / totalExpense) * 100).toFixed(2)
+      : "0";
+
+  // Set success or warning messages based on profit
+  useEffect(() => {
+    if (profit > 0) {
+      setMessage("Success! You are making a profit.");
+      setIsSuccess(true);
+    } else if (profit < 0) {
+      setMessage("Warning! You are operating at a loss.");
+      setIsSuccess(false);
+    } else {
+      setMessage("You are breaking even.");
+      setIsSuccess(false);
+    }
+  }, [profit]);
+
   const chartData = {
-    labels: ["Profit", "Expenses"], // Change labels to Profit and Expenses
+    labels: ["Profit", "Expenses"],
     datasets: [
       {
         label: "Profit vs Expenses",
-        data: [profit, totalExpense], // Data should represent profit and expenses
-        backgroundColor: ["#10B981", "#3B82F6"], // Green for Profit, Blue for Expenses
+        data: [profit, totalExpense],
+        backgroundColor: ["#10B981", "#3B82F6"],
         hoverBackgroundColor: ["#047857", "#1E3A8A"],
         borderWidth: 1,
       },
@@ -64,6 +83,17 @@ export default function AdminDashboard() {
           Profits: {profitPercentage}%
         </p>
 
+        {/* Message Display */}
+        <div
+          className={`my-4 p-4 rounded-lg ${
+            isSuccess
+              ? "bg-green-100 text-green-700"
+              : "bg-red-100 text-red-700"
+          }`}
+        >
+          {message}
+        </div>
+
         {/* Doughnut Chart Section */}
         <div className="w-48 h-48 mx-auto mt-4">
           <Doughnut data={chartData} options={{ maintainAspectRatio: false }} />
@@ -78,7 +108,7 @@ export default function AdminDashboard() {
           />
           <div>
             <p className="text-lg">Total Earnings</p>
-            <p className="text-sm mt-2">${totalEarnings.toLocaleString()}</p>
+            <p className="text-sm mt-2">BDT{totalEarnings.toLocaleString()}</p>
           </div>
         </div>
 
@@ -88,7 +118,7 @@ export default function AdminDashboard() {
           />
           <div>
             <p className="text-lg">Total Expense</p>
-            <p className="text-sm mt-2">${totalExpense.toLocaleString()}</p>
+            <p className="text-sm mt-2">BDT{totalExpense.toLocaleString()}</p>
           </div>
         </div>
 
@@ -96,7 +126,7 @@ export default function AdminDashboard() {
           <RiseOutlined style={{ fontSize: "24px", marginRight: "10px" }} />
           <div>
             <p className="text-lg">Profit</p>
-            <p className="text-sm mt-2">${profit.toLocaleString()}</p>
+            <p className="text-sm mt-2">BDT{profit.toLocaleString()}</p>
           </div>
         </div>
       </div>

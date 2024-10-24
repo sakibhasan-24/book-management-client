@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
 import useOrders from "../../hooks/orders/useOrders";
 import Spinner from "../../componets/loader/Spinner";
 import Swal from "sweetalert2";
@@ -226,7 +226,19 @@ export default function Orders() {
                   {order.deliveryStatus}
                 </p>
                 <p className="text-md text-slate-700 font-semibold flex items-center space-x-2">
-                  {order.isDelivered && "delivery time"}
+                  delivery Time:{" "}
+                  {order.deliveredAt
+                    ? new Date(order.deliveredAt).toLocaleDateString("en-US", {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        hour: "numeric",
+                        minute: "numeric",
+                        second: "numeric",
+                        hour12: true,
+                      })
+                    : "Pending...."}
                 </p>
               </div>
               <div className="w-1/2 border-b-[1px] border-slate-800"></div>
@@ -288,9 +300,11 @@ export default function Orders() {
                               alt="imgs"
                               className="w-12 h-10 object-cover"
                             />
-                            <p className="text-md text-slate-700 underline ">
-                              {item.title}
-                            </p>
+                            <Link to={`/book/${item.product}`}>
+                              <p className="text-md text-slate-700 underline ">
+                                {item.title}
+                              </p>
+                            </Link>
                           </div>
                           <p className="font-bold text-xl">BDT{item.price}</p>
                         </div>
@@ -346,7 +360,8 @@ export default function Orders() {
                   <strong>Email:</strong> {assignedMan?.userEmail}
                 </p>
                 <p className="text-gray-700 mb-1">
-                  <strong>Phone:</strong> {assignedMan?.phone}
+                  <strong>Phone:</strong>{" "}
+                  {assignedMan?.phone || "018XXXXXXXXXXXXXXXX"}
                 </p>
               </div>
             )}
@@ -366,47 +381,76 @@ export default function Orders() {
       </div>
 
       {currentUser?.user?.isAdmin && (
-        <div className="my-8 p-6  shadow-lg rounded-xl">
+        <div className="my-8 p-6 shadow-lg rounded-xl">
           <h1 className="text-3xl font-bold text-slate-700 mb-4">
-            Assign Delivery Man
+            {order?.assignedDeliveryMan === null
+              ? "Assign Delivery Man"
+              : "Delivery Man Already Assigned"}
           </h1>
-          <div className="relative">
-            <select
-              className="w-full px-4 py-3 rounded-lg bg-white text-gray-800 font-semibold appearance-none transition ease-in-out duration-300 focus:outline-none focus:ring-4 focus:ring-indigo-300 hover:bg-gray-100"
-              onChange={(e) => setSelectedDeliveryMan(e.target.value)}
-            >
-              {deliveryMan?.map((man) => (
-                <option key={man._id} value={man._id}>
-                  {man.userName}
+
+          {/* If no delivery man assigned, show select dropdown and assign button */}
+          {order?.assignedDeliveryMan === null ? (
+            <div className="relative">
+              <select
+                className="w-full px-4 py-3 rounded-lg bg-white text-gray-800 font-semibold appearance-none transition ease-in-out duration-300 focus:outline-none focus:ring-4 focus:ring-indigo-300 hover:bg-gray-100"
+                onChange={(e) => setSelectedDeliveryMan(e.target.value)}
+                defaultValue=""
+              >
+                {/* Default option prompting user to select a delivery man */}
+                <option value="" disabled>
+                  Select Delivery Man
                 </option>
-              ))}
-            </select>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-gray-500 absolute right-4 top-3 pointer-events-none"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-            <button
-              onClick={() =>
-                handleAssignDeliveryMan(orderId, selectedDeliveryMan)
-              }
-              disabled={order?.assignedDeliveryMan}
-              className="bg-gradient-to-r from-indigo-500 to-purple-600 my-4 rounded-md text-white font-bold py-2 px-4 "
-            >
-              {order?.assignedDeliveryMan
-                ? "Already Assigned"
-                : "Assign Delivery Man"}
-            </button>
-          </div>
+                {deliveryMan?.map((man) => (
+                  <option
+                    key={man._id}
+                    value={man._id}
+                    disabled={man.isRedAlert} // Disable option if isRedAlert is true
+                  >
+                    {man.userName} {man.isRedAlert ? "(Red Alert)" : ""}
+                  </option>
+                ))}
+              </select>
+
+              {/* Dropdown Arrow Icon */}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-gray-500 absolute right-4 top-3 pointer-events-none"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+
+              {/* Assign Button */}
+              <button
+                onClick={() =>
+                  handleAssignDeliveryMan(orderId, selectedDeliveryMan)
+                }
+                disabled={!selectedDeliveryMan}
+                className={`bg-gradient-to-r from-indigo-500 to-purple-600 my-4 rounded-md text-white font-bold py-2 px-4 transition-opacity duration-300 ${
+                  !selectedDeliveryMan ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+              >
+                Assign Delivery Man
+              </button>
+            </div>
+          ) : (
+            /* If delivery man already assigned, show their name */
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <p className="text-lg font-semibold text-blue-600">
+                Delivery Man Assigned:{" "}
+                {deliveryMan?.find(
+                  (man) => man._id === order.assignedDeliveryMan
+                )?.userName || "Unknown"}
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>

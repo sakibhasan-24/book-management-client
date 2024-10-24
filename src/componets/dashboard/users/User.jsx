@@ -24,8 +24,7 @@ export default function User({ user, handleDeleteUser }) {
           {user?.role === "user" && "User"}
         </p>
       </Table.Cell>
-      <Table.Cell>6</Table.Cell>
-      <Table.Cell>{user?.role === "user" && user?.totalEarnings}</Table.Cell>
+
       <Table.Cell>
         <p
           className="font-medium text-red-600 hover:underline  cursor-pointer"

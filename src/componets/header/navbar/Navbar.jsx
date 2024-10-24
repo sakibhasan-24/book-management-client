@@ -134,6 +134,11 @@ export default function Navbar() {
                     <Dropdown.Item>Dashboard</Dropdown.Item>
                   </Link>
                 )}
+                {currentUser?.user?.role === "deliveryMan" && (
+                  <Link to="/dashboard/profile">
+                    <Dropdown.Item>Dashboard</Dropdown.Item>
+                  </Link>
+                )}
 
                 <Dropdown.Divider />
                 <Dropdown.Item onClick={handleSignOut}>Sign out</Dropdown.Item>

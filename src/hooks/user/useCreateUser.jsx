@@ -13,7 +13,8 @@ export default function useCreateUser() {
       //   console.table(response);
       return response.data;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      return error;
     } finally {
       setLoading(false);
     }

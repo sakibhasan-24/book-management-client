@@ -10,7 +10,7 @@ export default function useRentBooks() {
     setError(null);
     try {
       const response = await axiosPublic.get(`api/books/getAllRentBooks/${id}`);
-      console.log(response.data);
+      // console.log(response.data);
       setLoading(false);
       return response.data;
     } catch (err) {

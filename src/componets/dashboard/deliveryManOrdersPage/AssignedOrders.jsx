@@ -21,7 +21,11 @@ export default function AssignedOrders() {
   }, []);
   console.log(deliveryManProducts);
   if (deliveryManProducts.length === 0) {
-    return <Spinner />;
+    return (
+      <div className="text-3xl text-center text-slate-700 my-12">
+        <h1>Currently You Have No Orders To delivery</h1>
+      </div>
+    );
   }
   const handleUpdateOrderStatus = async (e, id) => {
     const deliveryStatus = e.target.value; // Get the selected status

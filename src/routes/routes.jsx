@@ -32,6 +32,7 @@ import AdminDashboard from "../componets/dashboard/adminDashboard/AdminDashboard
 import UserDashboard from "../componets/dashboard/userDashboard/UserDashboard";
 import SearchResult from "../componets/homepageitems/SearchResult";
 import PaymentSuccess from "../pages/paymentSuccess/PaymentSuccess";
+import AdminSummary from "../componets/dashboard/AdminSummary/AdminSummary";
 
 const router = createBrowserRouter([
   {
@@ -113,6 +114,16 @@ const router = createBrowserRouter([
               <PrivateRoutes>
                 <AdminRoutes>
                   <DeliveryManLists />
+                </AdminRoutes>
+              </PrivateRoutes>
+            ),
+          },
+          {
+            path: "/dashboard/summary",
+            element: (
+              <PrivateRoutes>
+                <AdminRoutes>
+                  <AdminSummary />
                 </AdminRoutes>
               </PrivateRoutes>
             ),

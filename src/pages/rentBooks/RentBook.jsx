@@ -12,6 +12,7 @@ export default function RentBook({
   handleSendToStore,
   currentUser,
   numberOfRentBooks,
+  modifyReturnDate,
 }) {
   const dispatch = useDispatch();
   // console.log(item.isBack);
@@ -19,8 +20,17 @@ export default function RentBook({
   // console.log(item);
   const today = new Date();
   const returnDate = new Date(item.returnDate);
+
+  // Add 10 extra days to the return date
+  returnDate.setDate(returnDate.getDate() + 10);
+
+  // Calculate the time difference between the return date and today
   const diffTime = returnDate.getTime() - today.getTime();
+
+  // Calculate remaining days, rounding up to the nearest whole number
   const remainingDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  // Check if the item is overdue
   const isOverdue = remainingDays < 0;
   // if (remainingDays === 55 || remainingDays === 34) {
   //   dispatch(setNotice("You have One book to return"));
@@ -50,8 +60,19 @@ export default function RentBook({
       <td className="py-3 px-4">
         {item?.user?.userEmail}- {item?.user?.isRedAlert && "Blocked"}
       </td>
+      <td className="py-3 px-4">{item?.bookOwner?.userEmail}</td>
       <td className="py-3 px-4">
         {new Date(item?.returnDate).toLocaleDateString()}
+      </td>
+      <td className="py-3 px-4">
+        {new Date(item?.returnDate).setDate(
+          new Date(item?.returnDate).getDate() + 10
+        ) &&
+          new Date(
+            new Date(item?.returnDate).setDate(
+              new Date(item?.returnDate).getDate() + 10
+            )
+          ).toLocaleDateString()}
       </td>
       <td className="py-3 px-4">{remainingDays} Days</td>
       <td className="py-3 px-4">

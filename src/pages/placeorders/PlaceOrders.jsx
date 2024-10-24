@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useOrders from "../../hooks/orders/useOrders";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { clearCart } from "../../redux/cart/cartSlice";
 
 export default function PlaceOrders() {
@@ -12,7 +12,7 @@ export default function PlaceOrders() {
   //   clearCart
   // console.log(cart.cartItems);
   // console.log(cart.deliveryAddress);
-  const shippingPrice = cart.cartPrice > 1000 ? 0.0 : cart.cartPrice * 0.02;
+  const shippingPrice = cart.cartPrice > 1000 ? 0.0 : cart.cartPrice * 0.04;
   const { loading, error, createOrder } = useOrders();
   const calculateRemainingDays = (returnDate) => {
     const currentDate = new Date();
@@ -115,9 +115,11 @@ export default function PlaceOrders() {
                     className="w-16 h-16 object-cover rounded-md"
                   />
                   <div>
-                    <p className="text-gray-800 text-md font-semibold underline">
-                      {item.title}
-                    </p>
+                    <Link to={`/book/${item._id}`}>
+                      <p className="text-gray-800 text-md font-semibold underline">
+                        {item.title}
+                      </p>
+                    </Link>
                     {item?.orderType === "rent" && (
                       <div>
                         <p className="text-gray-700 text-md font-medium">

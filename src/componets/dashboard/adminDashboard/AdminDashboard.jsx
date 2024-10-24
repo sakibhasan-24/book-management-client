@@ -22,7 +22,6 @@ export default function AdminDashboard() {
   const { getAllOrders } = useOrders();
   const [orders, setOrders] = useState([]);
   const { currentUser } = useSelector((state) => state.user);
-
   useEffect(() => {
     const fetchData = async () => {
       const data = await getAllOrders();
@@ -152,6 +151,11 @@ export default function AdminDashboard() {
         >
           download Report
         </button>
+        <Link to="/dashboard/summary">
+          <button className="bg-blue-500 mx-6 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300">
+            Summary
+          </button>
+        </Link>
       </div>
     </div>
   );

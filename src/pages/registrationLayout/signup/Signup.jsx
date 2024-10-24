@@ -105,6 +105,13 @@ export default function Signup() {
         });
         setFormData({});
         navigate("/user-credentials/login");
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: res.response.data.message,
+          showConfirmButton: false,
+          timer: 1500,
+        });
       }
     } catch (error) {
       console.log(error);
@@ -145,6 +152,7 @@ export default function Signup() {
             name="userPassword"
             id="userPassword"
             placeholder="****************"
+            minLength={6}
             className="w-full mb-2 p-2 rounded-md border-none outline-none focus:outline-none"
           />
           {showPassword ? (

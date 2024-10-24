@@ -60,6 +60,8 @@ export default function MyBooks() {
             <Table.HeadCell>Category</Table.HeadCell>
             <Table.HeadCell>Image</Table.HeadCell>
             <Table.HeadCell>Price</Table.HeadCell>
+            <Table.HeadCell>Number Of Time Rent</Table.HeadCell>
+            <Table.HeadCell>status</Table.HeadCell>
             <Table.HeadCell>Edit</Table.HeadCell>
             <Table.HeadCell>Action</Table.HeadCell>
           </Table.Head>

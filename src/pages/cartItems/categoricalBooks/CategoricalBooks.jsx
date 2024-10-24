@@ -231,7 +231,7 @@ export default function CategoricalBooks() {
             <span className="text-red-600 font-bold">{category}</span>
           </p>
         )}
-        <div className="flex flex-col sm:flex-row gap-2 my-6">
+        <div className="flex flex-col sm:flex-row flex-wrap gap-2 my-6">
           {books.length > 0 &&
             books.map((book) => <BookCard key={book._id} book={book} />)}
         </div>

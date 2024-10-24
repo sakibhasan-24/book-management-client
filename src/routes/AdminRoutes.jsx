@@ -14,7 +14,7 @@ export default function AdminRoutes({ children }) {
       />
     );
   }
-  if (!currentUser.isAdmin) {
+  if (!currentUser.user?.isAdmin) {
     return <Navigate to="/" state={{ from: location }} replace />;
   }
   return children;

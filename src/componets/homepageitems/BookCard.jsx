@@ -87,14 +87,14 @@ export default function BookCard({ book }) {
           Price: {book?.price} BDT
         </p>
         <div className="flex  items-center justify-center gap-3">
-          {currentUser && currentUser.user._id === book.bookOwner && (
+          {/* {currentUser && currentUser.user._id === book.bookOwner && (
             <Link
               to={`/dashboard/update/${book._id}`}
               className="bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-600 transition-colors duration-300"
             >
               Edit
             </Link>
-          )}
+          )} */}
 
           <Link to={`/book/${book._id}`}>
             <button className="bg-gray-500 text-white p-2  rounded-md hover:bg-gray-600 transition-colors duration-300">

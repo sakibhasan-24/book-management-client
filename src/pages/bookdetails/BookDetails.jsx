@@ -126,9 +126,13 @@ export default function BookDetails() {
       navigate("/user-credentials/login");
       return;
     }
+    if (currentUser && currentUser?.user?.isRedAlert === true) {
+      toast.error("You are not allowed to add more books to cart");
+      return;
+    }
     const rentDays = calculateDays(rentDuration);
 
-    if (orderType === "rent" && (rentDays < 30 || rentDays > 180)) {
+    if (orderType === "rent" && (rentDays < 0 || rentDays > 180)) {
       toast.error("Rent duration must be between 30 and 180 days.");
       return;
     }
@@ -356,31 +360,33 @@ export default function BookDetails() {
                 </h1>
               </div>
             )}
-          <div className="flex space-x-4">
-            <button
-              className={`${
-                orderType === "sell"
-                  ? "bg-slate-900 text-white py-1 px-4 rounded-md font-bold text-xl"
-                  : "bg-gray-200 text-black py-1 px-4 rounded-md font-bold text-xl"
-              }`}
-              onClick={() => handleToggle("sell")}
-            >
-              Sell
-            </button>
+          {book?.isAccepted && book?.bookStatus === "available" && (
+            <div className="flex space-x-4">
+              <button
+                className={`${
+                  orderType === "sell"
+                    ? "bg-slate-900 text-white py-1 px-4 rounded-md font-bold text-xl"
+                    : "bg-gray-200 text-black py-1 px-4 rounded-md font-bold text-xl"
+                }`}
+                onClick={() => handleToggle("sell")}
+              >
+                Sell
+              </button>
 
-            <button
-              className={`${
-                orderType === "rent"
-                  ? "bg-slate-900 text-white py-1 px-4 rounded-md font-bold text-xl"
-                  : "bg-gray-200 text-black py-1 px-4 rounded-md font-bold text-xl"
-              }`}
-              onClick={() => handleToggle("rent")}
-            >
-              Rent
-            </button>
-          </div>
+              <button
+                className={`${
+                  orderType === "rent"
+                    ? "bg-slate-900 text-white py-1 px-4 rounded-md font-bold text-xl"
+                    : "bg-gray-200 text-black py-1 px-4 rounded-md font-bold text-xl"
+                }`}
+                onClick={() => handleToggle("rent")}
+              >
+                Rent
+              </button>
+            </div>
+          )}
           <div className="flex gap-6">
-            {book?.isAccepted && (
+            {book?.isAccepted && book?.bookStatus === "available" && (
               <button
                 onClick={handleAddToCart}
                 disabled={
